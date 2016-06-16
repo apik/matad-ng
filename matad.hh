@@ -228,6 +228,25 @@ S epx1,epx2,epx3,epx4,epx5,epx6;
 * Master integrals
 S miT1,miD6,miD5,miD4,miDN,miE3;
 
+
+Symbols   [000000], [00000M], [0000M0], [0000MM], 
+[000M00], [000M0M], [000MM0], [000MMM], [00M000], 
+[00M00M], [00M0M0], [00M0MM], [00MM00], [00MM0M], 
+[00MMM0], [00MMMM], [0M0000], [0M000M], [0M00M0], 
+[0M00MM], [0M0M00], [0M0M0M], [0M0MM0], [0M0MMM], 
+[0MM000], [0MM00M], [0MM0M0], [0MM0MM], [0MMM00], 
+[0MMM0M], [0MMMM0], [0MMMMM], [M00000], [M0000M], 
+[M000M0], [M000MM], [M00M00], [M00M0M], [M00MM0], 
+[M00MMM], [M0M000], [M0M00M], [M0M0M0], [M0M0MM], 
+[M0MM00], [M0MM0M], [M0MMM0], [M0MMMM], [MM0000], 
+[MM000M], [MM00M0], [MM00MM], [MM0M00], [MM0M0M], 
+[MM0MM0], [MM0MMM], [MMM000], [MMM00M], [MMM0M0], 
+[MMM0MM], [MMMM00], [MMMM0M], [MMMMM0], [MMMMMM];
+
+CF tad3l,tad2l,tad1l;
+
+
+
 PolyRatFun rat;
 
 *
@@ -236,7 +255,145 @@ PolyRatFun rat;
 
 
 
+
 .global
+
+
+
+#procedure toauxtopo
+
+id tad3l([000000],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
+
+id tad3l([00000M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
+
+id tad3l([0000M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
+
+id tad3l([0000MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4*s5m^n5*s6m^n6;
+
+id tad3l([000M00],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
+
+id tad3l([000M0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3*s4m^n4/p5.p5^n5*s6m^n6;
+
+id tad3l([000MM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3*s4m^n4*s5m^n5/p6.p6^n6;
+
+id tad3l([000MMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3*s4m^n4*s5m^n5*s6m^n6;
+
+id tad3l([00M000],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
+
+id tad3l([00M00M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
+
+id tad3l([00M0M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
+
+id tad3l([00M0MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3/p4.p4^n4*s5m^n5*s6m^n6;
+
+id tad3l([00MM00],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
+
+id tad3l([00MM0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3*s4m^n4/p5.p5^n5*s6m^n6;
+
+id tad3l([00MMM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3*s4m^n4*s5m^n5/p6.p6^n6;
+
+id tad3l([00MMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3*s4m^n4*s5m^n5*s6m^n6;
+
+id tad3l([0M0000],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
+
+id tad3l([0M000M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
+
+id tad3l([0M00M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
+
+id tad3l([0M00MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3/p4.p4^n4*s5m^n5*s6m^n6;
+
+id tad3l([0M0M00],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
+
+id tad3l([0M0M0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3*s4m^n4/p5.p5^n5*s6m^n6;
+
+id tad3l([0M0MM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3*s4m^n4*s5m^n5/p6.p6^n6;
+
+id tad3l([0M0MMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3*s4m^n4*s5m^n5*s6m^n6;
+
+id tad3l([0MM000],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
+
+id tad3l([0MM00M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
+
+id tad3l([0MM0M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
+
+id tad3l([0MM0MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3/p4.p4^n4*s5m^n5*s6m^n6;
+
+id tad3l([0MMM00],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
+
+id tad3l([0MMM0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3*s4m^n4/p5.p5^n5*s6m^n6;
+
+id tad3l([0MMMM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n5/p6.p6^n6;
+
+id tad3l([0MMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n5*s6m^n6;
+
+id tad3l([M00000],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
+
+id tad3l([M0000M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
+
+id tad3l([M000M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
+
+id tad3l([M000MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4*s5m^n5*s6m^n6;
+
+id tad3l([M00M00],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
+
+id tad3l([M00M0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3*s4m^n4/p5.p5^n5*s6m^n6;
+
+id tad3l([M00MM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3*s4m^n4*s5m^n5/p6.p6^n6;
+
+id tad3l([M00MMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3*s4m^n4*s5m^n5*s6m^n6;
+
+id tad3l([M0M000],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
+
+id tad3l([M0M00M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
+
+id tad3l([M0M0M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
+
+id tad3l([M0M0MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3/p4.p4^n4*s5m^n5*s6m^n6;
+
+id tad3l([M0MM00],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
+
+id tad3l([M0MM0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3*s4m^n4/p5.p5^n5*s6m^n6;
+
+id tad3l([M0MMM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3*s4m^n4*s5m^n5/p6.p6^n6;
+
+id tad3l([M0MMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3*s4m^n4*s5m^n5*s6m^n6;
+
+id tad3l([MM0000],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
+
+id tad3l([MM000M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
+
+id tad3l([MM00M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
+
+id tad3l([MM00MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3/p4.p4^n4*s5m^n5*s6m^n6;
+
+id tad3l([MM0M00],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
+
+id tad3l([MM0M0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3*s4m^n4/p5.p5^n5*s6m^n6;
+
+id tad3l([MM0MM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3*s4m^n4*s5m^n5/p6.p6^n6;
+
+id tad3l([MM0MMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3*s4m^n4*s5m^n5*s6m^n6;
+
+id tad3l([MMM000],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
+
+id tad3l([MMM00M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
+
+id tad3l([MMM0M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
+
+id tad3l([MMM0MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3/p4.p4^n4*s5m^n5*s6m^n6;
+
+id tad3l([MMMM00],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
+
+id tad3l([MMMM0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4/p5.p5^n5*s6m^n6;
+
+id tad3l([MMMMM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n5/p6.p6^n6;
+
+id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n5*s6m^n6;
+
+#endprocedure
+
+
+
 
 #procedure averts(P,in)
 
