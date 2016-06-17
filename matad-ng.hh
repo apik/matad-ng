@@ -6716,8 +6716,10 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
 *         .end
 * Check if table is too small:
         
-        if ( count(intbn,1) );        
+        if ( count(intbn,1) );       
+*         if (count(dala,1) > 11) exit "table is too small"; 
         if (count(dala,1) > 11) multiply 1/(1-1); 
+
         #call BNd
         
 * Replace temporarily x6 by s6m, in order not to touch
@@ -6736,60 +6738,16 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         .sort
 
 
+*         if (count(x3,1,x4,1,x5,1,x6,1)>0) multiply 1/(1-1);
+
 *         Print+s;
 *         .end        
 
         
-* g diabnbntmp2 = diabnbn;
-* .sort
-* drop diabnbn;
-* .sort
-* .store
+*         if ( count(intbn,1) );        
+*         if (count(x3,1,x4,1,x5,1,x6,1)>0) multiply 1/(1-1);
+*         endif;        
 
-* ************************************************************
-
-* G diabntbl = diabnbntmp2;
-
-* if (count(x3,1,x4,1,x5,1,x6,1)>0) discard;
-* .sort
-
-* #include redcut
-* #call ACCU(Table 0)
-* #include expepgam
-* #call ACCU(Table)
-
-* .store
-
-* g diabnbn = diabnbntmp2;
-
-* ************************************************************
-
-* if (count(x3,1,x4,1,x5,1,x6,1)==0) discard;
-* .sort
-
-* ************************************************************
-
-* * split expression
-
-* G diabnh4 = diabnbn;
-* .sort
-* skip diabnbn;
-* if ( match(x3*x4*x5*x6)>0 ) discard;
-* .sort
-
-* G diabnbntmp3 = diabnbn - diabnh4;
-* * `diabnbn' contains the BN-type integrals which have to be reduced.
-* .sort
-* drop diabnbn;
-* .sort
-* .store
-* g diabnbn = diabnbntmp3;
-* .sort
-
-* #call ACCU(bnh6)
-        if ( count(intbn,1) );        
-        if (count(x3,1,x4,1,x5,1,x6,1)>0) multiply 1/(1-1);
-        endif;        
 * `diabnbn' has to be zero, otherwise 
 *  an entry is missing in the table
 
@@ -6983,6 +6941,14 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         #message - done
 #endprocedure
 
+
+
+
+
+
+
+
+
 #procedure topbn
 *
 * this is topbnbn
@@ -6995,37 +6961,10 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         #message do recursion
 
 * Modified: applyed only to intbn        
-        #call reduceBNBN
-
-        
-* * split expression
-
-*         G diabnh1 = diabnbn;
-*         .sort
-*         skip diabnbn;
-*         if ( match(x3*x4*x5*x6)>0 ) discard;
-*         .sort
-*         g diabnbntmp4 = diabnbn - diabnh1;
-* * 'diabnbn' now contains the BN-type integrals which have to be reduced.
-*         .sort
-*         drop diabnbn;
-*         .sort
-*         .store
-* * AFP: all integrals with x3*x4*x5*x6        
-*         g diabnbn = diabnbntmp4;
-*         .sort
-
-*         #include reduceBNBN
-
-*         G diabnbn = diabnh1 + diabnh4 + diabnbn + diabnh7 + inttbl*diabntbl;
-*         .sort
-
-* The following 'symBN' is necessary in order to identify 
-* the BM-integrals correctly.
-
-*         b intbn;        
-*         Print+s;
-*         .end        
+*         #call reduceBNBN
+        #call reduceBNnotab        
+        Print+s;
+        .end        
         
         #call symBN{p1,p2,x3,x4,x5,x6}
 
@@ -7095,53 +7034,53 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
 *
 * this is topbn2
 *
-#-
-#message this is topbn2
+        #-
+        #message this is topbn2
 
-#message numerator
+        #message numerator
 
-if( count(intbn2,1));        
-id  p1.p2 = 1/2 * ( 1/x4 + 1/x3 - 1/x5 - 1/x6 );
+        if( count(intbn2,1));        
+        id  p1.p2 = 1/2 * ( 1/x4 + 1/x3 - 1/x5 - 1/x6 );
         id  p1.p3 = 1/2 * ( 1/x6 - 1/x3 - p1.p1 );
-endif;        
-#call ACCU(BN2 1)
+        endif;        
+        #call ACCU(BN2 1)
 
-if( count(intbn2,1));        
-id  p1.p4 = 1/2 * (-1/x5 + 1/x4 + p1.p1 );
+        if( count(intbn2,1));        
+        id  p1.p4 = 1/2 * (-1/x5 + 1/x4 + p1.p1 );
         id  p1.p5 = 1/2 * ( 1/x4 - 1/x5 - p1.p1 );
-endif;        
-#call ACCU(BN2 2)
+        endif;        
+        #call ACCU(BN2 2)
 
-if( count(intbn2,1));        
-id  p1.p6 = 1/2 * (-1/x3 + 1/x6 + p1.p1 );
+        if( count(intbn2,1));        
+        id  p1.p6 = 1/2 * (-1/x3 + 1/x6 + p1.p1 );
         id  p2.p3 = 1/2 * ( 1/x5 - 1/x3 - p2.p2 );
-endif;        
-#call ACCU(BN2 3)
+        endif;        
+        #call ACCU(BN2 3)
 
-if( count(intbn2,1));        
-id  p2.p4 = 1/2 * (-1/x6 + 1/x4 + p2.p2 );
+        if( count(intbn2,1));        
+        id  p2.p4 = 1/2 * (-1/x6 + 1/x4 + p2.p2 );
         id  p2.p5 = 1/2 * (-1/x3 + 1/x5 + p2.p2 );
-endif;        
-#call ACCU(BN2 4)
+        endif;        
+        #call ACCU(BN2 4)
 
-if( count(intbn2,1));        
-id  p2.p6 = 1/2 * ( 1/x4 - 1/x6 - p2.p2 );
+        if( count(intbn2,1));        
+        id  p2.p6 = 1/2 * ( 1/x4 - 1/x6 - p2.p2 );
         id  p3.p4 = 1/2 * ( 1/x5 + 1/x6 - p2.p2 - p1.p1 - 2*M^2);
-endif;        
-#call ACCU(BN2 5)
+        endif;        
+        #call ACCU(BN2 5)
 
-if( count(intbn2,1));        
-id  p3.p5 = 1/2 * ( 1/x3 + 1/x5 - p2.p2 - 2*M^2);
+        if( count(intbn2,1));        
+        id  p3.p5 = 1/2 * ( 1/x3 + 1/x5 - p2.p2 - 2*M^2);
         id  p3.p6 = 1/2 * ( 1/x3 + 1/x6 - p1.p1 - 2*M^2);
-endif;        
-#call ACCU(BN2 6)
+        endif;        
+        #call ACCU(BN2 6)
 
-if( count(intbn2,1));        
-id  p4.p5 = 1/2 * ( 1/x4 + 1/x5 - p1.p1 - 2*M^2);
-id  p4.p6 = 1/2 * ( 1/x4 + 1/x6 - p2.p2 - 2*M^2);
+        if( count(intbn2,1));        
+        id  p4.p5 = 1/2 * ( 1/x4 + 1/x5 - p1.p1 - 2*M^2);
+        id  p4.p6 = 1/2 * ( 1/x4 + 1/x6 - p2.p2 - 2*M^2);
         id  p5.p6 = 1/2 * ( 1/x3 + 1/x4 - p2.p2 - p1.p1 - 2*M^2);
-endif;        
-#call ACCU(BN2 7)
+        endif;        
+        #call ACCU(BN2 7)
 
 *
 * Warning! 
@@ -7150,24 +7089,24 @@ endif;
         id  1/x3 = M^2 + p3.p3;
         id  1/x5 = M^2 + p5.p5;
         endif;        
-#call ACCU(BN2 8)
+        #call ACCU(BN2 8)
 
-if( count(intbn2,1));        
-id  p6.p6 = 1/x6 - M^2;
+        if( count(intbn2,1));        
+        id  p6.p6 = 1/x6 - M^2;
         id  p4.p4 = 1/x4 - M^2;
-endif;        
-#call ACCU(BN2 7)
+        endif;        
+        #call ACCU(BN2 7)
 
-#message do recursion
+        #message do recursion
 
-if( count(intbn2,1));        
-id p5=-p5;
-multiply replace_(p6,p5,p4,p6,p1,p4,p3,p2,p5,p1,p2,p3,x6,x5,x4,x6);
+        if( count(intbn2,1));        
+        id p5=-p5;
+        multiply replace_(p6,p5,p4,p6,p1,p4,p3,p2,p5,p1,p2,p3,x6,x5,x4,x6);
         multiply intbm1/intbn2;
-endif;        
-.sort
+        endif;        
+        .sort
 
-#message - done
+        #message - done
         
 #endprocedure        
 
@@ -10131,6 +10070,17 @@ endargument;
 
         #call tad`LOOPS'l
         
+
+        Print+s;        
+        .end
+
+        if(count(int0,1));
+        Multiply 1/int0;  
+        
+        else;
+        exit "Not all integrals reduced";
+
+        endif;        
 #endprocedure
 
 
