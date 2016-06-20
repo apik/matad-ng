@@ -498,185 +498,185 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
         
 * #endprocedure        
 
-#procedure simpfin()
+* #procedure simpfin()
 
-* expand functions w.r.t. ep
+* * expand functions w.r.t. ep
 
-* gm2:
+* * gm2:
 
-        id  gm2(k1?,k2?,k3?,k4?) =
-        po(2 - k3    , -k4 - 1)
-        *po(k1 + k3 - 2, k2 + k4 + 1)
-        *poinv(k1     ,k2)
-        *M^(4 - 2*k1 - 2*k3)
-*                  *Exp3(1 + k2 + k4)
-        *gm2norm(k2,k4)
-        ;   
+*         id  gm2(k1?,k2?,k3?,k4?) =
+*         po(2 - k3    , -k4 - 1)
+*         *po(k1 + k3 - 2, k2 + k4 + 1)
+*         *poinv(k1     ,k2)
+*         *M^(4 - 2*k1 - 2*k3)
+* *                  *Exp3(1 + k2 + k4)
+*         *gm2norm(k2,k4)
+*         ;   
 
-        id po(1,?a) = 1;
-        id poinv(1,?a) = 1;
-        id po(x1?pos_,0) = fac_(x1-1);
-        id poinv(x1?pos_,0) = 1/(fac_(x1-1));
+*         id po(1,?a) = 1;
+*         id poinv(1,?a) = 1;
+*         id po(x1?pos_,0) = fac_(x1-1);
+*         id poinv(x1?pos_,0) = 1/(fac_(x1-1));
 
-        id,many,po(x1?neg0_,x2?) = acc(PO(x1,x2))/x2/ep;
-        id,many,po(x1?,x2?) = acc(PO(x1,x2));
+*         id,many,po(x1?neg0_,x2?) = acc(PO(x1,x2))/x2/ep;
+*         id,many,po(x1?,x2?) = acc(PO(x1,x2));
 
-        repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-        #call ACCU(simpfin)
+*         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
+*         #call ACCU(simpfin)
 
-        id,many,poinv(x1?neg0_,x2?) = acc(POINV(x1,x2))*x2*ep;
-        id,many,poinv(x1?,x2?) = acc(POINV(x1,x2));
+*         id,many,poinv(x1?neg0_,x2?) = acc(POINV(x1,x2))*x2*ep;
+*         id,many,poinv(x1?,x2?) = acc(POINV(x1,x2));
 
-        repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-        #call ACCU(simpfin)
+*         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
+*         #call ACCU(simpfin)
 
-        id gm2norm(k2?,k4?) =
-        (
-        Gam(1,-1-k4)
-        *Gam(1,1+k2+k4)
-        *iGam(2,-1)
-        *iGam(1,k2)
-        #ifdef 'MINCER'
-                *ExpZ2
-        #endif
-        );
-        .sort
+*         id gm2norm(k2?,k4?) =
+*         (
+*         Gam(1,-1-k4)
+*         *Gam(1,1+k2+k4)
+*         *iGam(2,-1)
+*         *iGam(1,k2)
+*         #ifdef 'MINCER'
+*                 *ExpZ2
+*         #endif
+*         );
+*         .sort
 
-************************************************************
+* ************************************************************
 
-* gm3:
+* * gm3:
 
-        id  gm3(k1?,k2?,k3?,k4?,k5?,k6?) =
-        po(2 - k5    ,      -k6 - 1)
-        *po(k1 + k5 - 2, k2 + k6 + 1)
-        *po(k3 + k5 - 2, k4 + k6 + 1)
-        *po(k1 + k3 + k5 - 4, 2 + k2 +  k4 + k6)
-        *poinv(k1                ,k2)
-        *poinv(k3                ,k4)
-        *poinv(k1 + k3 + 2*k5 - 4,2 + k2 +k4 + 2*k6)
-        *(1 + k2 + k6)
-        *(1 + k4 + k6)
-        *(-1)*nom(1 ,-(2 + k2 + k4 + k6))
-        *(2 + k2 + k4 + k6)
-        /(2 + k2 + k4 + 2*k6)
-        *nom(0,1)*nom(0,1)
-        *M^(8 - 2*k1 - 2*k3 - 2*k5)
-        *gm3norm(k2,k4,k6)
-        ;
+*         id  gm3(k1?,k2?,k3?,k4?,k5?,k6?) =
+*         po(2 - k5    ,      -k6 - 1)
+*         *po(k1 + k5 - 2, k2 + k6 + 1)
+*         *po(k3 + k5 - 2, k4 + k6 + 1)
+*         *po(k1 + k3 + k5 - 4, 2 + k2 +  k4 + k6)
+*         *poinv(k1                ,k2)
+*         *poinv(k3                ,k4)
+*         *poinv(k1 + k3 + 2*k5 - 4,2 + k2 +k4 + 2*k6)
+*         *(1 + k2 + k6)
+*         *(1 + k4 + k6)
+*         *(-1)*nom(1 ,-(2 + k2 + k4 + k6))
+*         *(2 + k2 + k4 + k6)
+*         /(2 + k2 + k4 + 2*k6)
+*         *nom(0,1)*nom(0,1)
+*         *M^(8 - 2*k1 - 2*k3 - 2*k5)
+*         *gm3norm(k2,k4,k6)
+*         ;
 
-        id po(1,?a) = 1;
-        id poinv(1,?a) = 1;
-        id po(x1?pos_,0) = fac_(x1-1);
-        id poinv(x1?pos_,0) = 1/(fac_(x1-1));
+*         id po(1,?a) = 1;
+*         id poinv(1,?a) = 1;
+*         id po(x1?pos_,0) = fac_(x1-1);
+*         id poinv(x1?pos_,0) = 1/(fac_(x1-1));
 
-        id,many,po(x1?neg0_,x2?) = acc(PO(x1,x2))/x2/ep;
-        id,many,po(x1?,x2?) = acc(PO(x1,x2));
+*         id,many,po(x1?neg0_,x2?) = acc(PO(x1,x2))/x2/ep;
+*         id,many,po(x1?,x2?) = acc(PO(x1,x2));
 
-        repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-        #call ACCU(simpfin)
+*         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
+*         #call ACCU(simpfin)
 
-        id,many,poinv(x1?neg0_,x2?) = acc(POINV(x1,x2))*x2*ep;
-        id,many,poinv(x1?,x2?) = acc(POINV(x1,x2));
+*         id,many,poinv(x1?neg0_,x2?) = acc(POINV(x1,x2))*x2*ep;
+*         id,many,poinv(x1?,x2?) = acc(POINV(x1,x2));
 
-        repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-        #call ACCU(simpfin)
+*         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
+*         #call ACCU(simpfin)
 
-        id gm3norm(x1?,x2?,x3?) = 
-        Gam(-1,2+x1+x2+x3)
-        *Gam(0,1+x1+x3)
-        *Gam(0,1+x2+x3)
-        *Gam(1,-1-x3)
-        *iGam(1,x1 )
-        *iGam(1,x2 )
-        *iGam(0,2+x1+x2+2*x3)
-        *iGam(2,-1)
-        #ifdef 'MINCER'
-                *ExpZ2^2
-        #endif
-        ;
+*         id gm3norm(x1?,x2?,x3?) = 
+*         Gam(-1,2+x1+x2+x3)
+*         *Gam(0,1+x1+x3)
+*         *Gam(0,1+x2+x3)
+*         *Gam(1,-1-x3)
+*         *iGam(1,x1 )
+*         *iGam(1,x2 )
+*         *iGam(0,2+x1+x2+2*x3)
+*         *iGam(2,-1)
+*         #ifdef 'MINCER'
+*                 *ExpZ2^2
+*         #endif
+*         ;
 
-        .sort
+*         .sort
 
-************************************************************
+* ************************************************************
 
-* l1:
+* * l1:
 
-* Note: The acc's are leftovers when the gamma's are normalized.
-* In that case two gamma's had to be reduced down, so that the
-* first part is one. Actually the first acc can be cancelled
-* against the factors in the definition of the exp's.
-* The last factor comes from the transitition G -> MSbar
+* * Note: The acc's are leftovers when the gamma's are normalized.
+* * In that case two gamma's had to be reduced down, so that the
+* * first part is one. Actually the first acc can be cancelled
+* * against the factors in the definition of the exp's.
+* * The last factor comes from the transitition G -> MSbar
 
-        id G(x1?,y1?,x2?,y2?,n?,s?) = po(x1+x2-s-2,1+y1+y2)
-        *po(2-x1+n-s,-1-y1)*po(2-x2+s,-1-y2)
-*       *acc(1+y1+y2)
-        *nom(1,-2-y1-y2)
-        *poinv(x1,y1)*poinv(x2,y2)*poinv(4-x1-x2+n,-2-y1-y2)
-        *G(1,y1,1,y2,0,0)
-        #ifdef 'MINCER'
-                *ExpZ2
-        #endif
-        ;
-***        *Gam(1,1)*Gam(1,-1)^2*iGam(2,-2)
-*
-* the last factor (last line) would be the transitition G -> MSbar
-*
-
-
-        id po(1,?a) = 1;
-        id poinv(1,?a) = 1;
-        id po(x1?pos_,0) = fac_(x1-1);
-        id poinv(x1?pos_,0) = 1/(fac_(x1-1));
-
-        id,many,po(x1?neg0_,x2?) = acc(PO(x1,x2))/x2/ep;
-        id,many,po(x1?,x2?) = acc(PO(x1,x2));
-
-        repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-        #call ACCU(simpfin)
-
-        id,many,poinv(x1?neg0_,x2?) = acc(POINV(x1,x2))*x2*ep;
-        id,many,poinv(x1?,x2?) = acc(POINV(x1,x2));
-
-        repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-        #call ACCU(simpfin)
+*         id G(x1?,y1?,x2?,y2?,n?,s?) = po(x1+x2-s-2,1+y1+y2)
+*         *po(2-x1+n-s,-1-y1)*po(2-x2+s,-1-y2)
+* *       *acc(1+y1+y2)
+*         *nom(1,-2-y1-y2)
+*         *poinv(x1,y1)*poinv(x2,y2)*poinv(4-x1-x2+n,-2-y1-y2)
+*         *G(1,y1,1,y2,0,0)
+*         #ifdef 'MINCER'
+*                 *ExpZ2
+*         #endif
+*         ;
+* ***        *Gam(1,1)*Gam(1,-1)^2*iGam(2,-2)
+* *
+* * the last factor (last line) would be the transitition G -> MSbar
+* *
 
 
-***id  G(1,0,1,0,0,0) = 1;
-        id  G(1,0,1,0,0,0) = G(0,0);
-        id  G(1,1,1,1,0,0) = exp11; *1/3
-        id  G(1,0,1,1,0,0) = exp10; *1/2
-        id  G(1,1,1,0,0,0) = exp10; *1/2
-        id  G(1,0,1,2,0,0) = exp20; *1/3
-        id  G(1,2,1,0,0,0) = exp20; *1/3
-***.sort
-        id  exp11 = G(1,1);
-        id  exp20 = G(2,0);
-        id  exp10 = G(1,0);
-        .sort
-        id G(x1?,x2?)= Gam(1,1+x1+x2)*Gam(1,-1-x1)*Gam(1,-1-x2)
-        *iGam(1,x1)*iGam(1,x2)*iGam(2,-2-x1-x2)
-***                   *iGam(1,1)*iGam(1,-1)^2*Gam(2,-2)
-        ;
+*         id po(1,?a) = 1;
+*         id poinv(1,?a) = 1;
+*         id po(x1?pos_,0) = fac_(x1-1);
+*         id poinv(x1?pos_,0) = 1/(fac_(x1-1));
+
+*         id,many,po(x1?neg0_,x2?) = acc(PO(x1,x2))/x2/ep;
+*         id,many,po(x1?,x2?) = acc(PO(x1,x2));
+
+*         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
+*         #call ACCU(simpfin)
+
+*         id,many,poinv(x1?neg0_,x2?) = acc(POINV(x1,x2))*x2*ep;
+*         id,many,poinv(x1?,x2?) = acc(POINV(x1,x2));
+
+*         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
+*         #call ACCU(simpfin)
 
 
-        #call ACCU(simpfin)
+* ***id  G(1,0,1,0,0,0) = 1;
+*         id  G(1,0,1,0,0,0) = G(0,0);
+*         id  G(1,1,1,1,0,0) = exp11; *1/3
+*         id  G(1,0,1,1,0,0) = exp10; *1/2
+*         id  G(1,1,1,0,0,0) = exp10; *1/2
+*         id  G(1,0,1,2,0,0) = exp20; *1/3
+*         id  G(1,2,1,0,0,0) = exp20; *1/3
+* ***.sort
+*         id  exp11 = G(1,1);
+*         id  exp20 = G(2,0);
+*         id  exp10 = G(1,0);
+*         .sort
+*         id G(x1?,x2?)= Gam(1,1+x1+x2)*Gam(1,-1-x1)*Gam(1,-1-x2)
+*         *iGam(1,x1)*iGam(1,x2)*iGam(2,-2-x1-x2)
+* ***                   *iGam(1,1)*iGam(1,-1)^2*Gam(2,-2)
+*         ;
 
 
-* Pochhammer functions
+*         #call ACCU(simpfin)
 
-        id po(1,?a) = 1;
-        id poinv(1,?a) = 1;
-        id po(x1?pos_,0) = fac_(x1-1);
-        id poinv(x1?pos_,0) = 1/(fac_(x1-1));
 
-        id,many,po(x1?neg0_,x2?) = acc(PO(x1,x2))/x2/ep;
-        id,many,po(x1?,x2?) = acc(PO(x1,x2));
-        id,many,poinv(x1?neg0_,x2?) = acc(POINV(x1,x2))*x2*ep;
-        id,many,poinv(x1?,x2?) = acc(POINV(x1,x2));
+* * Pochhammer functions
 
-        #call ACCU()
+*         id po(1,?a) = 1;
+*         id poinv(1,?a) = 1;
+*         id po(x1?pos_,0) = fac_(x1-1);
+*         id poinv(x1?pos_,0) = 1/(fac_(x1-1));
 
-#endprocedure
+*         id,many,po(x1?neg0_,x2?) = acc(PO(x1,x2))/x2/ep;
+*         id,many,po(x1?,x2?) = acc(PO(x1,x2));
+*         id,many,poinv(x1?neg0_,x2?) = acc(POINV(x1,x2))*x2*ep;
+*         id,many,poinv(x1?,x2?) = acc(POINV(x1,x2));
+
+*         #call ACCU()
+
+* #endprocedure
 
 
 #procedure tad1l
@@ -1103,8 +1103,13 @@ endif;
 * Identify M1, M2, ... in the output of BN/BM
 *
         if (count(int`TYPE',1) );
+*         if (count(intm1,1,intm2,1,intm3,1,intm4,1,intt1,1,intn1,1,
+*         intbm,1,intbm1,1,intbm2,1)==0);
+
+
         if (count(intm1,1,intm2,1,intm3,1,intm4,1,intt1,1,intn1,1,
-        intbm,1,intbm1,1,intbm2,1)==0);
+        intbm1,1,intbm2,1)==0);
+        
         if (match(1/p1.p1/p2.p2*x5*x6)>0); 
         multiply intm1/int`TYPE';
         elseif (match(1/p1.p1/p2.p2/p5.p5*x6)>0); 
@@ -1126,6 +1131,7 @@ endif;
         
 * BN BM
         endif;
+        
 #endprocedure        
 
 
@@ -1815,9 +1821,7 @@ endif;
                 endif;
 * topBN1        
                 endif;
-                id nom(4,-2) = acc(4-2*ep);
-                id acc(x1?)*acc(x2?)=acc(x1*x2);
-
+                id nom(4,-2) = num(4-2*ep);
 
                 #call ACCU(BN1)
 
@@ -4030,8 +4034,8 @@ endif;
         #call mltadDM(s1m,s2m,s3m,p4,p5,p6)
 * #include expandnomdeno
 
-        id n = acc(4-2*ep);
-        id acc(x1?)*acc(x2?) = acc(x1*x2);
+        id n = num(4-2*ep);
+*         id acc(x1?)*acc(x2?) = acc(x1*x2);
         #call ACCU(DM)
 
 * massless index >1
@@ -4043,8 +4047,8 @@ endif;
 
         #call mltadDM(s1m,s2m,s3m,p4,p5,p6)
 
-        id n = acc(4-2*ep);
-        id acc(x1?)*acc(x2?) = acc(x1*x2);
+        id n = num(4-2*ep);
+*         id acc(x1?)*acc(x2?) = acc(x1*x2);
         #call ACCU(DM)
 
         #do i=1,1
@@ -4054,8 +4058,8 @@ endif;
 
         #call mltadDM(s1m,s2m,s3m,p4,p5,p6)
 
-        id n = acc(4-2*ep);
-        id acc(x1?)*acc(x2?) = acc(x1*x2);
+        id n = num(4-2*ep);
+*         id acc(x1?)*acc(x2?) = acc(x1*x2);
         #call ACCU(DM)
 
 ************************************************************
@@ -5414,7 +5418,7 @@ endif;
                 *(-1)/(n5-1)
                 *(
                 ( n3*`x3'+n4*`x4'+n6*`x6' )*(-1)
-                -1/M^2*nom(6-n1-n2-n3-n4-(n5-1)-n6,-3)
+                -1/M^2*num(6-n1-n2-n3-n4-(n5-1)-n6-3*ep)
                 )
                 ;
                 
@@ -5456,7 +5460,7 @@ endif;
                 * `x3'^n3 * `x4'^(n4-1) *(-1) * `x5'^n5  * `x6'^n6
                 *1/2/(n4-1)/M^2
                 *(
-                +nom(4-2*(n4-1)-n1-n6,-2)
+                +num(4-2*(n4-1)-n1-n6-2*ep)
                 +n1/`p1'.`p1'*(1/`x5'-1/`x4')
                 +n6*`x6'     *(`p2'.`p2'-1/`x4'+2*M^2)
                 )
@@ -6961,10 +6965,11 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         #message do recursion
 
 * Modified: applyed only to intbn        
-*         #call reduceBNBN
-        #call reduceBNnotab        
-        Print+s;
-        .end        
+        #call reduceBNBN
+        id acc(x1?)*intbn = rat(x1,1)*int0;        
+*         #call reduceBNnotab        
+*         Print+s;
+*         .end        
         
         #call symBN{p1,p2,x3,x4,x5,x6}
 
@@ -6974,8 +6979,9 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         #call ACCU(topBN)
 
         if ( count(intbn,1) );                
-        if ( (count(x3,1)==0)&&(count(inttbl,1)==0) ) multiply intbm/intbn;
-
+        if ( (count(x3,1)==0)) multiply intbm/intbn;
+        endif;
+        
         if (count(intbm,1)==1);
 
         id  p4.p4 = 1/x4 - M^2;
@@ -7016,16 +7022,17 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         endif;
 
         endif;
-* topBN
-        endif;        
         .sort
 
+        
 *        id inttbl = 1;
         .sort
 
         #message - done
 
-        
+
+*         Print+s;
+*         .end        
 #endprocedure        
 
 
@@ -7237,7 +7244,7 @@ else;
 
 endif;
 
-repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
+* repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
 
 #endprocedure
 
@@ -8057,7 +8064,7 @@ if( count(intbm,1));
       * `x4'^n4  * `x5'^n5  * `x6'^(n6-1) * (-1)
       *1/(n6-1)/M^2/2
       *(
-        acc(4-2*(n6-1)-n1-n3 -2*ep)
+        num(4-2*(n6-1)-n1-n3 -2*ep)
        +n1/`p1'.`p1'*(1/`x4'-1/`x6')
        +n3/`p3'.`p3'*(1/`x5'-1/`x6')
        )
@@ -8067,7 +8074,7 @@ if( count(intbm,1));
   endif;
         endif;
         
-  repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
+*   repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
   #call ACCU{BMn6}
 
 #enddo
@@ -9421,129 +9428,55 @@ if( count(intm3,1)) id p4=-p4;
 ************************************************************
 #endprocedure
 
+
 #procedure topt1
-
-#endprocedure        
-
-#procedure topt1xxx
 #message this is topt1
 
-if( (count(x3,1)=0) && (count(x4,1)=1)
- && (count(x5,1)=1) && (count(x6,1)=1) )
-            id x4*x5*x6 =  + (M^2*Gam(-1,1))^3
-  #ifdef 'MINCER'
-                             *ExpZ2^3
-  #endif
+        if( count(intt1,1));
+        if( (count(x3,1)=0) && (count(x4,1)=1)
+        && (count(x5,1)=1) && (count(x6,1)=1) )
+        id x4*x5*x6 =  + (M^2*Gam(-1,1))^3;
+
+        Multiply int0/intt1;        
+        endif;
         
 #endprocedure        
 
 
-#procedure topn1
 
-#endprocedure
+
         
-#procedure topn1xxx
+#procedure topn1
 #message this is topn1
 
-* #include expandnomdeno
-
-* #include matad.info # time
-* #include matad.info # print
-
-#ifdef 'TABINT'
-
-* Expand the coefficient of those integrals where the
-* table is used.
-
-  #call ACCU(tabint 0)
-
-  #include redcutnomdeno
-
-  #call ACCU(tabint 1)
-
-  if (match(x3*x4*x5*x6)>0);
-    argument accun;
-      id n=4-2*ep;
-    endargument;
-    id accun(x?)=acc(x);
-    repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-  endif;
-  .sort
-
-  #call ACCU(tabint 2)
-
-  if (match(x3*x4*x5*x6)>0);
-    id deno(0,y?)=1/y/ep;
-    id nom(x?,y?)=acc(x+y*ep);
-    id nom(x?,y?,z?)=acc(x + ep*y + ep^2*z);
-    id n=acc(4-2*ep);
-    repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-  endif;
-  .sort
-
-  #call ACCU(tabint 3)
-
-  if (match(x3*x4*x5*x6)>0);
-    id  deno(1,y1?) = accm(1+ep*y1);
-    repeat id accm(x1?)*accm(x2?) = accm(x1*x2);
-    id  accm(x1?) = accm(x1-1);
-    id  accm(x1?) = accm(x1-x1^2,x1^3);
-    id  accm(x1?,x2?) = acc(1-x1-x2+x2*x1+x2^2);
-    repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-  endif;
-  .sort
-
-  b x3,x4,x5,x6;
- .sort
-  keep brackets;
-
-* Replace BN-integrals (tabBN.prc):
-
-  id x3*x4*x5*x6^a?(1,2,3,4,5,6,7,8,9,10) =
-                             acc((TabBN(a))*M^(2*a-6)) * M^(-2*a+6)
-***id x3*x4*x5*x6^a?(1,2,3,4,5,6,7,8,9,10) = TabBN(a)
-    #ifdef 'MINCER'
-                             *ExpZ2^3
-    #endif
-  ;
-  .sort
-
-  id acc(x?)*acc(y?)=acc(x*y);
-  .sort
-
-  #call ACCU(TabBN)
-
-  .sort
-
-#endif
 
 ************************************************************
 
 * integrals of type N1
 
-if( (count(x3,1)=1) && (count(x4,1)=1)
- && (count(x5,1)=1) && (count(x6,1)=1) )
-          id x3*x4*x5*x6 =M^4*acc(agam/ep^3+bgam/ep^2+cgam/ep+dgam+egam*ep
-                                 +fgam*ep^2+ggam*ep^3+hgam*ep^4)
-  #ifdef 'MINCER'
-                             *ExpZ2^3
-  #endif
-                       ;
+        if(count(intn1,1));        
+        if( (count(x3,1)=1) && (count(x4,1)=1)
+        && (count(x5,1)=1) && (count(x6,1)=1) )
+        id x3*x4*x5*x6 =M^4*rat(agam/ep^3+bgam/ep^2+cgam/ep+dgam+egam*ep
+        +fgam*ep^2+ggam*ep^3+hgam*ep^4,1);
+
+        Multiply int0/intn1;        
+        endif;        
 .sort 
 
 * The following commands should not be used if 'EXACTEXP' is defined.
 
-#ifndef 'EXACTEXP'
-  if (count(acc,1)!=0);
-    argument accun;
-      id n=4-2*ep;
-    endargument;
-    id accun(x?)=acc(x);
-    repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-  endif;
-  #call ACCU(TabBN)
-***if (count(accun,1)!=0) id acc(x?)=x;
-#endif
+* #ifndef 'EXACTEXP'
+*   if (count(acc,1)!=0);
+*     argument accun;
+*       id n=4-2*ep;
+*     endargument;
+*     id accun(x?)=acc(x);
+*     repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
+*   endif;
+*   #call ACCU(TabBN)
+* ***if (count(accun,1)!=0) id acc(x?)=x;
+* #endif
 
 id agam=2;
 id bgam=23/3;
@@ -10061,6 +9994,11 @@ endargument;
         #call dorec3l
         
 
+        #call Conv2exact
+        #call DoG
+        #call subSimple
+        #call GammaArgToOne
+        
 #endprocedure
 
 
@@ -10071,16 +10009,17 @@ endargument;
         #call tad`LOOPS'l
         
 
-        Print+s;        
-        .end
+*         b intn1,x6;        
+*         Print+s;        
+*         .end
 
-        if(count(int0,1));
-        Multiply 1/int0;  
+*         if(count(int0,1));
+*         Multiply 1/int0;  
         
-        else;
-        exit "Not all integrals reduced";
+*         else;
+*         exit "Not all integrals reduced";
 
-        endif;        
+*         endif;        
 #endprocedure
 
 
