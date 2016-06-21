@@ -420,6 +420,31 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
 
 
 
+#procedure Conv2exact()
+        
+        id po(n?,x?)                = Pochhammer(n,x*ep)*den(x*ep);
+        id poinv(n?,x?)             = PochhammerINV(n,x*ep)*num(x*ep);
+        
+        id nom(x1?,x2?)             = num(x1+x2*ep);
+        id deno(x1?,x2?)            = den(x1+x2*ep);
+        id nom(x?,y?,z?)            = num(x+y*ep+z*ep^2);    
+
+
+
+* id deno(x?,y?) * nom(x?,y?) = 1;
+* id deno(0,y?)               = 1/y/ep;
+* id nom(x?,y?,z?)            = x + y*nom(0,1)*nom(1,z/y);
+
+* repeat id 1/ep * nom(0,x?) = x;
+
+* id nom(0,y?)         = nom(0,1)*y;
+* id deno(x?!{0,1},y?) = deno(1,y/x)/x;
+* id nom(x?!{0,1},y?)  = x*nom(1,y/x);
+* .sort
+        
+#endprocedure
+
+
 
 #procedure averts(P,in)
 
@@ -762,15 +787,6 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
 * #endprocedure
 
 
-#procedure Conv2exact()
-
-id po(n?,x?)    = Pochhammer(n,x*ep)*den(x*ep);
-id poinv(n?,x?) = PochhammerINV(n,x*ep)*num(x*ep);
-
-id nom(x1?,x2?) = num(x1+x2*ep);
-id deno(x1?,x2?)= den(x1+x2*ep);
-
-#endprocedure
 
 
 
@@ -5494,8 +5510,8 @@ endif;
                 * `x3'^n3? * `x4'^n4? * `x5'^n5? * `x6'^n6?
                 =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
                 * `x3'^n3 * `x4'^n4  * `x5'^n5  * `x6'^n6
-                *M^2*deno( 
-                + 2*n1 + 2*n2 + 3*n6 - 7,6
+                *M^2*den( 
+                + 2*n1 + 2*n2 + 3*n6 - 7+ep*6
                 )        
                 *(-1)
                 *(
@@ -5511,9 +5527,9 @@ endif;
                 
                 - p1.p1^-1*x4*x5^-1 * ( 2 )
                 
-                + p1.p1^-1*x6^-1 * 1/M^2*nom( - n2- n6 + 3,-2)
+                + p1.p1^-1*x6^-1 * 1/M^2*num( - n2- n6 + 3 -ep*2)
                 
-                - p1.p1^-1 * nom( 4 - 8*n1 - 4*n6,-8 )
+                - p1.p1^-1 * num( 4 - 8*n1 - 4*n6 -ep*8 )
                 
                 
                 ) ;
@@ -5540,8 +5556,8 @@ endif;
                 * `x3'^n3? * `x4'^n4? * `x5'^n5? * `x6'^n6?
                 =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
                 * `x3'^n3 * `x4'^n4  * `x5'^n5  * `x6'^n6
-                *deno(
-                + 12  - 8*n1 - 4*n6,-8
+                *den(
+                + 12  - 8*n1 - 4*n6 - ep*8
                 )
                 *(-1)
                 *(
@@ -5553,7 +5569,7 @@ endif;
                 
                 + x4*x5^-1 * ( 2 )
                 
-                - x6^-1 * 1/M^2*nom( - n2- n6 + 3,-2 )
+                - x6^-1 * 1/M^2*num( - n2- n6 + 3 - ep*2 )
                 
                 - p1.p1 * 1/M^2*nom( + 2*n1 + 2*n2 + 3*n6 - 9,6 )
                 
@@ -5587,8 +5603,8 @@ endif;
                 * `x3'^n3? * `x4'^n4? * `x5'^n5? * `x6'^n6?
                 =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
                 * `x3'^n3 * `x4'^n4  * `x5'^n5  * `x6'^n6
-                *M^2*deno(
-                + 2*n1 + 2*n2 + 3*n6 - 7,6
+                *M^2*den(
+                + 2*n1 + 2*n2 + 3*n6 - 7 + ep*6
                 )
                 *(-1)
                 *(
@@ -5604,9 +5620,9 @@ endif;
                 
                 + p2.p2^-1*x4^-1 * (  - n6*M^-2 + M^-2 )
                 
-                + p2.p2^-1*x6^-1 * 1/M^2*nom(  - n1 - n6 + 3,-2 )
+                + p2.p2^-1*x6^-1 * 1/M^2*num(  - n1 - n6 + 3 - ep*2 )
                 
-                - p2.p2^-1 * nom( 4 - 8*n2 - 4*n6,-8 )
+                - p2.p2^-1 * num( 4 - 8*n2 - 4*n6 - ep*8 )
                 
                 
                 ) ;
@@ -5632,8 +5648,8 @@ endif;
         * `x3'^n3? * `x4'^n4? * `x5'^n5? * `x6'^n6?
         =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
         * `x3'^n3 * `x4'^n4  * `x5'^n5  * `x6'^n6
-        *deno(
-        + 12 - 8*n2 - 4*n6,-8
+        *den(
+        + 12 - 8*n2 - 4*n6 - ep*8
         )
         *(-1)
         *(
@@ -5645,13 +5661,13 @@ endif;
         
         - x4^-1 * (  - n6*M^-2 + M^-2 )
         
-        - x6^-1 * 1/M^2*nom(   - n1 - n6 + 3,-2 )
+        - x6^-1 * 1/M^2*num(   - n1 - n6 + 3 - ep*2 )
         
         - p1.p1^-1*x4^-1*x6^-1 * (  - n1*M^-2 )
         
         - p1.p1^-1*x5^-1*x6^-1 * ( n1*M^-2 )
         
-        - p2.p2 * 1/M^2*nom(  + 2*n1 + 2*n2 + 3*n6 - 9,6 )
+        - p2.p2 * 1/M^2*num(  + 2*n1 + 2*n2 + 3*n6 - 9 + ep*6 )
         
         
         );
@@ -5702,34 +5718,34 @@ endif;
                 * `x3'^n3? * `x4'^n4? * `x5'^n5? * `x6'^n6?
                 =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
                 * `x3'^n3 * `x4'^n4  * `x5'^n5  * `x6'^n6
-                *1/8/M^2/(n6-1)*deno(4-n6,-2)*deno(n6-3,2)*deno(n6-3,2)
+                *1/8/M^2/(n6-1)*den(4-n6-2*ep)*den(n6-3+2*ep)*den(n6-3+2*ep)
                 *(-1)
                 *(
-                3*M**2*`x3'*`x4'*nom(3 - n6,-2)*nom(-4 + n6,2)/(`x5'*`x6') 
+                3*M**2*`x3'*`x4'*num(3 - n6-2*ep)*num(-4 + n6+2*ep)/(`x5'*`x6') 
                 +
-                3*M**2*`x4'*`x5'*nom(3 - n6,-2)*nom(-4 + n6,2)/(`x3'*`x6') 
+                3*M**2*`x4'*`x5'*num(3 - n6-2*ep)*num(-4 + n6+2*ep)/(`x3'*`x6') 
                 +
-                M**2*(-1 + n6)*`x3'*nom(-4 + n6,2)*nom(-3 + n6,2)/`x5' 
+                M**2*(-1 + n6)*`x3'*num(-4 + n6+2*ep)*num(-3 + n6+2*ep)/`x5' 
                 +
-                M**2*(-1 + n6)*`x5'*nom(-4 + n6,2)*nom(-3 + n6,2)/`x3' 
+                M**2*(-1 + n6)*`x5'*num(-4 + n6+2*ep)*num(-3 + n6+2*ep)/`x3' 
                 -
-                (-2 + n6)*`x3'*nom(-4 + n6,2)*nom(-3 + n6,2)/(`x5'*`x6') 
+                (-2 + n6)*`x3'*num(-4 + n6+2*ep)*num(-3 + n6+2*ep)/(`x5'*`x6') 
                 -
-                (-2 + n6)*`x5'*nom(-4 + n6,2)*nom(-3 + n6,2)/(`x3'*`x6') 
+                (-2 + n6)*`x5'*num(-4 + n6+2*ep)*num(-3 + n6+2*ep)/(`x3'*`x6') 
                 +
-                M**2*(-1 + n6)*n6*`x6'*nom(-4 + n6,2)*nom(-3 + n6,2)/`x4' 
+                M**2*(-1 + n6)*n6*`x6'*num(-4 + n6+2*ep)*num(-3 + n6+2*ep)/`x4' 
                 +
-                (-2 + n6)*nom(-5 + n6,3)*nom(-4 + n6,2)*nom(-3 + n6,2)/
+                (-2 + n6)*num(-5 + n6+3*ep)*num(-4 + n6+2*ep)*num(-3 + n6+2*ep)/
                 (M**2*`x4'*`x6') 
                 +       
-                nom(-5 + n6,3)*nom(-4 + n6,2)**2*nom(-3 + n6,2)/
-                (M**2*`x6'**2) 
+                num(-5 + n6+3*ep)*num(-4 + n6+2*ep)**2*num(-3 + n6+2*ep)/
+                (M^2*`x6'^2) 
                 -    
-                (-1 + n6)*nom(-4 + n6,2)*nom(-3 + n6,2)*
-                nom(-6 + 2*n6,3)/`x4' 
+                (-1 + n6)*num(-4 + n6+2*ep)*num(-3 + n6+2*ep)*
+                num(-6 + 2*n6+3*ep)/`x4' 
                 -
-                nom(-4 + n6,2)*nom(-3 + n6,2)*
-                nom(-58 + 41*n6 - 7*n6**2,54 - 20*n6,-12)/`x6'
+                num(-4 + n6+2*ep)*num(-3 + n6+2*ep)*
+                nom(-58 + 41*n6 - 7*n6^2,54 - 20*n6,-12)/`x6'
                 )
                 
                 ;
@@ -5747,12 +5763,8 @@ endif;
                 if ( (count(`x4',1)<=0)&&(count(`x5',1)<=0) ) discard;
                 if ( (count(`x4',1)<=0)&&(count(`x6',1)<=0) ) discard;
                 endif;
-                
-                id deno(x?,y?)*nom(x?,y?)=1;
-                id deno(0,y?)=1/y/ep;
-                id nom(x?,y?,z?)=x+y*nom(0,1)*nom(1,z/y);
-                repeat id 1/ep*nom(0,x?)=x;
-                id nom(x?,y?)=x+ep*y;
+
+                #call Conv2exact                
                 
                 #call ACCU(n6)
                 
@@ -6780,7 +6792,7 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         
         #CALL redBNn5{p1|p2|x3|x4|x5|x6}
         #call symBN{p1|p2|x3|x4|x5|x6}
-        
+
         #call ACCU{BN}
         
         #message 2
@@ -6788,7 +6800,6 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         #CALL redBNn34{p1|p2|x3|x4|x5|x6}
         #call symBN{p1|p2|x3|x4|x5|x6}
         #call symmetryBN
-        
         
         #call ACCU{BN}
         
@@ -6808,42 +6819,45 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
 *         #do i = 'N6MIN','N6MAX'
 *                 #message n6 = 'i'
                 
+        
+        #CALL redBNn12{p1|p2|x3|x4|x5|x6}
+        #call symBN{p1|p2|x3|x4|x5|x6}
+        #call symmetryBN
                 
-                #CALL redBNn12{p1|p2|x3|x4|x5|x6}
-                #call symBN{p1|p2|x3|x4|x5|x6}
-                #call symmetryBN
+        
+        #call ACCU{BN}
+        
+        if ( (count(x3,1)<=0)&&(count(x5,1)<=0) ) discard;
+        if ( (count(x3,1)<=0)&&(count(x6,1)<=0) ) discard;
+        if ( (count(x4,1)<=0)&&(count(x5,1)<=0) ) discard;
+        if ( (count(x4,1)<=0)&&(count(x6,1)<=0) ) discard;
+        .sort
+        #message 5
+        
+        
+        #CALL redBNn6{p1|p2|x3|x4|x5|x6}
+
+        
+        #call symBN{p1|p2|x3|x4|x5|x6}
+        #call symmetryBN
+
+        
                 
-                
-                #call ACCU{BN}
-                
-                if ( (count(x3,1)<=0)&&(count(x5,1)<=0) ) discard;
-                if ( (count(x3,1)<=0)&&(count(x6,1)<=0) ) discard;
-                if ( (count(x4,1)<=0)&&(count(x5,1)<=0) ) discard;
-                if ( (count(x4,1)<=0)&&(count(x6,1)<=0) ) discard;
-                .sort
-                #message 5
-                
-                
-                #CALL redBNn6{p1|p2|x3|x4|x5|x6}
-                #call symBN{p1|p2|x3|x4|x5|x6}
-                #call symmetryBN
-                
-                
-                #call ACCU{BN}
+        #call ACCU{BN}
 *                 if (count(acc,1)!=0) id accu(x?)=x;
-                if ( (count(x3,1)<=0)&&(count(x5,1)<=0) ) discard;
-                if ( (count(x3,1)<=0)&&(count(x6,1)<=0) ) discard;
-                if ( (count(x4,1)<=0)&&(count(x5,1)<=0) ) discard;
-                if ( (count(x4,1)<=0)&&(count(x6,1)<=0) ) discard;
-                .sort
+        if ( (count(x3,1)<=0)&&(count(x5,1)<=0) ) discard;
+        if ( (count(x3,1)<=0)&&(count(x6,1)<=0) ) discard;
+        if ( (count(x4,1)<=0)&&(count(x5,1)<=0) ) discard;
+        if ( (count(x4,1)<=0)&&(count(x6,1)<=0) ) discard;
+        .sort
+        
                 
-                
-                
-                #call ACCU{BN}
+        
+        #call ACCU{BN}
 *                 if (count(acc,1)!=0) id accun(x?)=x;
-                #message 6
-                
-                
+        #message 6
+        
+        
 *         #enddo
         
         
@@ -6893,7 +6907,7 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         #call ACCU(topBN)
         
         if ( count(intbn,1) );                
-        if ( (count(x3,1)==0)&&(count(inttbl,1)==0) ) multiply intbm/intbn;
+        if ( (count(x3,1)==0) ) multiply intbm/intbn;
         
         if (count(intbm,1)==1);
         
@@ -6965,9 +6979,10 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         #message do recursion
 
 * Modified: applyed only to intbn        
-        #call reduceBNBN
-        id acc(x1?)*intbn = rat(x1,1)*int0;        
-*         #call reduceBNnotab        
+*         #call reduceBNBN
+*         id acc(x1?)*intbn = rat(x1,1)*int0;        
+        #call reduceBNnotab
+        
 *         Print+s;
 *         .end        
         
