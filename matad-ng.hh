@@ -1,6 +1,11 @@
 S n,ep;
 dimension n;
 
+* By default we use reduction with tables for BN topology
+
+#ifndef `REDBNTAB'
+        #define REDBNTAB
+#endif
 
 V q, Q;
 
@@ -376,217 +381,6 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
         .sort:`TEXT';
 #endprocedure
 
-* #procedure one10(x,x1,y,y1)
-
-* * 1/(Q.Q + M^2) is "x" and 1/Q.Q is "y";
-* * (1/(Q.Q + M^2))^ep is "x1" and (1/Q.Q)^ep is "y1";
-
-*         if ( (count(`x',1) <= 0) && (count(`x1',1) == 0) ) discard;
-
-*         id `x'^k1?*`x1'^k2?*`y'^k3?*`y1'^k4?  = gm2(k1,k2,k3,k4);
-
-* #endprocedure
-
-
-* #procedure SimpExact
-
-* *         
-* *  One-loop tadpole with powers
-* *
-* *  1/(p.p+m^2)^(1+ep*k2)/p.p^(1+ep*k4)        
-* *         
-*         id gm2norm(k2?,k4?) =
-*         (
-*         Gam(1,-1-k4)
-*         *Gam(1,1+k2+k4)
-*         *iGam(2,-1)
-*         *iGam(1,k2)
-*         #ifdef 'MINCER'
-*                 *ExpZ2
-*         #endif
-*         );
-        
-* #endprocedure        
-
-* #procedure simpfin()
-
-* * expand functions w.r.t. ep
-
-* * gm2:
-
-*         id  gm2(k1?,k2?,k3?,k4?) =
-*         po(2 - k3    , -k4 - 1)
-*         *po(k1 + k3 - 2, k2 + k4 + 1)
-*         *poinv(k1     ,k2)
-*         *M^(4 - 2*k1 - 2*k3)
-* *                  *Exp3(1 + k2 + k4)
-*         *gm2norm(k2,k4)
-*         ;   
-
-*         id po(1,?a) = 1;
-*         id poinv(1,?a) = 1;
-*         id po(x1?pos_,0) = fac_(x1-1);
-*         id poinv(x1?pos_,0) = 1/(fac_(x1-1));
-
-*         id,many,po(x1?neg0_,x2?) = acc(PO(x1,x2))/x2/ep;
-*         id,many,po(x1?,x2?) = acc(PO(x1,x2));
-
-*         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-*         #call ACCU(simpfin)
-
-*         id,many,poinv(x1?neg0_,x2?) = acc(POINV(x1,x2))*x2*ep;
-*         id,many,poinv(x1?,x2?) = acc(POINV(x1,x2));
-
-*         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-*         #call ACCU(simpfin)
-
-*         id gm2norm(k2?,k4?) =
-*         (
-*         Gam(1,-1-k4)
-*         *Gam(1,1+k2+k4)
-*         *iGam(2,-1)
-*         *iGam(1,k2)
-*         #ifdef 'MINCER'
-*                 *ExpZ2
-*         #endif
-*         );
-*         .sort
-
-* ************************************************************
-
-* * gm3:
-
-*         id  gm3(k1?,k2?,k3?,k4?,k5?,k6?) =
-*         po(2 - k5    ,      -k6 - 1)
-*         *po(k1 + k5 - 2, k2 + k6 + 1)
-*         *po(k3 + k5 - 2, k4 + k6 + 1)
-*         *po(k1 + k3 + k5 - 4, 2 + k2 +  k4 + k6)
-*         *poinv(k1                ,k2)
-*         *poinv(k3                ,k4)
-*         *poinv(k1 + k3 + 2*k5 - 4,2 + k2 +k4 + 2*k6)
-*         *(1 + k2 + k6)
-*         *(1 + k4 + k6)
-*         *(-1)*nom(1 ,-(2 + k2 + k4 + k6))
-*         *(2 + k2 + k4 + k6)
-*         /(2 + k2 + k4 + 2*k6)
-*         *nom(0,1)*nom(0,1)
-*         *M^(8 - 2*k1 - 2*k3 - 2*k5)
-*         *gm3norm(k2,k4,k6)
-*         ;
-
-*         id po(1,?a) = 1;
-*         id poinv(1,?a) = 1;
-*         id po(x1?pos_,0) = fac_(x1-1);
-*         id poinv(x1?pos_,0) = 1/(fac_(x1-1));
-
-*         id,many,po(x1?neg0_,x2?) = acc(PO(x1,x2))/x2/ep;
-*         id,many,po(x1?,x2?) = acc(PO(x1,x2));
-
-*         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-*         #call ACCU(simpfin)
-
-*         id,many,poinv(x1?neg0_,x2?) = acc(POINV(x1,x2))*x2*ep;
-*         id,many,poinv(x1?,x2?) = acc(POINV(x1,x2));
-
-*         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-*         #call ACCU(simpfin)
-
-*         id gm3norm(x1?,x2?,x3?) = 
-*         Gam(-1,2+x1+x2+x3)
-*         *Gam(0,1+x1+x3)
-*         *Gam(0,1+x2+x3)
-*         *Gam(1,-1-x3)
-*         *iGam(1,x1 )
-*         *iGam(1,x2 )
-*         *iGam(0,2+x1+x2+2*x3)
-*         *iGam(2,-1)
-*         #ifdef 'MINCER'
-*                 *ExpZ2^2
-*         #endif
-*         ;
-
-*         .sort
-
-* ************************************************************
-
-* * l1:
-
-* * Note: The acc's are leftovers when the gamma's are normalized.
-* * In that case two gamma's had to be reduced down, so that the
-* * first part is one. Actually the first acc can be cancelled
-* * against the factors in the definition of the exp's.
-* * The last factor comes from the transitition G -> MSbar
-
-*         id G(x1?,y1?,x2?,y2?,n?,s?) = po(x1+x2-s-2,1+y1+y2)
-*         *po(2-x1+n-s,-1-y1)*po(2-x2+s,-1-y2)
-* *       *acc(1+y1+y2)
-*         *nom(1,-2-y1-y2)
-*         *poinv(x1,y1)*poinv(x2,y2)*poinv(4-x1-x2+n,-2-y1-y2)
-*         *G(1,y1,1,y2,0,0)
-*         #ifdef 'MINCER'
-*                 *ExpZ2
-*         #endif
-*         ;
-* ***        *Gam(1,1)*Gam(1,-1)^2*iGam(2,-2)
-* *
-* * the last factor (last line) would be the transitition G -> MSbar
-* *
-
-
-*         id po(1,?a) = 1;
-*         id poinv(1,?a) = 1;
-*         id po(x1?pos_,0) = fac_(x1-1);
-*         id poinv(x1?pos_,0) = 1/(fac_(x1-1));
-
-*         id,many,po(x1?neg0_,x2?) = acc(PO(x1,x2))/x2/ep;
-*         id,many,po(x1?,x2?) = acc(PO(x1,x2));
-
-*         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-*         #call ACCU(simpfin)
-
-*         id,many,poinv(x1?neg0_,x2?) = acc(POINV(x1,x2))*x2*ep;
-*         id,many,poinv(x1?,x2?) = acc(POINV(x1,x2));
-
-*         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-*         #call ACCU(simpfin)
-
-
-* ***id  G(1,0,1,0,0,0) = 1;
-*         id  G(1,0,1,0,0,0) = G(0,0);
-*         id  G(1,1,1,1,0,0) = exp11; *1/3
-*         id  G(1,0,1,1,0,0) = exp10; *1/2
-*         id  G(1,1,1,0,0,0) = exp10; *1/2
-*         id  G(1,0,1,2,0,0) = exp20; *1/3
-*         id  G(1,2,1,0,0,0) = exp20; *1/3
-* ***.sort
-*         id  exp11 = G(1,1);
-*         id  exp20 = G(2,0);
-*         id  exp10 = G(1,0);
-*         .sort
-*         id G(x1?,x2?)= Gam(1,1+x1+x2)*Gam(1,-1-x1)*Gam(1,-1-x2)
-*         *iGam(1,x1)*iGam(1,x2)*iGam(2,-2-x1-x2)
-* ***                   *iGam(1,1)*iGam(1,-1)^2*Gam(2,-2)
-*         ;
-
-
-*         #call ACCU(simpfin)
-
-
-* * Pochhammer functions
-
-*         id po(1,?a) = 1;
-*         id poinv(1,?a) = 1;
-*         id po(x1?pos_,0) = fac_(x1-1);
-*         id poinv(x1?pos_,0) = 1/(fac_(x1-1));
-
-*         id,many,po(x1?neg0_,x2?) = acc(PO(x1,x2))/x2/ep;
-*         id,many,po(x1?,x2?) = acc(PO(x1,x2));
-*         id,many,poinv(x1?neg0_,x2?) = acc(POINV(x1,x2))*x2*ep;
-*         id,many,poinv(x1?,x2?) = acc(POINV(x1,x2));
-
-*         #call ACCU()
-
-* #endprocedure
 
 
 #procedure tad1l
@@ -603,21 +397,10 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
 
         #call Conv2exact()
         #call DoG
-*         #call simpfin()
-*         #include expandnomdeno
-*         #include redcut
-*         #include expepgam
-        
+        #call subSimple
+        #call GammaArgToOne
+
 #endprocedure        
-
-
-
-
-
-
-
-
-
 
 
 
@@ -633,43 +416,6 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
         id 1/[M^2+p1^2] = `xxx';     
         id 1/diff = 1/M^2;
 #endprocedure
-
-
-
-
-
-* #procedure two110(x,x1,y,y1,z,z1)
-
-* * 1/(p1.p1 + M^2) is "x" and 1/(p1.p1 + M^2)^ep  is "x1";
-* * 1/(p2.p2 + M^2) is "y" and 1/(p2.p2 + M^2)^ep  is "y1";
-* * 1/(p3.p3) is "z" and 1/p3.p3^ep  is "z1";
-
-*         if ( (count(`x',1) <= 0) && (count(`x1',1) == 0) ) discard;
-*         if ( (count(`y',1) <= 0) && (count(`y1',1) == 0) ) discard;
-
-*         if ( count(`x1',1)  < count(`y1',1) ) multiply,replace_(`x',`y',`x1',`y1');
-
-*         id `x'^k1?*`x1'^k2?*`y'^k3?*`y1'^k4?*`z'^k5?*`z1'^k6? = gm3(k1,k2,k3,k4,k5,k6);
-
-*         id gm3(k1?,k2?,k3?,k4?,k5?,k6?) =
-*         po(2 - k5    ,      -k6 - 1)
-*         *po(k1 + k5 - 2, k2 + k6 + 1)
-*         *po(k3 + k5 - 2, k4 + k6 + 1)
-*         *po(k1 + k3 + k5 - 4, 2 + k2 +  k4 + k6)
-*         *poinv(k1                ,k2)
-*         *poinv(k3                ,k4)
-*         *poinv(k1 + k3 + 2*k5 - 4,2 + k2 +k4 + 2*k6)
-*         *(1 + k2 + k6)
-*         *(1 + k4 + k6)
-*         *(-1)*nom(1 ,-(2 + k2 + k4 + k6))
-*         *(2 + k2 + k4 + k6)
-*         /(2 + k2 + k4 + 2*k6)
-*         *nom(0,1)*nom(0,1)
-*         *M^(8 - 2*k1 - 2*k3 - 2*k5)
-*         *gm3norm(k2,k4,k6)
-*         ;
-
-* #endprocedure
 
 
 
@@ -718,6 +464,8 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
 .sort:TadpoleMM0-`in'-2;        
 *         
 #endprocedure
+
+
 
 #procedure TadpoleM0(x,y,in,out)
 
@@ -2197,137 +1945,35 @@ endif;
 *   twice. (BN1(...) are added to 'diarest'; see below.) 
 
 ************************************************************ 
-
-*         multiply replace_(intbn,intbnbn,intbm,intbmbm);
-*         .sort
-
-*         Print+s;
-* .end        
         
         #do type = {d6|d5|d4|dm|dn|e4|e3}
-
-*   G dia`type' = dia;
-
-*   if (count(int`type',1) == 0) discard;
-*   id int`type' = 1;
-*   .sort
-
-***  #if (termsin(dia`type')!=0)
-
+                
+                
                 #message Recursion of type `type'
-
-*     #include matad.info # time 
-*     #include matad.info # print
-
+                
                 #call top`type'
                 Print+s;        
                 .sort        
-*     #include matad.info # time
-*     #include matad.info # print
-
-*     G diatmp = dia + dia`type';
                 
-*     multiply replace_(intbn,intbnbn,intbm,intbmbm);
-*     id int`type' = 0;
-*     .sort
-
-*   drop dia`type';
-*   .sort 
-*   delete storage;
-*   .sort
-*   .store
-
-*   g dia = diatmp;
-*   .sort
-*   delete storage;
-*   .sort
-*   .store
-
-#enddo
-
-* #do type = {bnbn|bn1|bn2|bn3|bmbm|bm1|bm2|m1|m2|m3|m4|m5|t1|n1}
-
-
-#do type = {bn|bn1|bn2|bn3|bm|bm1|bm2|m1|m2|m3|m4|m5|t1|n1}
-
+        #enddo
         
-*   G dia`type' = dia;
+        #do type = {bn|bn1|bn2|bn3|bm|bm1|bm2}
+        
+                #message Recursion of type `type'
+                multiply replace_(s1m,x1,s2m,x2,s3m,x3,s4m,x4,s5m,x5,s6m,x6,s7m,x7,s8m,x8);
+                
+                #call top`type'
+                #call bnm2m(`type')
+                
+        #enddo
+        
+        #do type = {m1|m2|m3|m4|m5|t1|n1}
+                #message Recursion of type `type'
+                multiply replace_(s1m,x1,s2m,x2,s3m,x3,s4m,x4,s5m,x5,s6m,x6,s7m,x7,s8m,x8);
+                
+                #call top`type'
+        #enddo
 
-*   if (count(int`type',1)==0) discard;
-*   id int`type' = 1;
-
-*   .sort
-
-* ***  #if (termsin(dia`type')!=0)
-
-    #message Recursion of type `type'
-    multiply replace_(s1m,x1,s2m,x2,s3m,x3,s4m,x4,s5m,x5,s6m,x6,s7m,x7,s8m,x8);
-
-* *     #include matad.info # time 
-* *     #include matad.info # print
-
-    #call top`type'
-    #call bnm2m(`type')
-
-* *     #include matad.info # time
-* *     #include matad.info # print
-
-*     G diatmp = dia + dia`type';
-
-*         multiply replace_(intbn,intbnbn,intbm,intbmbm);
-*     id int`type' = 0;
-*     .sort
-
-*   drop dia`type';
-*   .sort
-*   delete storage;
-*   .sort
-*   .store
-*   g dia = diatmp;
-*   .sort
-*   delete storage;
-*   .sort
-*   .store
-
-#enddo
-
-* ************************************************************
-
-*   g diatmp = dia;
-*   .sort
-*   delete storage;
-*   .sort
-*   .store
-*   g dia = diatmp;
-*   .sort
-*   delete storage;
-*   .sort
-
-* #message final manipulations
-
-* * #include matad.info # time
-* * #include matad.info # print
-
-* #message simplify
-
-* #call simpfin
-* #include redcut
-
-* #call ACCU()
-
-* * use "expandnomdeno" because of treatment of 1/ep poles
-
-* #include expandnomdeno2
-
-* * expand ep
-
-* #include expepgam
-
-* * #include matad.info # time
-* * #include matad.info # print
-
-* id acc(x?)=x;
-* .sort 
 #endprocedure
 
 
@@ -2385,11 +2031,14 @@ endif;
 
 #endprocedure
 
+
+
 ************************************************************
+#procedure topd6
 
 * treat the scalar products
 
-#procedure topd6
+
 *
 * this is topd6
 *
@@ -2842,155 +2491,156 @@ endif;
                 endrepeat;
                 endif;
                 #call ACCU(D5)
+        #enddo
 
-#enddo
-
-#call mltadD5(s1m,s2m,s3m,s4m,s5m,p6)
-
+        #call mltadD5(s1m,s2m,s3m,s4m,s5m,p6)
+        
 * #include expandnomdeno
-
-#call ACCU(D5)
-
-#do i=1,1
-
-        #call redD5n2(s1m,s2m,s3m,s4m,s5m,p6)
+        
         #call ACCU(D5)
-
-#enddo
-
+        
+        #do i=1,1
+                
+                #call redD5n2(s1m,s2m,s3m,s4m,s5m,p6)
+                #call ACCU(D5)
+                
+        #enddo
+        
 * sort: n1 >= n3,n4,n5
-if ( count(intd5,1) );        
-repeat;
-        if (count(s1m,1) < count(s3m,1)) 
-        multiply replace_(s1m,s3m,s3m,s1m,s4m,s5m,s5m,s4m);
-        if (count(s1m,1) < count(s4m,1)) 
-        multiply replace_(s1m,s4m,s4m,s1m,s3m,s5m,s5m,s3m);
-        if (count(s1m,1) < count(s5m,1)) 
-        multiply replace_(s1m,s5m,s5m,s1m,s3m,s4m,s4m,s3m);
-endrepeat;
-endif;
-.sort
-
-#call mltadD5(s1m,s2m,s3m,s4m,s5m,p6)
-
-* #include expandnomdeno
-
-#do i=1,1
-
-        #call redD5n1345(s1m,s2m,s3m,s4m,s5m,p6)
+        if ( count(intd5,1) );        
+        repeat;
+                if (count(s1m,1) < count(s3m,1)) 
+                multiply replace_(s1m,s3m,s3m,s1m,s4m,s5m,s5m,s4m);
+                if (count(s1m,1) < count(s4m,1)) 
+                multiply replace_(s1m,s4m,s4m,s1m,s3m,s5m,s5m,s3m);
+                if (count(s1m,1) < count(s5m,1)) 
+                multiply replace_(s1m,s5m,s5m,s1m,s3m,s4m,s4m,s3m);
+        endrepeat;
+        endif;
         .sort
-
-        id n = num(4-2*ep);
+        
+        #call mltadD5(s1m,s2m,s3m,s4m,s5m,p6)
+        
+* #include expandnomdeno
+        
+        #do i=1,1
+                
+                #call redD5n1345(s1m,s2m,s3m,s4m,s5m,p6)
+                .sort
+                
+                id n = num(4-2*ep);
 *         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-        #call ACCU(D5)
-
-#enddo
-
-#call mltadD5(s1m,s2m,s3m,s4m,s5m,p6)
-
-id n = num(4-2*ep);
+                #call ACCU(D5)
+                
+        #enddo
+        
+        #call mltadD5(s1m,s2m,s3m,s4m,s5m,p6)
+        
+        id n = num(4-2*ep);
 * repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-#call ACCU(D5)
-
-if ( count(intd5,1) );        
-if ( (count(s2m,1)==0) && (count(p6,1)==0) );
-if (count(s1m,1) < count(s3m,1)) multiply replace_(s1m,s3m,s3m,s1m);
-if (count(s1m,1) < count(s4m,1)) multiply replace_(s1m,s4m,s4m,s1m);
-if (count(s1m,1) < count(s5m,1)) multiply replace_(s1m,s5m,s5m,s1m);
-if (count(s3m,1) < count(s4m,1)) multiply replace_(s3m,s4m,s4m,s3m);
-if (count(s3m,1) < count(s5m,1)) multiply replace_(s3m,s5m,s5m,s3m);
-if (count(s4m,1) < count(s5m,1)) multiply replace_(s4m,s5m,s5m,s4m);
-endif;
-if ( (count(s3m,1)==0) && (count(p6,1)==0) );
-if (count(s2m,1) < count(s4m,1)) multiply replace_(s2m,s4m,s4m,s2m);
-if (count(s2m,1) < count(s5m,1)) multiply replace_(s2m,s5m,s5m,s2m);
-if (count(s4m,1) < count(s5m,1)) multiply replace_(s4m,s5m,s5m,s4m);
-endif;
+        #call ACCU(D5)
+        
+        if ( count(intd5,1) );        
+        if ( (count(s2m,1)==0) && (count(p6,1)==0) );
+        if (count(s1m,1) < count(s3m,1)) multiply replace_(s1m,s3m,s3m,s1m);
+        if (count(s1m,1) < count(s4m,1)) multiply replace_(s1m,s4m,s4m,s1m);
+        if (count(s1m,1) < count(s5m,1)) multiply replace_(s1m,s5m,s5m,s1m);
+        if (count(s3m,1) < count(s4m,1)) multiply replace_(s3m,s4m,s4m,s3m);
+        if (count(s3m,1) < count(s5m,1)) multiply replace_(s3m,s5m,s5m,s3m);
+        if (count(s4m,1) < count(s5m,1)) multiply replace_(s4m,s5m,s5m,s4m);
+        endif;
+        if ( (count(s3m,1)==0) && (count(p6,1)==0) );
+        if (count(s2m,1) < count(s4m,1)) multiply replace_(s2m,s4m,s4m,s2m);
+        if (count(s2m,1) < count(s5m,1)) multiply replace_(s2m,s5m,s5m,s2m);
+        if (count(s4m,1) < count(s5m,1)) multiply replace_(s4m,s5m,s5m,s4m);
+        endif;
 * topd5
-endif;
-
-#call ACCU(D5)
-
+        endif;
+        
+        #call ACCU(D5)
+        
 * transform D5(1,1,1,1,1,0) to D5(1,1,1,1,1,1)
 *
 * or: compute D5(1,1,1,1,1,0) once and use it as master integral ?
-
-if ( (count(s1m,1)==1) && (count(s2m,1)==1) && (count(s3m,1)==1) &&
-(count(s4m,1)==1) && (count(s5m,1)==1) && (count(p6,1)==0) );
-id s1m*s2m*s3m*s4m*s5m = 
-
-M^2*nom(0,-2)*deno(2-8/3,4/3) * (
-
-s1m*s2m*s3m*s4m*s5m/p6.p6 - (
-
-+ s1m^2*s2m*s3m*s5m * (
-- 2*deno(0,-2)*p6.p6^-1
-)
-
-+ s1m^2*s2m*s4m*s5m * (
-+ 2/3*deno(0,-2)*M^-2
-)
-
-+ s1m^2*s3m*s4m*s5m * (
-- 2/3*deno(0,-2)*M^-2
-)
-)
-
-);
-endif;
-.sort
-
+        
+        if ( (count(s1m,1)==1) && (count(s2m,1)==1) && (count(s3m,1)==1) &&
+        (count(s4m,1)==1) && (count(s5m,1)==1) && (count(p6,1)==0) );
+        id s1m*s2m*s3m*s4m*s5m = 
+        
+        M^2*nom(0,-2)*deno(2-8/3,4/3) * (
+        
+        s1m*s2m*s3m*s4m*s5m/p6.p6 - (
+        
+        + s1m^2*s2m*s3m*s5m * (
+        - 2*deno(0,-2)*p6.p6^-1
+        )
+        
+        + s1m^2*s2m*s4m*s5m * (
+        + 2/3*deno(0,-2)*M^-2
+        )
+        
+        + s1m^2*s3m*s4m*s5m * (
+        - 2/3*deno(0,-2)*M^-2
+        )
+        )
+        
+        );
+        endif;
+        .sort
+        
 * sort: n5 <= n1,n3,n4
-if ( count(intd5,1) );        
-repeat;
-        if (count(s5m,1) > count(s1m,1)) 
-        multiply replace_(s5m,s1m,s1m,s5m,s4m,s3m,s3m,s4m);
-        if (count(s5m,1) > count(s3m,1)) 
-        multiply replace_(s5m,s3m,s3m,s5m,s1m,s4m,s4m,s1m);
-        if (count(s5m,1) > count(s4m,1)) 
-        multiply replace_(s5m,s4m,s4m,s5m,s3m,s1m,s1m,s3m);
-endrepeat;
-endif;
-.sort
-
-#call mltadD5(s1m,s2m,s3m,s4m,s5m,p6)
-
-#call ACCU(D5)
-
+        if ( count(intd5,1) );        
+        repeat;
+                if (count(s5m,1) > count(s1m,1)) 
+                multiply replace_(s5m,s1m,s1m,s5m,s4m,s3m,s3m,s4m);
+                if (count(s5m,1) > count(s3m,1)) 
+                multiply replace_(s5m,s3m,s3m,s5m,s1m,s4m,s4m,s1m);
+                if (count(s5m,1) > count(s4m,1)) 
+                multiply replace_(s5m,s4m,s4m,s5m,s3m,s1m,s1m,s3m);
+        endrepeat;
+        endif;
+        .sort
+        
+        #call mltadD5(s1m,s2m,s3m,s4m,s5m,p6)
+        
+        #call ACCU(D5)
+        
 ************************************************************
-
+        
 * identify simple integrals
-if ( count(intd5,1) );        
-if ( (count(s2m,1)<=0) );
-id 1/s2m=p2.p2+M^2; 
-id p2=p1+p3;
-id p1=-p1;
-id p4=-p4;
-id p5=-p5;
-multiply replace_(p1,p4,p3,p6,p4,p5,p5,p3,p6,p1,
-s1m,s4m,s3m,s6m,s4m,s5m,s5m,s3m);
-
+        if ( count(intd5,1) );        
+        if ( (count(s2m,1)<=0) );
+        id 1/s2m=p2.p2+M^2; 
+        id p2=p1+p3;
+        id p1=-p1;
+        id p4=-p4;
+        id p5=-p5;
+        multiply replace_(p1,p4,p3,p6,p4,p5,p5,p3,p6,p1,
+        s1m,s4m,s3m,s6m,s4m,s5m,s5m,s3m);
+        
 *** needed because of topBN
-id 1/s3m=p3.p3+M^2;
+        id 1/s3m=p3.p3+M^2;
+        multiply, intbn/intd5;
 
-multiply, intbn/intd5;
-elseif ( (count(s5m,1)<=0) );
-id 1/s5m=p5.p5+M^2; 
-id p5=-p5;
-multiply replace_(p2,p4,p3,p6,p4,p2,p6,p3,
-s2m,s4m,s3m,s6m,s4m,s2m);
-multiply, intd4/intd5;
-elseif ( (count(s1m,1)==1) && (count(s2m,1)==1) && (count(s3m,1)==1) && 
-(count(s4m,1)==1) && (count(s5m,1)==1) && (count(p6.p6,1)==-1) );
-id s1m*s2m*s3m*s4m*s5m/p6.p6 = miD5;
-Multiply int0/intd5;
-else;
-multiply 1/(1-1);
-endif;
-endif;
+        elseif ( (count(s5m,1)<=0) );
+        id 1/s5m=p5.p5+M^2; 
+        id p5=-p5;
+        multiply replace_(p2,p4,p3,p6,p4,p2,p6,p3,
+        s2m,s4m,s3m,s6m,s4m,s2m);
+        multiply, intd4/intd5;
+
+        elseif ( (count(s1m,1)==1) && (count(s2m,1)==1) && (count(s3m,1)==1) && 
+        (count(s4m,1)==1) && (count(s5m,1)==1) && (count(p6.p6,1)==-1) );
+        id s1m*s2m*s3m*s4m*s5m/p6.p6 = miD5;
+        Multiply int0/intd5;
+
+        else;
+        multiply 1/(1-1);
+        endif;
+        endif;
 *#include expandnomdeno
-
-#message - done
+        
+        #message - done
 #endprocedure
 
 
@@ -3004,7 +2654,7 @@ endif;
 
 
 #procedure mltadD4(s1m,s2m,p3,s4m,p5,s6m)
-
+        
 * discard massless tadpoles
         if ( count(intd4,1) );
         if ( (count(`s1m',1)<=0) && (count(`s6m',1)<=0) ) discard;
@@ -5717,721 +5367,1386 @@ endif;
 #endprocedure        
 
 
-
-#procedure BNd0
-id,only dala^( 0 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 1 )= M^(12-2*(4))*acc(
-      275/12 + 2*ep^-3 + 23/3*ep^-2 + 3*ep^-1*z2 + 35/2*ep^-1 + 89/3*ep*z3 + 3/
-      2*ep*z4 + 105/4*ep*z2 + 9/4*ep*z2^2 - 189/8*ep - 3*ep^2*z3*z2 + 525/2*
-      ep^2*z3 - 649/4*ep^2*z4 - 6/5*ep^2*z5 + 275/8*ep^2*z2 + 69/8*ep^2*z2^2
-       + 16*ep^2*B4 - 14917/48*ep^2 - 2*z3 + 23/2*z2
-);
-id,only dala^( 0 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 2 )= M^(12-2*(5))*acc(
-      5/3 - ep^-3 - 7/3*ep^-2 - 3/2*ep^-1*z2 - 3*ep^-1 - 49/3*ep*z3 - 3/4*ep*
-      z4 - 9/2*ep*z2 - 9/8*ep*z2^2 + 29*ep + 3/2*ep^2*z3*z2 - 109*ep^2*z3 + 
-      329/4*ep^2*z4 + 3/5*ep^2*z5 + 5/2*ep^2*z2 - 21/8*ep^2*z2^2 - 8*ep^2*B4
-       + 413/3*ep^2 + z3 - 7/2*z2
-);
-id,only dala^( 0 )*x3^( 1 )*x4^( 1 )*x5^( 2 )*x6^( 2 )= M^(12-2*(6))*acc(
-      1/3 + 1/3*ep^-3 + 1/3*ep^-2 + 1/2*ep^-1*z2 + 1/3*ep^-1 - 8/3*ep*z3 + 43/
-      4*ep*z4 + 1/2*ep*z2 + 3/8*ep*z2^2 - ep*B4 + 1/3*ep - 39/32*ep^2*z3*z2 + 
-      5151/64*ep^2*z3 + 1/16*ep^2*z3^2 + 9/64*ep^2*z4*z2 - 8599/128*ep^2*z4 - 
-      39/80*ep^2*z5 + 1/16*ep^2*z6 - 439/256*ep^2*z2 + 411/256*ep^2*z2^2 + 9/
-      128*ep^2*z2^3 - 1/16*ep^2*ggam + 13/2*ep^2*B4 - 143503/1536*ep^2 - 8/3*
-      z3 + 1/2*z2
-);
-id,only dala^( 0 )*x3^( 1 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(7))*acc(
-       - 63/8*ep*z4 + 3/4*ep*B4 + 69/128*ep^2*z3*z2 - 15965/256*ep^2*z3 - 3/64
-      *ep^2*z3^2 - 27/256*ep^2*z4*z2 + 29925/512*ep^2*z4 + 69/320*ep^2*z5 - 3/
-      64*ep^2*z6 + 1701/1024*ep^2*z2 - 945/1024*ep^2*z2^2 - 27/512*ep^2*z2^3
-       + 3/64*ep^2*ggam - 45/8*ep^2*B4 + 144015/2048*ep^2 + 7/4*z3
-);
-id,only dala^( 0 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(8))*acc(
-       - 3/8 + 63/32*ep*z3 - 63/32*ep*z4 + 3/16*ep*B4 + 69/512*ep^2*z3*z2 - 
-      13949/1024*ep^2*z3 - 3/256*ep^2*z3^2 - 27/1024*ep^2*z4*z2 + 11781/2048*
-      ep^2*z4 + 69/1280*ep^2*z5 - 3/256*ep^2*z6 - 603/4096*ep^2*z2 - 945/4096*
-      ep^2*z2^2 - 27/2048*ep^2*z2^3 + 3/256*ep^2*ggam - 9/16*ep^2*B4 + 140943/
-      8192*ep^2 + 7/16*z3
-);
-        
-#endprocedure        
-
-#procedure BNd
-id,only dala^( 1 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 1 )= M^(12-2*(5))*acc(
-      104/3 + 8/3*ep^-2 + 32/3*ep^-1 - 316/3*ep*z3 + 126*ep*z4 + 16*ep*z2 - 12
-      *ep*B4 + 320/3*ep - 69/8*ep^2*z3*z2 + 31703/48*ep^2*z3 + 3/4*ep^2*z3^2
-       + 27/16*ep^2*z4*z2 - 15077/32*ep^2*z4 - 69/20*ep^2*z5 + 3/4*ep^2*z6 + 
-      1627/64*ep^2*z2 + 1137/64*ep^2*z2^2 + 27/32*ep^2*z2^3 - 3/4*ep^2*ggam + 
-      46*ep^2*B4 - 308141/384*ep^2 - 28*z3 + 4*z2
-);
-id,only dala^( 1 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 2 )= M^(12-2*(6))*acc(
-       - 2/3 - 2/3*ep^-2 - 2/3*ep^-1 + 16/3*ep*z3 - 63/2*ep*z4 - ep*z2 + 3*ep*
-      B4 - 2/3*ep + 69/32*ep^2*z3*z2 - 46871/192*ep^2*z3 - 3/16*ep^2*z3^2 - 27/
-      64*ep^2*z4*z2 + 27173/128*ep^2*z4 + 69/80*ep^2*z5 - 3/16*ep^2*z6 + 1445/
-      256*ep^2*z2 - 1137/256*ep^2*z2^2 - 27/128*ep^2*z2^3 + 3/16*ep^2*ggam - 
-      41/2*ep^2*B4 + 431021/1536*ep^2 + 7*z3 - z2
-);
-id,only dala^( 1 )*x3^( 1 )*x4^( 1 )*x5^( 2 )*x6^( 2 )= M^(12-2*(7))*acc(
-       - 1/2 + 21/8*ep*z3 + 63/8*ep*z4 - 3/4*ep*B4 - 69/128*ep^2*z3*z2 + 16637/
-      256*ep^2*z3 + 3/64*ep^2*z3^2 + 27/256*ep^2*z4*z2 - 35973/512*ep^2*z4 - 
-      69/320*ep^2*z5 + 3/64*ep^2*z6 - 2469/1024*ep^2*z2 + 945/1024*ep^2*z2^2
-       + 27/512*ep^2*z2^3 - 3/64*ep^2*ggam + 27/4*ep^2*B4 - 145039/2048*ep^2
-       - 7/4*z3
-);
-id,only dala^( 1 )*x3^( 1 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(8))*acc(
-      3/4 - 7/2*ep*z3 + 63/16*ep*z4 - 3/8*ep*B4 - 3/8*ep - 69/256*ep^2*z3*z2
-       + 14957/512*ep^2*z3 + 3/128*ep^2*z3^2 + 27/512*ep^2*z4*z2 - 13797/1024*
-      ep^2*z4 - 69/640*ep^2*z5 + 3/128*ep^2*z6 + 603/2048*ep^2*z2 + 945/2048*
-      ep^2*z2^2 + 27/1024*ep^2*z2^3 - 3/128*ep^2*ggam + 21/16*ep^2*B4 - 140943/
-      4096*ep^2 - 7/8*z3
-);
-id,only dala^( 1 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(9))*acc(
-      27/32 - 1183/256*ep*z3 + 441/128*ep*z4 - 21/64*ep*B4 + 153/128*ep - 483/
-      2048*ep^2*z3*z2 + 75803/4096*ep^2*z3 + 21/1024*ep^2*z3^2 + 189/4096*ep^2
-      *z4*z2 - 39123/8192*ep^2*z4 - 483/5120*ep^2*z5 + 21/1024*ep^2*z6 + 8829/
-      16384*ep^2*z2 + 6615/16384*ep^2*z2^2 + 189/8192*ep^2*z2^3 - 21/1024*ep^2
-      *ggam + 123/256*ep^2*B4 - 983913/32768*ep^2 - 49/64*z3
-);
-id,only dala^( 2 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 1 )= M^(12-2*(6))*acc(
-       - 2/3 + 16/3*ep^-1 - 49/2*ep*z3 + 189/2*ep*z4 + 8*ep*z2 - 9*ep*B4 + 16/
-      3*ep - 207/32*ep^2*z3*z2 + 141541/192*ep^2*z3 + 9/16*ep^2*z3^2 + 81/64*
-      ep^2*z4*z2 - 75663/128*ep^2*z4 - 207/80*ep^2*z5 + 9/16*ep^2*z6 - 5359/
-      256*ep^2*z2 + 2835/256*ep^2*z2^2 + 81/128*ep^2*z2^3 - 9/16*ep^2*ggam + 
-      57*ep^2*B4 - 1297159/1536*ep^2 - 21*z3
-);
-id,only dala^( 2 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 2 )= M^(12-2*(7))*acc(
-      4 - 63/4*ep*z3 - 1/2*ep - 147/8*ep^2*z3 + 567/8*ep^2*z4 + 6*ep^2*z2 - 27/
-      4*ep^2*B4 + 4*ep^2
-);
-id,only dala^( 2 )*x3^( 1 )*x4^( 1 )*x5^( 2 )*x6^( 2 )= M^(12-2*(8))*acc(
-       - 7/8 + 203/64*ep*z3 - 189/32*ep*z4 + 9/16*ep*B4 + 83/32*ep + 207/512*
-      ep^2*z3*z2 - 54503/1024*ep^2*z3 - 9/256*ep^2*z3^2 - 81/1024*ep^2*z4*z2
-       + 60543/2048*ep^2*z4 + 207/1280*ep^2*z5 - 9/256*ep^2*z6 - 273/4096*ep^2
-      *z2 - 2835/4096*ep^2*z2^2 - 81/2048*ep^2*z2^3 + 9/256*ep^2*ggam - 183/64
-      *ep^2*B4 + 423725/8192*ep^2 + 21/16*z3
-);
-id,only dala^( 2 )*x3^( 1 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(9))*acc(
-       - 81/32 + 3353/256*ep*z3 - 1323/128*ep*z4 + 63/64*ep*B4 - 351/128*ep + 
-      1449/2048*ep^2*z3*z2 - 246337/4096*ep^2*z3 - 63/1024*ep^2*z3^2 - 567/
-      4096*ep^2*z4*z2 + 145593/8192*ep^2*z4 + 1449/5120*ep^2*z5 - 63/1024*ep^2
-      *z6 - 26487/16384*ep^2*z2 - 19845/16384*ep^2*z2^2 - 567/8192*ep^2*z2^3
-       + 63/1024*ep^2*ggam - 453/256*ep^2*B4 + 2990907/32768*ep^2 + 147/64*z3
-);
-id,only dala^( 2 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(10))*acc(
-       - 37/8 + 14007/512*ep*z3 - 567/32*ep*z4 + 27/16*ep*B4 - 8119/768*ep + 
-      621/512*ep^2*z3*z2 - 150009/2048*ep^2*z3 - 27/256*ep^2*z3^2 - 243/1024*
-      ep^2*z4*z2 + 17199/2048*ep^2*z4 + 621/1280*ep^2*z5 - 27/256*ep^2*z6 - 
-      13107/4096*ep^2*z2 - 8505/4096*ep^2*z2^2 - 243/2048*ep^2*z2^3 + 27/256*
-      ep^2*ggam - 477/512*ep^2*B4 + 10943303/73728*ep^2 + 63/16*z3
-);
-id,only dala^( 3 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 1 )= M^(12-2*(7))*acc(
-       - 53/2 + 1617/16*ep*z3 - 567/8*ep*z4 + 27/4*ep*B4 + 9/8*ep + 621/128*
-      ep^2*z3*z2 - 112437/256*ep^2*z3 - 27/64*ep^2*z3^2 - 243/256*ep^2*z4*z2
-       + 36477/512*ep^2*z4 + 621/320*ep^2*z5 - 27/64*ep^2*z6 - 25395/1024*ep^2
-      *z2 - 8505/1024*ep^2*z2^2 - 243/512*ep^2*z2^3 + 27/64*ep^2*ggam - 117/16
-      *ep^2*B4 + 1246599/2048*ep^2 + 63/4*z3
-);
-id,only dala^( 3 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 2 )= M^(12-2*(8))*acc(
-       - 53/8 + 2373/64*ep*z3 - 567/32*ep*z4 + 27/16*ep*B4 - 627/32*ep + 621/
-      512*ep^2*z3*z2 - 34821/1024*ep^2*z3 - 27/256*ep^2*z3^2 - 243/1024*ep^2*
-      z4*z2 - 72387/2048*ep^2*z4 + 621/1280*ep^2*z5 - 27/256*ep^2*z6 - 25395/
-      4096*ep^2*z2 - 8505/4096*ep^2*z2^2 - 243/2048*ep^2*z2^3 + 27/256*ep^2*
-      ggam + 207/64*ep^2*B4 + 1253511/8192*ep^2 + 63/16*z3
-);
-id,only dala^( 3 )*x3^( 1 )*x4^( 1 )*x5^( 2 )*x6^( 2 )= M^(12-2*(9))*acc(
-      95/24 - 2037/128*ep*z3 + 567/32*ep*z4 - 27/16*ep*B4 - 1801/576*ep - 621/
-      512*ep^2*z3*z2 + 146331/1024*ep^2*z3 + 27/256*ep^2*z3^2 + 243/1024*ep^2*
-      z4*z2 - 122661/2048*ep^2*z4 - 621/1280*ep^2*z5 + 27/256*ep^2*z6 + 9011/
-      4096*ep^2*z2 + 8505/4096*ep^2*z2^2 + 243/2048*ep^2*z2^3 - 27/256*ep^2*
-      ggam + 747/128*ep^2*B4 - 36981277/221184*ep^2 - 63/16*z3
-);
-id,only dala^( 3 )*x3^( 1 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(10))*acc(
-      37/2 - 13503/128*ep*z3 + 567/8*ep*z4 - 27/4*ep*B4 + 7231/192*ep - 621/
-      128*ep^2*z3*z2 + 10251/32*ep^2*z3 + 27/64*ep^2*z3^2 + 243/256*ep^2*z4*z2
-       - 26271/512*ep^2*z4 - 621/320*ep^2*z5 + 27/64*ep^2*z6 + 13107/1024*ep^2
-      *z2 + 8505/1024*ep^2*z2^2 + 243/512*ep^2*z2^3 - 27/64*ep^2*ggam + 693/
-      128*ep^2*B4 - 11138159/18432*ep^2 - 63/4*z3
-);
-id,only dala^( 3 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(11))*acc(
-      25555/512 - 2592219/8192*ep*z3 + 384993/2048*ep*z4 - 18333/1024*ep*B4 + 
-      1778323/12288*ep - 421659/32768*ep^2*z3*z2 + 38887947/65536*ep^2*z3 + 
-      18333/16384*ep^2*z3^2 + 164997/65536*ep^2*z4*z2 + 3768093/131072*ep^2*z4
-       - 421659/81920*ep^2*z5 + 18333/16384*ep^2*z6 + 9231429/262144*ep^2*z2
-       + 5774895/262144*ep^2*z2^2 + 164997/131072*ep^2*z2^3 - 18333/16384*ep^2
-      *ggam - 10971/8192*ep^2*B4 - 7085415833/4718592*ep^2 - 42777/1024*z3
-);
-id,only dala^( 4 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 1 )= M^(12-2*(8))*acc(
-      201/2 - 16611/32*ep*z3 + 2835/8*ep*z4 - 135/4*ep*B4 + 8267/48*ep - 3105/
-      128*ep^2*z3*z2 + 432699/256*ep^2*z3 + 135/64*ep^2*z3^2 + 1215/256*ep^2*
-      z4*z2 - 150633/512*ep^2*z4 - 621/64*ep^2*z5 + 135/64*ep^2*z6 + 77823/
-      1024*ep^2*z2 + 42525/1024*ep^2*z2^2 + 1215/512*ep^2*z2^3 - 135/64*ep^2*
-      ggam + 981/32*ep^2*B4 - 56655259/18432*ep^2 - 315/4*z3
-);
-id,only dala^( 4 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 2 )= M^(12-2*(9))*acc(
-      201/4 - 20391/64*ep*z3 + 2835/16*ep*z4 - 135/8*ep*B4 + 15503/96*ep - 
-      3105/256*ep^2*z3*z2 + 233367/512*ep^2*z3 + 135/128*ep^2*z3^2 + 1215/512*
-      ep^2*z4*z2 + 121527/1024*ep^2*z4 - 621/128*ep^2*z5 + 135/128*ep^2*z6 + 
-      77823/2048*ep^2*z2 + 42525/2048*ep^2*z2^2 + 1215/1024*ep^2*z2^3 - 135/
-      128*ep^2*ggam - 639/64*ep^2*B4 - 51893467/36864*ep^2 - 315/8*z3
-);
-id,only dala^( 4 )*x3^( 1 )*x4^( 1 )*x5^( 2 )*x6^( 2 )= M^(12-2*(10))*acc(
-       - 4111/128 + 288183/2048*ep*z3 - 65205/512*ep*z4 + 3105/256*ep*B4 - 
-      24271/3072*ep + 71415/8192*ep^2*z3*z2 - 15029415/16384*ep^2*z3 - 3105/
-      4096*ep^2*z3^2 - 27945/16384*ep^2*z4*z2 + 10223199/32768*ep^2*z4 + 14283/
-      4096*ep^2*z5 - 3105/4096*ep^2*z6 - 1396713/65536*ep^2*z2 - 978075/65536*
-      ep^2*z2^2 - 27945/32768*ep^2*z2^3 + 3105/4096*ep^2*ggam - 62793/2048*
-      ep^2*B4 + 1440019661/1179648*ep^2 + 7245/256*z3
-);
-id,only dala^( 4 )*x3^( 1 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(11))*acc(
-       - 127775/512 + 12618879/8192*ep*z3 - 1924965/2048*ep*z4 + 91665/1024*ep
-      *B4 - 8278295/12288*ep + 2108295/32768*ep^2*z3*z2 - 215177487/65536*ep^2
-      *z3 - 91665/16384*ep^2*z3^2 - 824985/65536*ep^2*z4*z2 + 5799087/131072*
-      ep^2*z4 + 421659/16384*ep^2*z5 - 91665/16384*ep^2*z6 - 46157145/262144*
-      ep^2*z2 - 28874475/262144*ep^2*z2^2 - 824985/131072*ep^2*z2^3 + 91665/
-      16384*ep^2*ggam - 91809/8192*ep^2*B4 + 36109955197/4718592*ep^2 + 213885/
-      1024*z3
-);
-id,only dala^( 4 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(12))*acc(
-       - 9304913/10240 + 199689105/32768*ep*z3 - 27910575/8192*ep*z4 + 1329075/
-      4096*ep*B4 - 3762879793/1228800*ep + 30568725/131072*ep^2*z3*z2 - 
-      2101636785/262144*ep^2*z3 - 1329075/65536*ep^2*z3^2 - 11961675/262144*
-      ep^2*z4*z2 - 1120092435/524288*ep^2*z4 + 6113745/65536*ep^2*z5 - 1329075/
-      65536*ep^2*z6 - 3378245559/5242880*ep^2*z2 - 418658625/1048576*ep^2*z2^2
-       - 11961675/524288*ep^2*z2^3 + 1329075/65536*ep^2*ggam + 5836545/32768*
-      ep^2*B4 + 61207571383387/2359296000*ep^2 + 3101175/4096*z3
-);
-id,only dala^( 5 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 1 )= M^(12-2*(9))*acc(
-       - 31629/32 + 2983365/512*ep*z3 - 467775/128*ep*z4 + 22275/64*ep*B4 - 
-      623279/256*ep + 512325/2048*ep^2*z3*z2 - 57051285/4096*ep^2*z3 - 22275/
-      1024*ep^2*z3^2 - 200475/4096*ep^2*z4*z2 + 7390845/8192*ep^2*z4 + 102465/
-      1024*ep^2*z5 - 22275/1024*ep^2*z6 - 11661147/16384*ep^2*z2 - 7016625/
-      16384*ep^2*z2^2 - 200475/8192*ep^2*z2^3 + 22275/1024*ep^2*ggam - 57915/
-      512*ep^2*B4 + 991203343/32768*ep^2 + 51975/64*z3
-);
-id,only dala^( 5 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 2 )= M^(12-2*(10))*acc(
-       - 94887/128 + 10197495/2048*ep*z3 - 1403325/512*ep*z4 + 66825/256*ep*B4
-       - 2628933/1024*ep + 1536975/8192*ep^2*z3*z2 - 99553095/16384*ep^2*z3 - 
-      66825/4096*ep^2*z3^2 - 601425/16384*ep^2*z4*z2 - 67640265/32768*ep^2*z4
-       + 307395/4096*ep^2*z5 - 66825/4096*ep^2*z6 - 34983441/65536*ep^2*z2 - 
-      21049875/65536*ep^2*z2^2 - 601425/32768*ep^2*z2^3 + 66825/4096*ep^2*ggam
-       + 360855/2048*ep^2*B4 + 2734270893/131072*ep^2 + 155925/256*z3
-);
-id,only dala^( 5 )*x3^( 1 )*x4^( 1 )*x5^( 2 )*x6^( 2 )= M^(12-2*(11))*acc(
-      1157529/2560 - 17562825/8192*ep*z3 + 3529575/2048*ep*z4 - 168075/1024*ep
-      *B4 + 41807523/102400*ep - 3865725/32768*ep^2*z3*z2 + 733970985/65536*
-      ep^2*z3 + 168075/16384*ep^2*z3^2 + 1512675/65536*ep^2*z4*z2 - 412024725/
-      131072*ep^2*z4 - 773145/16384*ep^2*z5 + 168075/16384*ep^2*z6 + 412489647/
-      1310720*ep^2*z2 + 52943625/262144*ep^2*z2^2 + 1512675/131072*ep^2*z2^3
-       - 168075/16384*ep^2*ggam + 2557575/8192*ep^2*B4 - 1076567281819/
-      65536000*ep^2 - 392175/1024*z3
-);
-id,only dala^( 5 )*x3^( 1 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(12))*acc(
-      27914739/5120 - 586662615/16384*ep*z3 + 83731725/4096*ep*z4 - 3987225/
-      2048*ep*B4 + 3576781533/204800*ep - 91706175/65536*ep^2*z3*z2 + 
-      7103666775/131072*ep^2*z3 + 3987225/32768*ep^2*z3^2 + 35885025/131072*
-      ep^2*z4*z2 + 2467138905/262144*ep^2*z4 - 18341235/32768*ep^2*z5 + 
-      3987225/32768*ep^2*z6 + 10134736677/2621440*ep^2*z2 + 1255975875/524288*
-      ep^2*z2^2 + 35885025/262144*ep^2*z2^3 - 3987225/32768*ep^2*ggam - 
-      12193335/16384*ep^2*B4 - 20803897639049/131072000*ep^2 - 9303525/2048*z3
-      
-);
-id,only dala^( 5 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(13))*acc(
-      257571657/10240 - 11565975015/65536*ep*z3 + 771701175/8192*ep*z4 - 
-      36747675/4096*ep*B4 + 77284295253/819200*ep - 845196525/131072*ep^2*z3*
-      z2 + 82356662835/524288*ep^2*z3 + 36747675/65536*ep^2*z3^2 + 330729075/
-      262144*ep^2*z4*z2 + 49817042415/524288*ep^2*z4 - 169039305/65536*ep^2*z5
-       + 36747675/65536*ep^2*z6 + 93635373951/5242880*ep^2*z2 + 11575517625/
-      1048576*ep^2*z2^2 + 330729075/524288*ep^2*z2^3 - 36747675/65536*ep^2*
-      ggam - 547125435/65536*ep^2*B4 - 179459708314467/262144000*ep^2 - 
-      85744575/4096*z3
-);
-id,only dala^( 6 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 1 )= M^(12-2*(10))*acc(
-      11063547/640 - 225827595/2048*ep*z3 + 33041925/512*ep*z4 - 1573425/256*
-      ep*B4 + 1328814969/25600*ep - 36188775/8192*ep^2*z3*z2 + 3142122795/
-      16384*ep^2*z3 + 1573425/4096*ep^2*z3^2 + 14160825/16384*ep^2*z4*z2 + 
-      564672465/32768*ep^2*z4 - 7237755/4096*ep^2*z5 + 1573425/4096*ep^2*z6 + 
-      4036144221/327680*ep^2*z2 + 495628875/65536*ep^2*z2^2 + 14160825/32768*
-      ep^2*z2^3 - 1573425/4096*ep^2*ggam - 2377755/2048*ep^2*B4 - 
-      8361740207457/16384000*ep^2 - 3671325/256*z3
-);
-id,only dala^( 6 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 2 )= M^(12-2*(11))*acc(
-      11063547/640 - 247855545/2048*ep*z3 + 33041925/512*ep*z4 - 1573425/256*
-      ep*B4 + 1660721379/25600*ep - 36188775/8192*ep^2*z3*z2 + 1787157225/
-      16384*ep^2*z3 + 1573425/4096*ep^2*z3^2 + 14160825/16384*ep^2*z4*z2 + 
-      2150684865/32768*ep^2*z4 - 7237755/4096*ep^2*z5 + 1573425/4096*ep^2*z6
-       + 4036144221/327680*ep^2*z2 + 495628875/65536*ep^2*z2^2 + 14160825/
-      32768*ep^2*z2^3 - 1573425/4096*ep^2*ggam - 11818305/2048*ep^2*B4 - 
-      7723909022337/16384000*ep^2 - 3671325/256*z3
-);
-id,only dala^( 6 )*x3^( 1 )*x4^( 1 )*x5^( 2 )*x6^( 2 )= M^(12-2*(12))*acc(
-       - 25801737/2560 + 837975915/16384*ep*z3 - 77693175/2048*ep*z4 + 3699675/
-      1024*ep*B4 - 2852820513/204800*ep + 85092525/32768*ep^2*z3*z2 - 
-      29377113255/131072*ep^2*z3 - 3699675/16384*ep^2*z3^2 - 33297075/65536*
-      ep^2*z4*z2 + 6737125185/131072*ep^2*z4 + 17018505/16384*ep^2*z5 - 
-      3699675/16384*ep^2*z6 - 9327155391/1310720*ep^2*z2 - 1165397625/262144*
-      ep^2*z2^2 - 33297075/131072*ep^2*z2^3 + 3699675/16384*ep^2*ggam - 
-      84828465/16384*ep^2*B4 + 23395687784707/65536000*ep^2 + 8632575/1024*z3
-);
-id,only dala^( 6 )*x3^( 1 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(13))*acc(
-       - 1803001599/10240 + 79589911905/65536*ep*z3 - 5401908225/8192*ep*z4 + 
-      257233725/4096*ep*B4 - 520384334211/819200*ep + 5916375675/131072*ep^2*
-      z3*z2 - 669024439965/524288*ep^2*z3 - 257233725/65536*ep^2*z3^2 - 
-      2315103525/262144*ep^2*z4*z2 - 299330421705/524288*ep^2*z4 + 1183275135/
-      65536*ep^2*z5 - 257233725/65536*ep^2*z6 - 655447617657/5242880*ep^2*z2
-       - 81028623375/1048576*ep^2*z2^2 - 2315103525/524288*ep^2*z2^3 + 
-      257233725/65536*ep^2*ggam + 3241915245/65536*ep^2*B4 + 1280948932682229/
-      262144000*ep^2 + 600212025/4096*z3
-);
-id,only dala^( 6 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(14))*acc(
-       - 141289369929/143360 + 940453299765/131072*ep*z3 - 60455113425/16384*
-      ep*z4 + 2878814925/8192*ep*B4 - 322042661882127/80281600*ep + 
-      66212743275/262144*ep^2*z3*z2 - 4126734725715/1048576*ep^2*z3 - 
-      2878814925/131072*ep^2*z3^2 - 25909334325/524288*ep^2*z4*z2 - 
-      5140139914665/1048576*ep^2*z4 + 13242548655/131072*ep^2*z5 - 2878814925/
-      131072*ep^2*z6 - 51380153918847/73400320*ep^2*z2 - 906826701375/2097152*
-      ep^2*z2^2 - 25909334325/1048576*ep^2*z2^3 + 2878814925/131072*ep^2*ggam
-       + 57593623185/131072*ep^2*B4 + 4608098483075964771/179830784000*ep^2 + 
-      6717234825/8192*z3
-);
-id,only dala^( 7 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 1 )= M^(12-2*(11))*acc(
-       - 298676151/640 + 12898079145/4096*ep*z3 - 893918025/512*ep*z4 + 
-      42567525/256*ep*B4 - 82067986779/51200*ep + 979053075/8192*ep^2*z3*z2 - 
-      127892119005/32768*ep^2*z3 - 42567525/4096*ep^2*z3^2 - 383107725/16384*
-      ep^2*z4*z2 - 39719787345/32768*ep^2*z4 + 195810615/4096*ep^2*z5 - 
-      42567525/4096*ep^2*z6 - 108704350593/327680*ep^2*z2 - 13408770375/65536*
-      ep^2*z2^2 - 383107725/32768*ep^2*z2^3 + 42567525/4096*ep^2*ggam + 
-      419645205/4096*ep^2*B4 + 216162350340381/16384000*ep^2 + 99324225/256*z3
-      
-);
-id,only dala^( 7 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 2 )= M^(12-2*(12))*acc(
-       - 298676151/512 + 69257958525/16384*ep*z3 - 4469590125/2048*ep*z4 + 
-      212837625/1024*ep*B4 - 96404442027/40960*ep + 4895265375/32768*ep^2*z3*
-      z2 - 329906695545/131072*ep^2*z3 - 212837625/16384*ep^2*z3^2 - 
-      1915538625/65536*ep^2*z4*z2 - 370231197525/131072*ep^2*z4 + 979053075/
-      16384*ep^2*z5 - 212837625/16384*ep^2*z6 - 108704350593/262144*ep^2*z2 - 
-      67043851875/262144*ep^2*z2^2 - 1915538625/131072*ep^2*z2^3 + 212837625/
-      16384*ep^2*ggam + 4141467225/16384*ep^2*B4 + 200405296878813/13107200*
-      ep^2 + 496621125/1024*z3
-);
-id,only dala^( 7 )*x3^( 1 )*x4^( 1 )*x5^( 2 )*x6^( 2 )= M^(12-2*(13))*acc(
-      11801595591/35840 - 57935155635/32768*ep*z3 + 5057200575/4096*ep*z4 - 
-      240819075/2048*ep*B4 + 11646997128873/20070400*ep - 5538838725/65536*
-      ep^2*z3*z2 + 1746535811265/262144*ep^2*z3 + 240819075/32768*ep^2*z3^2 + 
-      2167371675/131072*ep^2*z4*z2 - 316504670265/262144*ep^2*z4 - 1107767745/
-      32768*ep^2*z5 + 240819075/32768*ep^2*z6 + 4284570870513/18350080*ep^2*z2
-       + 75858008625/524288*ep^2*z2^2 + 2167371675/262144*ep^2*z2^3 - 
-      240819075/32768*ep^2*ggam + 4068936585/32768*ep^2*B4 - 
-      514339430554699629/44957696000*ep^2 - 561911175/2048*z3
-);
-id,only dala^( 7 )*x3^( 1 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(14))*acc(
-      141289369929/17920 - 927018830115/16384*ep*z3 + 60455113425/2048*ep*z4
-       - 2878814925/1024*ep*B4 + 312152405987097/10035200*ep - 66212743275/
-      32768*ep^2*z3*z2 + 633398503185/16384*ep^2*z3 + 2878814925/16384*ep^2*
-      z3^2 + 25909334325/65536*ep^2*z4*z2 + 4656499007265/131072*ep^2*z4 - 
-      13242548655/16384*ep^2*z5 + 2878814925/16384*ep^2*z6 + 51380153918847/
-      9175040*ep^2*z2 + 906826701375/262144*ep^2*z2^2 + 25909334325/131072*
-      ep^2*z2^3 - 2878814925/16384*ep^2*ggam - 51835993335/16384*ep^2*B4 - 
-      4698270428402960331/22478848000*ep^2 - 6717234825/1024*z3
-);
-id,only dala^( 7 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(15))*acc(
-      238220921651049/4587520 - 1635454218850515/4194304*ep*z3 + 
-      101922601597425/524288*ep*z4 - 4853457218925/262144*ep*B4 + 
-      579727015161350697/2569011200*ep - 111629516035275/8388608*ep^2*z3*z2 + 
-      1727778383527455/16777216*ep^2*z3 + 4853457218925/4194304*ep^2*z3^2 + 
-      43681114970325/16777216*ep^2*z4*z2 + 10463116119841665/33554432*ep^2*z4
-       - 22325903207055/4194304*ep^2*z5 + 4853457218925/4194304*ep^2*z6 + 
-      86636809318439007/2348810240*ep^2*z2 + 1528839023961375/67108864*ep^2*
-      z2^2 + 43681114970325/33554432*ep^2*z2^3 - 4853457218925/4194304*ep^2*
-      ggam - 118494084664935/4194304*ep^2*B4 - 7432274218099299127131/
-      5754585088000*ep^2 - 11324733510825/262144*z3
-);
-id,only dala^( 8 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 1 )= M^(12-2*(12))*acc(
-      160848770193/8960 - 1036684721205/8192*ep*z3 + 68806683225/1024*ep*z4 - 3276508725/512*ep*B4 + 341786261184399/5017600*ep - 75359700675/16384*ep^2*z3*z2 + 6982233107535/65536*ep^2*z3 + 
-      3276508725/8192*ep^2*z3^2 + 29488578525/32768*ep^2*z4*z2 + 4637475431505/65536*ep^2*z4 - 15071940135/8192*ep^2*z5 + 3276508725/8192*ep^2*z6 + 58509539860599/4587520*ep^2*z2 + 1032100248375/
-      131072*ep^2*z2^2 + 29488578525/65536*ep^2*z2^3 - 3276508725/8192*ep^2*ggam - 51112404945/8192*ep^2*B4 - 5455732270292400027/11239424000*ep^2 - 7645187025/512*z3
-);
-id,only dala^( 8 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 2 )= M^(12-2*(13))*acc(
-      482546310579/17920 - 3293538652215/16384*ep*z3 + 206420049675/2048*ep*z4 - 9829526175/1024*ep*B4 + 1160471750515317/10035200*ep - 226079102025/32768*ep^2*z3*z2 + 8506482668145/131072*ep^2*z3 + 
-      9829526175/16384*ep^2*z3^2 + 88465735575/65536*ep^2*z4*z2 + 20517867884115/131072*ep^2*z4 - 45215820405/16384*ep^2*z5 + 9829526175/16384*ep^2*z6 + 175528619581797/9175040*ep^2*z2 + 
-      3096300745125/262144*ep^2*z2^2 + 88465735575/131072*ep^2*z2^3 - 9829526175/16384*ep^2*ggam - 231973424235/16384*ep^2*B4 - 15218794973297619441/22478848000*ep^2 - 22935561075/1024*z3
-);
-id,only dala^( 8 )*x3^( 1 )*x4^( 1 )*x5^( 2 )*x6^( 2 )= M^(12-2*(14))*acc(
-       - 17046569321181/1146880 + 87693448408335/1048576*ep*z3 - 7296490232325/131072*ep*z4 + 347451915825/65536*ep*B4 - 19853704100074653/642252800*ep + 7991394063975/2097152*ep^2*z3*z2 - 
-      1153674051521355/4194304*ep^2*z3 - 347451915825/1048576*ep^2*z3^2 - 3127067242425/4194304*ep^2*z4*z2 + 308868717654315/8388608*ep^2*z4 + 1598278812795/1048576*ep^2*z5 - 347451915825/1048576*
-      ep^2*z6 - 6196581969119883/587202560*ep^2*z2 - 109447353484875/16777216*ep^2*z2^2 - 3127067242425/8388608*ep^2*z2^3 + 347451915825/1048576*ep^2*ggam - 4111323438285/1048576*ep^2*B4 + 
-      729927873089987876919/1438646272000*ep^2 + 810721136925/65536*z3
-);
-id,only dala^( 8 )*x3^( 1 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(15))*acc(
-       - 2143988294859441/4587520 + 14537892233481435/4194304*ep*z3 - 917303414376825/524288*ep*z4 + 43681114970325/262144*ep*B4 - 5084139420327568833/2569011200*ep + 1004665644317475/8388608*ep^2*z3
-      *z2 - 22091822327149155/16777216*ep^2*z3 - 43681114970325/4194304*ep^2*z3^2 - 393130034732925/16777216*ep^2*z4*z2 - 87644998576339785/33554432*ep^2*z4 + 200933128863495/4194304*ep^2*z5 - 
-      43681114970325/4194304*ep^2*z6 - 779731283865951063/2348810240*ep^2*z2 - 13759551215652375/67108864*ep^2*z2^2 - 393130034732925/33554432*ep^2*z2^3 + 43681114970325/4194304*ep^2*ggam + 
-      988791446481615/4194304*ep^2*B4 + 68189056476855117705459/5754585088000*ep^2 + 101922601597425/262144*z3
-);
-id,only dala^( 8 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(16))*acc(
-       - 9283383072342963/2621440
-       + 458088928907232735/16777216*ep*z3
-       - 27802673788949325/2097152*ep*z4
-       + 1323936847092825/1048576*ep*B4
-       - 23850251795116804299/1468006400*ep
-       + 30450547483134975/33554432*ep^2*z3*z2
-       - 38662985948860665/67108864*ep^2*z3
-       - 1323936847092825/16777216*ep^2*z3^2
-       - 11915431623835425/67108864*ep^2*z4*z2
-       - 3284931390909449085/134217728*ep^2*z4
-       + 6090109496626995/16777216*ep^2*z5
-       - 1323936847092825/16777216*ep^2*z6
-       - 3376277238051236709/1342177280*ep^2*z2
-       - 417040106834239875/268435456*ep^2*z2^2
-       - 11915431623835425/134217728*ep^2*z2^3
-       + 1323936847092825/16777216*ep^2*ggam
-       + 37451405023389315/16777216*ep^2*B4
-       + 832015171392400061165131/9865003008000*ep^2
-       + 3089185976549925/1048576*z3
-      
-);
-id,only dala^( 9 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 1 )= M^(12-2*(13))*acc(
-       - 53464091020587/57344
-       + 1785557690498925/262144*ep*z3
-       - 114365652951375/32768*ep*z4
-       + 5445983473875/16384*ep*B4
-       - 122808275214677739/32112640*ep
-       + 125257619899125/524288*ep^2*z3*z2
-       - 3680182482294465/1048576*ep^2*z3
-       - 5445983473875/262144*ep^2*z3^2
-       - 49013851264875/1048576*ep^2*z4*z2
-       - 9956391706058175/2097152*ep^2*z4
-       + 25051523979825/262144*ep^2*z5
-       - 5445983473875/262144*ep^2*z6
-       - 19445313496000941/29360128*ep^2*z2
-       - 1715484794270625/4194304*ep^2*z2^2
-       - 49013851264875/2097152*ep^2*z2^3
-       + 5445983473875/262144*ep^2*ggam
-       + 111720993348825/262144*ep^2*B4
-       + 1735014661399909090017/71932313600*ep^2
-       + 12707294772375/16384*z3
-      
-);
-id,only dala^( 9 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 2 )= M^(12-2*(14))*acc(
-       - 53464091020587/32768
-       + 13108853982566475/1048576*ep*z3
-       - 800559570659625/131072*ep*z4
-       + 38121884317125/65536*ep*B4
-       - 135639657059618619/18350080*ep
-       + 876803339293875/2097152*ep^2*z3*z2
-       - 4334585090074155/4194304*ep^2*z3
-       - 38121884317125/1048576*ep^2*z3^2
-       - 343096958854125/4194304*ep^2*z4*z2
-       - 91652947309071225/8388608*ep^2*z4
-       + 175360667858775/1048576*ep^2*z5
-       - 38121884317125/1048576*ep^2*z6
-       - 19445313496000941/16777216*ep^2*z2
-       - 12008393559894375/16777216*ep^2*z2^2
-       - 343096958854125/8388608*ep^2*z2^3
-       + 38121884317125/1048576*ep^2*ggam
-       + 1043454160187775/1048576*ep^2*B4
-       + 1617118717193818460577/41104179200*ep^2
-       + 88951063406625/65536*z3
-      
-);
-id,only dala^( 9 )*x3^( 1 )*x4^( 1 )*x5^( 2 )*x6^( 2 )= M^(12-2*(15))*acc(
-       + 813326473902609/917504
-       - 21758397166032975/4194304*ep*z3
-       + 1740083042872125/524288*ep*z4
-       - 82861097279625/262144*ep*B4
-       + 1071817104398323193/513802240*ep
-       - 1905805237431375/8388608*ep^2*z3*z2
-       + 252214205942836305/16777216*ep^2*z3
-       + 82861097279625/4194304*ep^2*z3^2
-       + 745749875516625/16777216*ep^2*z4*z2
-       - 43237147387072275/33554432*ep^2*z4
-       - 381161047486275/4194304*ep^2*z5
-       + 82861097279625/4194304*ep^2*z6
-       + 295759036854372087/469762048*ep^2*z2
-       + 26101245643081875/67108864*ep^2*z2^2
-       + 745749875516625/33554432*ep^2*z2^3
-       - 82861097279625/4194304*ep^2*ggam
-       + 618304316683725/4194304*ep^2*B4
-       - 308062379950710456806731/10358253158400*ep^2
-       - 193342560319125/262144*z3
-      
-);
-id,only dala^( 9 )*x3^( 1 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(16))*acc(
-       + 9283383072342963/262144
-       - 2265731156723764275/8388608*ep*z3
-       + 139013368944746625/1048576*ep*z4
-       - 6619684235464125/524288*ep*B4
-       + 23330382343065598371/146800640*ep
-       - 152252737415674875/16777216*ep^2*z3*z2
-       + 1109492787558768795/33554432*ep^2*z3
-       + 6619684235464125/8388608*ep^2*z3^2
-       + 59577158119177125/33554432*ep^2*z4*z2
-       + 15534971393300867025/67108864*ep^2*z4
-       - 30450547483134975/8388608*ep^2*z5
-       + 6619684235464125/8388608*ep^2*z6
-       + 3376277238051236709/134217728*ep^2*z2
-       + 2085200534171199375/134217728*ep^2*z2^2
-       + 59577158119177125/67108864*ep^2*z2^3
-       - 6619684235464125/8388608*ep^2*ggam
-       - 176665530340203975/8388608*ep^2*B4
-       - 848042540598718553654059/986500300800*ep^2
-       - 15445929882749625/524288*z3
-      
-);
-id,only dala^( 9 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(17))*acc(
-       + 4455461991563872245/14680064
-       - 160697427751201170375/67108864*ep*z3
-       + 9531097044284300625/8388608*ep*z4
-       - 453861764013538125/4194304*ep*B4
-       + 2397090237098233593165/1644167168*ep
-       - 10438820572311376875/134217728*ep^2*z3*z2
-       - 15317182712726781075/33554432*ep^2*z3
-       + 453861764013538125/67108864*ep^2*z3^2
-       + 4084755876121843125/268435456*ep^2*z4*z2
-       + 1257836303008199336625/536870912*ep^2*z4
-       - 2087764114462275375/67108864*ep^2*z5
-       + 453861764013538125/67108864*ep^2*z6
-       + 1620417468151321066035/7516192768*ep^2*z2
-       + 142966455664264509375/1073741824*ep^2*z2^2
-       + 4084755876121843125/536870912*ep^2*z2^3
-       - 453861764013538125/67108864*ep^2*ggam
-       - 14406914497461640875/67108864*ep^2*B4
-       - 76533513714741473633510089/11048803368960*ep^2
-       - 1059010782698255625/4194304*z3
-      
-);
-id,only dala^( 10 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 1 )= M^(12-2*(14))*acc(
-       + 14415935810319315/229376
-       - 496144255056274125/1048576*ep*z3
-       + 30838155389724375/131072*ep*z4
-       - 1468483589986875/65536*ep*B4
-       + 7055073677791029711/25690112*ep
-       - 33775122569698125/2097152*ep^2*z3*z2
-       + 475866013268754675/4194304*ep^2*z3
-       + 1468483589986875/1048576*ep^2*z3^2
-       + 13216352309881875/4194304*ep^2*z4*z2
-       + 3213069371906790375/8388608*ep^2*z4
-       - 6755024513939625/1048576*ep^2*z5
-       + 1468483589986875/1048576*ep^2*z6
-       + 5243027333667327045/117440512*ep^2*z2
-       + 462572330845865625/16777216*ep^2*z2^2
-       + 13216352309881875/8388608*ep^2*z2^3
-       - 1468483589986875/1048576*ep^2*ggam
-       - 36415221368549625/1048576*ep^2*B4
-       - 268744448432056156722479/172637552640*ep^2
-       - 3426461709969375/65536*z3
-      
-);
-id,only dala^( 10 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 2 )= M^(12-2*(15))*acc(
-       + 14415935810319315/114688
-       - 516703025316090375/524288*ep*z3
-       + 30838155389724375/65536*ep*z4
-       - 1468483589986875/32768*ep*B4
-       + 7660542981824440941/12845056*ep
-       - 33775122569698125/1048576*ep^2*z3*z2
-       - 536700738631313025/4194304*ep^2*z3
-       + 1468483589986875/524288*ep^2*z3^2
-       + 13216352309881875/2097152*ep^2*z4*z2
-       + 3953185101260175375/4194304*ep^2*z4
-       - 6755024513939625/524288*ep^2*z5
-       + 1468483589986875/524288*ep^2*z6
-       + 5243027333667327045/58720256*ep^2*z2
-       + 462572330845865625/8388608*ep^2*z2^2
-       + 13216352309881875/4194304*ep^2*z2^3
-       - 1468483589986875/524288*ep^2*ggam
-       - 45226122908470875/524288*ep^2*B4
-       - 250965662764022761850759/86318776320*ep^2
-       - 3426461709969375/32768*z3
-      
-);
-id,only dala^( 10 )*x3^( 1 )*x4^( 1 )*x5^( 2 )*x6^( 2 )= M^(12-2*(16))*acc(
-       - 247744176316062345/3670016
-       + 6853688262233323875/16777216*ep*z3
-       - 529990823765143125/2097152*ep*z4
-       + 25237658274530625/1048576*ep*B4
-       - 71970861775037808129/411041792*ep
-       + 580466140314204375/33554432*ep^2*z3*z2
-       - 8804036862771489675/8388608*ep^2*z3
-       - 25237658274530625/16777216*ep^2*z3^2
-       - 227138924470775625/67108864*ep^2*z4*z2
-       + 5012863848043324875/134217728*ep^2*z4
-       + 116093228062840875/16777216*ep^2*z5
-       - 25237658274530625/16777216*ep^2*z6
-       - 90099261719123830335/1879048192*ep^2*z2
-       - 7949862356477146875/268435456*ep^2*z2^2
-       - 227138924470775625/134217728*ep^2*z2^3
-       + 25237658274530625/16777216*ep^2*ggam
-       - 91224023415107625/16777216*ep^2*B4
-       + 6149083610771668125248173/2762200842240*ep^2
-       + 58887869307238125/1048576*z3
-      
-);
-id,only dala^( 10 )*x3^( 1 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(17))*acc(
-       - 49010081907202594695/14680064
-       + 1750727532740040784125/67108864*ep*z3
-       - 104842067487127306875/8388608*ep*z4
-       + 4992479404148919375/4194304*ep*B4
-       - 25868980865025415833375/1644167168*ep
-       + 114827026295425145625/134217728*ep^2*z3*z2
-       + 176280591928788013275/67108864*ep^2*z3
-       - 4992479404148919375/67108864*ep^2*z3^2
-       - 44932314637340274375/268435456*ep^2*z4*z2
-       - 13226209122255997462875/536870912*ep^2*z4
-       + 22965405259085029125/67108864*ep^2*z5
-       - 4992479404148919375/67108864*ep^2*z6
-       - 17824592149664531726385/7516192768*ep^2*z2
-       - 1572631012306909603125/1073741824*ep^2*z2^2
-       - 44932314637340274375/536870912*ep^2*z2^3
-       + 4992479404148919375/67108864*ep^2*ggam
-       + 151214271247861439625/67108864*ep^2*B4
-       + 857977097255456339714679779/11048803368960*ep^2
-       + 11649118609680811875/4194304*z3
-      
-);
-id,only dala^( 10 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(18))*acc(
-       - 736612970806862294715/23068672
-       + 17254199182397282980875/67108864*ep*z3
-       - 1002753839843001736875/8388608*ep*z4
-       + 47750182849666749375/4194304*ep*B4
-       - 4536240180767771393004135/28420603904*ep
-       + 1098254205542335235625/134217728*ep^2*z3*z2
-       + 52167136267654316872425/536870912*ep^2*z3
-       - 47750182849666749375/67108864*ep^2*z3^2
-       - 429751645647000744375/268435456*ep^2*z4*z2
-       - 144843096640876362295875/536870912*ep^2*z4
-       + 219650841108467047125/67108864*ep^2*z5
-       - 47750182849666749375/67108864*ep^2*z6
-       - 267900871146298726489245/11811160064*ep^2*z2
-       - 15041307597645026053125/1073741824*ep^2*z2^2
-       - 429751645647000744375/536870912*ep^2*z2^3
-       + 47750182849666749375/67108864*ep^2*ggam
-       + 1664634850495968495375/67108864*ep^2*B4
-       + 1468117436873132388945941926583/2100851040583680*ep^2
-       + 111417093315889081875/4194304*z3
-      
-);
-id,only dala^( 11 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 1 )= M^(12-2*(15))*acc(
-       - 4895022042320149755/917504
-       + 172880232868742639625/4194304*ep*z3
-       - 10471361223536049375/524288*ep*z4
-       + 498636248739811875/262144*ep*B4
-       - 2525482391978921265315/102760448*ep
-       + 11468633721015673125/8388608*ep^2*z3*z2
-       - 217000482835942575/2097152*ep^2*z3
-       - 498636248739811875/4194304*ep^2*z3^2
-       - 4487726238658306875/16777216*ep^2*z4*z2
-       - 1249791802095111573375/33554432*ep^2*z4
-       + 2293726744203134625/4194304*ep^2*z5
-       - 498636248739811875/4194304*ep^2*z6
-       - 1780289657253561679965/469762048*ep^2*z2
-       - 157070418353040740625/67108864*ep^2*z2^2
-       - 4487726238658306875/33554432*ep^2*z2^3
-       + 498636248739811875/4194304*ep^2*ggam
-       + 14255178523540849125/4194304*ep^2*B4
-       + 29143571794243501409619277/230183403520*ep^2
-       + 1163484580392894375/262144*z3
-      
-);
-id,only dala^( 11 )*x3^( 1 )*x4^( 1 )*x5^( 1 )*x6^( 2 )= M^(12-2*(16))*acc(
-       - 44055198380881347795/3670016
-       + 1611769355677542686625/16777216*ep*z3
-       - 94242251011824444375/2097152*ep*z4
-       + 4487726238658306875/1048576*ep*B4
-       - 24374068934029861705515/411041792*ep
-       + 103217703489141058125/33554432*ep^2*z3*z2
-       + 514734689915180952525/16777216*ep^2*z3
-       - 4487726238658306875/16777216*ep^2*z3^2
-       - 40389536147924761875/67108864*ep^2*z4*z2
-       - 13258627573774925640375/134217728*ep^2*z4
-       + 20643540697828211625/16777216*ep^2*z5
-       - 4487726238658306875/16777216*ep^2*z6
-       - 16022606915282055119685/1879048192*ep^2*z2
-       - 1413633765177366665625/268435456*ep^2*z2^2
-       - 40389536147924761875/134217728*ep^2*z2^3
-       + 4487726238658306875/16777216*ep^2*ggam
-       + 152231146651378612125/16777216*ep^2*B4
-       + 245320904474093161783656693/920733614080*ep^2
-       + 10471361223536049375/1048576*z3
-      
-);
-id,only dala^( 11 )*x3^( 1 )*x4^( 1 )*x5^( 2 )*x6^( 2 )= M^(12-2*(17))*acc(
-       + 128988185853912982515/20185088
-       - 166983639811930470375/4194304*ep*z3
-       + 25084817085899773125/1048576*ep*z4
-       - 1194515099328560625/524288*ep*B4
-       + 223161022164535726932765/12434014208*ep
-       - 27473847284556894375/16777216*ep^2*z3*z2
-       + 12218148059306990568075/134217728*ep^2*z3
-       + 1194515099328560625/8388608*ep^2*z3^2
-       + 10750635893957045625/33554432*ep^2*z4*z2
-       + 107533950656601632625/67108864*ep^2*z4
-       - 5494769456911378875/8388608*ep^2*z5
-       + 1194515099328560625/8388608*ep^2*z6
-       + 46911592014219542244645/10334765056*ep^2*z2
-       + 376272256288496596875/134217728*ep^2*z2^2
-       + 10750635893957045625/67108864*ep^2*z2^3
-       - 1194515099328560625/8388608*ep^2*ggam
-       + 106488897457721625/4194304*ep^2*B4
-       - 126934479044733863730057397681/612748220170240*ep^2
-       - 2787201898433308125/524288*z3
-      
-);
-id,only dala^( 11 )*x3^( 1 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(18))*acc(
-       + 2209838912420586884145/5767168
-       - 51316929173928292615125/16777216*ep*z3
-       + 3008261519529005210625/2097152*ep*z4
-       - 143250548549000248125/1048576*ep*B4
-       + 13381843747294800592240185/7105150976*ep
-       - 3294762616627005706875/33554432*ep^2*z3*z2
-       - 121993010438168384655525/134217728*ep^2*z3
-       + 143250548549000248125/16777216*ep^2*z3^2
-       + 1289254936941002233125/67108864*ep^2*z4*z2
-       + 418485228485141059097625/134217728*ep^2*z4
-       - 658952523325401141375/16777216*ep^2*z5
-       + 143250548549000248125/16777216*ep^2*z6
-       + 803702613438896179467735/2952790016*ep^2*z2
-       + 45123922792935078159375/268435456*ep^2*z2^2
-       + 1289254936941002233125/134217728*ep^2*z2^3
-       - 143250548549000248125/16777216*ep^2*ggam
-       - 4802903820089238488625/16777216*ep^2*B4
-       - 1496060676386661860726847398183/175070920048640*ep^2
-       - 334251279947667245625/1048576*z3
-      
-);
-id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
-       - 647054999806874812148743178689665/3670016
-       + 26061617479066909827220400348552625/16777216*ep*z3
-       - 1574474528171941139618272424998125/2097152*ep*z4
-       + 74974977531997197124679639285625/1048576*ep*B4
-       - 339300933656606691449481735675851835/411041792*ep
-       + 1724424483235935533867631703569375/33554432*ep^2*z3*z2
-       + 9426582702872406115821875150525025/134217728*ep^2*z3
-       - 74974977531997197124679639285625/16777216*ep^2*z3^2
-       - 674774797787974774122116753570625/67108864*ep^2*z4*z2
-       - 190342828364736712461255010673785125/134217728*ep^2*z4
-       + 344884896647187106773526340713875/16777216*ep^2*z5
-       - 74974977531997197124679639285625/16777216*ep^2*z6
-       - 199362554027182980342381272909017095/1879048192*ep^2*z2
-       - 23617117922579117094274086374971875/268435456*ep^2*z2^2
-       - 674774797787974774122116753570625/134217728*ep^2*z2^3
-       + 74974977531997197124679639285625/16777216*ep^2*ggam
-       + 2172267330046154842418614863676125/16777216*ep^2*B4
-       + 4498668278196230427336746757612874762831/920733614080*ep^2
-       + 174941614241326793290919158333125/1048576*z3
-       - 108431217215972213061058560000*Mtep
-      
-);
-        
-#endprocedure        
+****************************************************************************
+* 
+* New tables for BN(1,1,1,1) BN(1,1,1,2) BN(1,1,2,2) BN(1,2,2,2) BN(2,2,2,2)
+* and it's dalambertian upto dala^11
+* 
+#procedure BNd0Exact
+id,only intbn*dala^0*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^4*miBN*rat(1,1) );
 
 
+id,only intbn*dala^0*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^2*miBN*rat(3*ep - 2,4
+         ) );
+
+
+id,only intbn*dala^0*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( miBN*rat(18*ep^3 - 27*
+         ep^2 + 13*ep - 2,32*ep) + Gam(1,1)^3*rat(1,8*ep^4) );
+
+
+id,only intbn*dala^0*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-2*miBN*rat(54*ep^4
+          - 135*ep^3 + 120*ep^2 - 45*ep + 6,128*ep) + Gam(1,1)^3*M^-2*rat(11*
+         ep - 3,32*ep^4) );
+
+
+id,only intbn*dala^0*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-4*miBN*rat(324*ep^6
+          - 864*ep^5 + 315*ep^4 + 312*ep^3 - 147*ep^2 - 24*ep + 12,1024*ep^2
+          + 1024*ep) + Gam(1,1)^3*M^-4*rat(162*ep^3 + 67*ep^2 - 11*ep - 6,256*
+         ep^5 + 256*ep^4) );
+#endprocedure
+
+#procedure BNdExact
+id,only intbn*dala^1*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^2*miBN*rat(6*ep^3 - 
+         25*ep^2 + 23*ep - 6,8*ep) + Gam(1,1)^3*M^2*rat(3,2*ep^4) );
+
+
+id,only intbn*dala^1*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( miBN*rat(18*ep^4 - 81*
+         ep^3 + 94*ep^2 - 41*ep + 6,32*ep) + Gam(1,1)^3*rat(9*ep - 3,8*ep^4) )
+         ;
+
+
+id,only intbn*dala^1*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-2*miBN*rat(108*ep^6
+          - 432*ep^5 + 321*ep^4 + 144*ep^3 - 249*ep^2 + 96*ep - 12,256*ep^2 + 
+         256*ep) + Gam(1,1)^3*M^-2*rat(54*ep^3 - 7*ep^2 - 25*ep + 6,64*ep^5 + 
+         64*ep^4) );
+
+
+id,only intbn*dala^1*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-4*miBN*rat(324*ep^7
+          - 1512*ep^6 + 2043*ep^5 - 318*ep^4 - 771*ep^3 + 270*ep^2 + 60*ep - 
+         24,1024*ep^2 + 1024*ep) + Gam(1,1)^3*M^-4*rat(162*ep^4 - 257*ep^3 - 
+         145*ep^2 + 16*ep + 12,256*ep^5 + 256*ep^4) );
+
+
+id,only intbn*dala^1*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-6*miBN*rat(1944*ep^9
+          - 6804*ep^8 - 594*ep^7 + 32697*ep^6 - 417*ep^5 - 23205*ep^4 + 159*
+         ep^3 + 5208*ep^2 - 12*ep - 336,8192*ep^3 + 24576*ep^2 + 16384*ep) + 
+         Gam(1,1)^3*M^-6*rat(972*ep^6 - 1944*ep^5 - 9947*ep^4 - 8084*ep^3 - 
+         1111*ep^2 + 650*ep + 168,2048*ep^6 + 6144*ep^5 + 4096*ep^4) );
+
+
+id,only intbn*dala^2*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( miBN*rat(36*ep^6 - 288*
+         ep^5 + 755*ep^4 - 416*ep^3 - 187*ep^2 + 192*ep - 36,64*ep^2 + 64*ep)
+          + Gam(1,1)^3*rat(18*ep^3 - 117*ep^2 - 27*ep + 18,16*ep^5 + 16*ep^4)
+          );
+
+
+id,only intbn*dala^2*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-2*miBN*rat(108*ep^6
+          - 864*ep^5 + 2265*ep^4 - 1248*ep^3 - 561*ep^2 + 576*ep - 108,256*ep
+          + 256) + Gam(1,1)^3*M^-2*rat(54*ep^3 - 351*ep^2 - 81*ep + 54,64*ep^4
+          + 64*ep^3) );
+
+
+id,only intbn*dala^2*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-4*miBN*rat(648*ep^9
+          - 3996*ep^8 + 4410*ep^7 + 16131*ep^6 - 20235*ep^5 - 231*ep^4 + 6837*
+         ep^3 - 1464*ep^2 - 516*ep + 144,2048*ep^3 + 6144*ep^2 + 4096*ep) + 
+         Gam(1,1)^3*M^-4*rat(324*ep^6 - 1512*ep^5 - 3673*ep^4 + 820*ep^3 + 
+         1091*ep^2 - 18*ep - 72,512*ep^6 + 1536*ep^5 + 1024*ep^4) );
+
+
+id,only intbn*dala^2*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-6*miBN*rat(1944*
+         ep^10 - 12636*ep^9 + 19818*ep^8 + 34479*ep^7 - 98508*ep^6 - 21954*
+         ep^5 + 69774*ep^4 + 4731*ep^3 - 15636*ep^2 - 300*ep + 1008,8192*ep^3
+          + 24576*ep^2 + 16384*ep) + Gam(1,1)^3*M^-6*rat(972*ep^7 - 4860*ep^6
+          - 4115*ep^5 + 21757*ep^4 + 23141*ep^3 + 3983*ep^2 - 1782*ep - 504,
+         2048*ep^6 + 6144*ep^5 + 4096*ep^4) );
+
+
+id,only intbn*dala^2*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-8*miBN*rat(11664*
+         ep^12 - 46656*ep^11 - 70632*ep^10 + 644112*ep^9 - 493767*ep^8 - 
+         4801392*ep^7 - 2931642*ep^6 + 3581892*ep^5 + 2604141*ep^4 - 817812*
+         ep^3 - 625716*ep^2 + 53136*ep + 41472,65536*ep^4 + 393216*ep^3 + 
+         720896*ep^2 + 393216*ep) + Gam(1,1)^3*M^-8*rat(5832*ep^9 - 14580*ep^8
+          - 48438*ep^7 + 556593*ep^6 + 2043681*ep^5 + 2488773*ep^4 + 1138125*
+         ep^3 + 29574*ep^2 - 106056*ep - 20736,16384*ep^7 + 98304*ep^6 + 
+         180224*ep^5 + 98304*ep^4) );
+
+
+id,only intbn*dala^3*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-2*miBN*rat(216*ep^9
+          - 2484*ep^8 + 9822*ep^7 - 8415*ep^6 - 38049*ep^5 + 32499*ep^4 + 8175
+         *ep^3 - 9288*ep^2 + 180*ep + 432,512*ep^3 + 1536*ep^2 + 1024*ep) + 
+         Gam(1,1)^3*M^-2*rat(108*ep^6 - 1080*ep^5 + 3453*ep^4 + 10452*ep^3 + 
+         2409*ep^2 - 918*ep - 216,128*ep^6 + 384*ep^5 + 256*ep^4) );
+
+
+id,only intbn*dala^3*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-4*miBN*rat(648*ep^10
+          - 7236*ep^9 + 26982*ep^8 - 15423*ep^7 - 122562*ep^6 + 59448*ep^5 + 
+         57024*ep^4 - 19689*ep^3 - 8748*ep^2 + 1476*ep + 432,2048*ep^3 + 6144*
+         ep^2 + 4096*ep) + Gam(1,1)^3*M^-4*rat(324*ep^7 - 3132*ep^6 + 9279*
+         ep^5 + 34809*ep^4 + 17679*ep^3 - 345*ep^2 - 1566*ep - 216,512*ep^6 + 
+         1536*ep^5 + 1024*ep^4) );
+
+
+id,only intbn*dala^3*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-6*miBN*rat(3888*
+         ep^12 - 31104*ep^11 + 30888*ep^10 + 359424*ep^9 - 916053*ep^8 - 
+         1639896*ep^7 + 1562610*ep^6 + 1162668*ep^5 - 844377*ep^4 - 261060*
+         ep^3 + 169092*ep^2 + 16848*ep - 10368,16384*ep^4 + 98304*ep^3 + 
+         180224*ep^2 + 98304*ep) + Gam(1,1)^3*M^-6*rat(1944*ep^9 - 12636*ep^8
+          - 594*ep^7 + 335091*ep^6 + 605931*ep^5 + 122295*ep^4 - 207873*ep^3
+          - 71478*ep^2 + 11448*ep + 5184,4096*ep^7 + 24576*ep^6 + 45056*ep^5
+          + 24576*ep^4) );
+
+
+id,only intbn*dala^3*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-8*miBN*rat(11664*
+         ep^13 - 93312*ep^12 + 115992*ep^11 + 926640*ep^10 - 3070215*ep^9 - 
+         2826324*ep^8 + 16273926*ep^7 + 15308460*ep^6 - 11723427*ep^5 - 
+         11234376*ep^4 + 2645532*ep^3 + 2556000*ep^2 - 171072*ep - 165888,
+         65536*ep^4 + 393216*ep^3 + 720896*ep^2 + 393216*ep) + Gam(1,1)^3*M^-8
+         *rat(5832*ep^10 - 37908*ep^9 + 9882*ep^8 + 750345*ep^7 - 182691*ep^6
+          - 5685951*ep^5 - 8816967*ep^4 - 4522926*ep^3 - 224352*ep^2 + 403488*
+         ep + 82944,16384*ep^7 + 98304*ep^6 + 180224*ep^5 + 98304*ep^4) );
+
+
+id,only intbn*dala^3*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-10*miBN*rat(69984*
+         ep^15 - 291600*ep^14 - 1321920*ep^13 + 8530920*ep^12 - 4930578*ep^11
+          - 117134649*ep^10 + 256737339*ep^9 + 1783904976*ep^8 + 2257021044*
+         ep^7 - 244562517*ep^6 - 1935136953*ep^5 - 598519602*ep^4 + 460273500*
+         ep^3 + 193809816*ep^2 - 30386016*ep - 14079744,524288*ep^5 + 5242880*
+         ep^4 + 18350080*ep^3 + 26214400*ep^2 + 12582912*ep) + Gam(1,1)^3*
+         M^-10*rat(34992*ep^12 - 93312*ep^11 - 748440*ep^10 + 2617920*ep^9 - 
+         21490989*ep^8 - 280174056*ep^7 - 949448058*ep^6 - 1500340416*ep^5 - 
+         1182911037*ep^4 - 388001544*ep^3 + 22933836*ep^2 + 42179184*ep + 
+         7039872,131072*ep^8 + 1310720*ep^7 + 4587520*ep^6 + 6553600*ep^5 + 
+         3145728*ep^4) );
+
+
+id,only intbn*dala^4*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-4*miBN*rat(1296*
+         ep^12 - 19008*ep^11 + 92952*ep^10 - 54480*ep^9 - 1095231*ep^8 + 
+         2713416*ep^7 + 5853750*ep^6 - 2700012*ep^5 - 3870219*ep^4 + 698148*
+         ep^3 + 825804*ep^2 - 47952*ep - 51840,4096*ep^4 + 24576*ep^3 + 45056*
+         ep^2 + 24576*ep) + Gam(1,1)^3*M^-4*rat(648*ep^9 - 8532*ep^8 + 34650*
+         ep^7 + 4809*ep^6 - 1138239*ep^5 - 2429883*ep^4 - 1425075*ep^3 - 94194
+         *ep^2 + 123336*ep + 25920,1024*ep^7 + 6144*ep^6 + 11264*ep^5 + 6144*
+         ep^4) );
+
+
+id,only intbn*dala^4*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-6*miBN*rat(3888*
+         ep^13 - 54432*ep^12 + 240840*ep^11 + 22464*ep^10 - 3394653*ep^9 + 
+         5949786*ep^8 + 22988082*ep^7 + 3607464*ep^6 - 17010681*ep^5 - 5645994
+         *ep^4 + 3873708*ep^3 + 1507752*ep^2 - 251424*ep - 103680,16384*ep^4
+          + 98304*ep^3 + 180224*ep^2 + 98304*ep) + Gam(1,1)^3*M^-6*rat(1944*
+         ep^10 - 24300*ep^9 + 86886*ep^8 + 83727*ep^7 - 3405099*ep^6 - 9566127
+         *ep^5 - 9134991*ep^4 - 3132732*ep^3 + 181620*ep^2 + 324432*ep + 51840
+         ,4096*ep^7 + 24576*ep^6 + 45056*ep^5 + 24576*ep^4) );
+
+
+id,only intbn*dala^4*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-8*miBN*rat(23328*
+         ep^15 - 221616*ep^14 + 57024*ep^13 + 5587704*ep^12 - 16476678*ep^11
+          - 45832563*ep^10 + 246722409*ep^9 + 541636272*ep^8 - 105304068*ep^7
+          - 609631911*ep^6 - 25012755*ep^5 + 251607834*ep^4 + 13284468*ep^3 - 
+         42627960*ep^2 - 1060128*ep + 2384640,131072*ep^5 + 1310720*ep^4 + 
+         4587520*ep^3 + 6553600*ep^2 + 3145728*ep) + Gam(1,1)^3*M^-8*rat(11664
+         *ep^12 - 93312*ep^11 - 93960*ep^10 + 2384640*ep^9 - 15588975*ep^8 - 
+         123457368*ep^7 - 248037726*ep^6 - 163465248*ep^5 + 30131457*ep^4 + 
+         66037416*ep^3 + 12913092*ep^2 - 4040496*ep - 1192320,32768*ep^8 + 
+         327680*ep^7 + 1146880*ep^6 + 1638400*ep^5 + 786432*ep^4) );
+
+
+id,only intbn*dala^4*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-10*miBN*rat(69984*
+         ep^16 - 641520*ep^15 + 136080*ep^14 + 15140520*ep^13 - 47585178*ep^12
+          - 92481759*ep^11 + 842410584*ep^10 + 500218281*ep^9 - 6662503836*
+         ep^8 - 11529667737*ep^7 - 712324368*ep^6 + 9077165163*ep^5 + 
+         3452871510*ep^4 - 2107557684*ep^3 - 999435096*ep^2 + 137850336*ep + 
+         70398720,524288*ep^5 + 5242880*ep^4 + 18350080*ep^3 + 26214400*ep^2
+          + 12582912*ep) + Gam(1,1)^3*M^-10*rat(34992*ep^13 - 268272*ep^12 - 
+         281880*ep^11 + 6360120*ep^10 - 34580589*ep^9 - 172719111*ep^8 + 
+         451422222*ep^7 + 3246899874*ep^6 + 6318791043*ep^5 + 5526553641*ep^4
+          + 1962941556*ep^3 - 72489996*ep^2 - 203856048*ep - 35199360,131072*
+         ep^8 + 1310720*ep^7 + 4587520*ep^6 + 6553600*ep^5 + 3145728*ep^4) );
+
+
+id,only intbn*dala^4*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-12*miBN*rat(419904*
+         ep^17 - 2519424*ep^16 - 12212208*ep^15 + 113724000*ep^14 - 151059492*
+         ep^13 - 1683245448*ep^12 + 10938699099*ep^11 + 17484608970*ep^10 - 
+         227981745153*ep^9 - 795700856682*ep^8 - 785497422699*ep^7 + 
+         219909241710*ep^6 + 735263239041*ep^5 + 185516095554*ep^4 - 
+         178814773692*ep^3 - 68171800680*ep^2 + 11903047200*ep + 5103648000,
+         4194304*ep^5 + 54525952*ep^4 + 247463936*ep^3 + 448790528*ep^2 + 
+         251658240*ep) + Gam(1,1)^3*M^-12*rat(209952*ep^14 - 944784*ep^13 - 
+         7208352*ep^12 + 42322824*ep^11 + 1391418*ep^10 + 1138887039*ep^9 + 
+         30107046219*ep^8 + 171318360246*ep^7 + 448167167376*ep^6 + 
+         621885198831*ep^5 + 453001390719*ep^4 + 138754523316*ep^3 - 
+         11056733460*ep^2 - 15733515600*ep - 2551824000,1048576*ep^8 + 
+         13631488*ep^7 + 61865984*ep^6 + 112197632*ep^5 + 62914560*ep^4) );
+
+
+id,only intbn*dala^5*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-6*miBN*rat(7776*
+         ep^14 - 143856*ep^13 + 878256*ep^12 - 443016*ep^11 - 19770042*ep^10
+          + 83648697*ep^9 + 91014738*ep^8 - 1117956018*ep^7 - 1450097994*ep^6
+          + 862161549*ep^5 + 1130693706*ep^4 - 198865116*ep^3 - 261816840*ep^2
+          + 12972960*ep + 17107200,32768*ep^4 + 294912*ep^3 + 851968*ep^2 + 
+         786432*ep) + Gam(1,1)^3*M^-6*rat(3888*ep^11 - 66096*ep^10 + 345816*
+         ep^9 + 155304*ep^8 - 8149677*ep^7 + 82446525*ep^6 + 488308833*ep^5 + 
+         793646535*ep^4 + 446481468*ep^3 + 31199580*ep^2 - 39275280*ep - 
+         8553600,8192*ep^7 + 73728*ep^6 + 212992*ep^5 + 196608*ep^4) );
+
+
+id,only intbn*dala^5*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-8*miBN*rat(23328*
+         ep^15 - 408240*ep^14 + 2203200*ep^13 + 1305720*ep^12 - 60639174*ep^11
+          + 191635965*ep^10 + 523990305*ep^9 - 3080823840*ep^8 - 7704162036*
+         ep^7 - 1763809335*ep^6 + 5978565765*ep^5 + 2795485770*ep^4 - 
+         1382045868*ep^3 - 746531640*ep^2 + 90240480*ep + 51321600,131072*ep^4
+          + 1179648*ep^3 + 3407872*ep^2 + 3145728*ep) + Gam(1,1)^3*M^-8*rat(
+         11664*ep^12 - 186624*ep^11 + 839160*ep^10 + 1503360*ep^9 - 23983119*
+         ep^8 + 222890544*ep^7 + 1712266074*ep^6 + 3845866104*ep^5 + 
+         3720384009*ep^4 + 1433043144*ep^3 - 24227100*ep^2 - 143486640*ep - 
+         25660800,32768*ep^7 + 294912*ep^6 + 851968*ep^5 + 786432*ep^4) );
+
+
+id,only intbn*dala^5*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-10*miBN*rat(139968*
+         ep^18 - 1492992*ep^17 - 1862352*ep^16 + 70720128*ep^15 - 185482764*
+         ep^14 - 1036687104*ep^13 + 6929504721*ep^12 + 8053978536*ep^11 - 
+         127167791751*ep^10 - 361735949916*ep^9 - 194403886461*ep^8 + 
+         327780306144*ep^7 + 318153329847*ep^6 - 99168439788*ep^5 - 
+         138018192408*ep^4 + 11895864192*ep^3 + 23310817200*ep^2 - 492091200*
+         ep - 1290816000,1048576*ep^6 + 15728640*ep^5 + 89128960*ep^4 + 
+         235929600*ep^3 + 287309824*ep^2 + 125829120*ep) + Gam(1,1)^3*M^-10*
+         rat(69984*ep^15 - 641520*ep^14 - 1788480*ep^13 + 30945240*ep^12 - 
+         37330578*ep^11 + 417623145*ep^10 + 15403234179*ep^9 + 82673128668*
+         ep^8 + 190214482836*ep^7 + 205362639021*ep^6 + 70650478047*ep^5 - 
+         46357028562*ep^4 - 41078799396*ep^3 - 5064913800*ep^2 + 2720109600*ep
+          + 645408000,262144*ep^9 + 3932160*ep^8 + 22282240*ep^7 + 58982400*
+         ep^6 + 71827456*ep^5 + 31457280*ep^4) );
+
+
+id,only intbn*dala^5*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-12*miBN*rat(419904*
+         ep^18 - 5038848*ep^17 + 2904336*ep^16 + 186997248*ep^15 - 833403492*
+         ep^14 - 776888496*ep^13 + 21038171787*ep^12 - 48147585624*ep^11 - 
+         332889398973*ep^10 + 572189614236*ep^9 + 3988707717393*ep^8 + 
+         4932893777904*ep^7 - 584192211219*ep^6 - 4226063338692*ep^5 - 
+         1291911347016*ep^4 + 1004716841472*ep^3 + 420933851280*ep^2 - 
+         66314635200*ep - 30621888000,4194304*ep^5 + 54525952*ep^4 + 247463936
+         *ep^3 + 448790528*ep^2 + 251658240*ep) + Gam(1,1)^3*M^-12*rat(209952*
+         ep^15 - 2204496*ep^14 - 1539648*ep^13 + 85572936*ep^12 - 252545526*
+         ep^11 + 1130538531*ep^10 + 23273723985*ep^9 - 9323917068*ep^8 - 
+         579742994100*ep^7 - 2067117805425*ep^6 - 3278309802267*ep^5 - 
+         2579253820998*ep^4 - 843583873356*ep^3 + 50606885160*ep^2 + 
+         91849269600*ep + 15310944000,1048576*ep^8 + 13631488*ep^7 + 61865984*
+         ep^6 + 112197632*ep^5 + 62914560*ep^4) );
+
+
+id,only intbn*dala^5*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-14*miBN*rat(2519424*
+         ep^21 - 8817984*ep^20 - 187907040*ep^19 + 771258672*ep^18 + 
+         3351784536*ep^17 - 26789487372*ep^16 + 103817077542*ep^15 + 
+         554312161809*ep^14 - 7502377161357*ep^13 - 21096357822135*ep^12 + 
+         212264679038859*ep^11 + 1407261578904711*ep^10 + 3530608360711785*
+         ep^9 + 4020728271593247*ep^8 + 769249291495491*ep^7 - 
+         2785063035366612*ep^6 - 2294416442972088*ep^5 + 67526202621744*ep^4
+          + 652718793105648*ep^3 + 143071014121920*ep^2 - 45795094156800*ep - 
+         13546662912000,33554432*ep^7 + 704643072*ep^6 + 5872025600*ep^5 + 
+         24662507520*ep^4 + 54492397568*ep^3 + 59190018048*ep^2 + 24159191040*
+         ep) + Gam(1,1)^3*M^-14*rat(1259712*ep^18 - 2519424*ep^17 - 95843088*
+         ep^16 + 224228736*ep^15 + 1979325396*ep^14 - 9893002392*ep^13 - 
+         153420682707*ep^12 - 3988501251732*ep^11 - 47776751165313*ep^10 - 
+         289752074018838*ep^9 - 1033706547769185*ep^8 - 2323452765971376*ep^7
+          - 3353799816489411*ep^6 - 3038483193155622*ep^5 - 1576463447412396*
+         ep^4 - 322614213750504*ep^3 + 75505073646240*ep^2 + 48861984326400*ep
+          + 6773331456000,8388608*ep^10 + 176160768*ep^9 + 1468006400*ep^8 + 
+         6165626880*ep^7 + 13623099392*ep^6 + 14797504512*ep^5 + 6039797760*
+         ep^4) );
+
+
+id,only intbn*dala^6*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-8*miBN*rat(46656*
+         ep^18 - 933120*ep^17 + 5071248*ep^16 + 16568064*ep^15 - 287305668*
+         ep^14 + 877909680*ep^13 + 4160205891*ep^12 - 36038356632*ep^11 - 
+         37078448517*ep^10 + 683291475900*ep^9 + 2135362771449*ep^8 + 
+         1885778793072*ep^7 - 725209849611*ep^6 - 1825601593860*ep^5 - 
+         391303622088*ep^4 + 447499610496*ep^3 + 158262938640*ep^2 - 
+         29874225600*ep - 12083904000,262144*ep^6 + 3932160*ep^5 + 22282240*
+         ep^4 + 58982400*ep^3 + 71827456*ep^2 + 31457280*ep) + Gam(1,1)^3*M^-8
+         *rat(23328*ep^15 - 431568*ep^14 + 1923264*ep^13 + 10264968*ep^12 - 
+         119083590*ep^11 + 213280443*ep^10 - 3433673511*ep^9 - 89473458060*
+         ep^8 - 482552416116*ep^7 - 1203088078521*ep^6 - 1598373481779*ep^5 - 
+         1118723407254*ep^4 - 327156667308*ep^3 + 30994543080*ep^2 + 
+         38097928800*ep + 6041952000,65536*ep^9 + 983040*ep^8 + 5570560*ep^7
+          + 14745600*ep^6 + 17956864*ep^5 + 7864320*ep^4) );
+
+
+id,only intbn*dala^6*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-10*miBN*rat(139968*
+         ep^19 - 2612736*ep^18 + 11481264*ep^17 + 69989184*ep^16 - 795644748*
+         ep^15 + 1484506368*ep^14 + 15992256393*ep^13 - 91474246332*ep^12 - 
+         255388772079*ep^11 + 1901560633632*ep^10 + 9139254217947*ep^9 + 
+         14198787465012*ep^8 + 5367485623455*ep^7 - 8377644180024*ep^6 - 
+         8476317241704*ep^5 - 222715656864*ep^4 + 2264787257904*ep^3 + 
+         543429077760*ep^2 - 155748614400*ep - 48335616000,1048576*ep^6 + 
+         15728640*ep^5 + 89128960*ep^4 + 235929600*ep^3 + 287309824*ep^2 + 
+         125829120*ep) + Gam(1,1)^3*M^-10*rat(69984*ep^16 - 1201392*ep^15 + 
+         4043520*ep^14 + 38487960*ep^13 - 316190898*ep^12 + 163506969*ep^11 - 
+         9447898761*ep^10 - 282155068224*ep^9 - 1805551080588*ep^8 - 
+         5539473900027*ep^7 - 9607472759421*ep^6 - 9749664148878*ep^5 - 
+         5456363630940*ep^4 - 1215643039992*ep^3 + 238271958720*ep^2 + 
+         170517571200*ep + 24167808000,262144*ep^9 + 3932160*ep^8 + 22282240*
+         ep^7 + 58982400*ep^6 + 71827456*ep^5 + 31457280*ep^4) );
+
+
+id,only intbn*dala^6*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-12*miBN*rat(839808*
+         ep^21 - 9657792*ep^20 - 35761824*ep^19 + 774967824*ep^18 - 1278990648
+         *ep^17 - 20088653508*ep^16 + 117808083810*ep^15 + 107615169963*ep^14
+          - 4274154414639*ep^13 + 417673086291*ep^12 + 113454038693529*ep^11
+          + 395942363470557*ep^10 + 477528159364515*ep^9 - 47652452733915*ep^8
+          - 548305558403967*ep^7 - 254582751663324*ep^6 + 195887862992664*ep^5
+          + 135217015505424*ep^4 - 28151201328048*ep^3 - 24150737891520*ep^2
+          + 1386980236800*ep + 1363848192000,8388608*ep^7 + 176160768*ep^6 + 
+         1468006400*ep^5 + 6165626880*ep^4 + 13623099392*ep^3 + 14797504512*
+         ep^2 + 6039797760*ep) + Gam(1,1)^3*M^-12*rat(419904*ep^18 - 4199040*
+         ep^17 - 23549616*ep^16 + 341241984*ep^15 - 89053668*ep^14 - 
+         9914662440*ep^13 - 53333020449*ep^12 - 1798100191980*ep^11 - 
+         18972501116715*ep^10 - 90583230387762*ep^9 - 235497669047739*ep^8 - 
+         346129564525920*ep^7 - 260154937695393*ep^6 - 39750417955170*ep^5 + 
+         76897943454492*ep^4 + 46482762820104*ep^3 + 3450154318560*ep^2 - 
+         3307532486400*ep - 681924096000,2097152*ep^10 + 44040192*ep^9 + 
+         367001600*ep^8 + 1541406720*ep^7 + 3405774848*ep^6 + 3699376128*ep^5
+          + 1509949440*ep^4) );
+
+
+id,only intbn*dala^6*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-14*miBN*rat(2519424*
+         ep^22 - 26453952*ep^21 - 126181152*ep^20 + 2086607952*ep^19 - 
+         2047026168*ep^18 - 50251979124*ep^17 + 291343489146*ep^16 - 
+         172407380985*ep^15 - 11382562294020*ep^14 + 31420282307364*ep^13 + 
+         359939183793804*ep^12 - 78591174367302*ep^11 - 6320222691621192*ep^10
+          - 20693530253389248*ep^9 - 27375848609657238*ep^8 - 8169808075835049
+         *ep^7 + 17201024804594196*ep^6 + 16128441303426360*ep^5 + 
+         180035374753440*ep^4 - 4425960537617616*ep^3 - 1047292193010240*ep^2
+          + 307018996185600*ep + 94826640384000,33554432*ep^7 + 704643072*ep^6
+          + 5872025600*ep^5 + 24662507520*ep^4 + 54492397568*ep^3 + 
+         59190018048*ep^2 + 24159191040*ep) + Gam(1,1)^3*M^-14*rat(1259712*
+         ep^19 - 11337408*ep^18 - 78207120*ep^17 + 895130352*ep^16 + 409724244
+         *ep^15 - 23748280164*ep^14 - 84169665963*ep^13 - 2914556472783*ep^12
+          - 19857242403189*ep^11 + 44685184138353*ep^10 + 994557970362681*ep^9
+          + 4912493068412919*ep^8 + 12910369545310221*ep^7 + 20438115522270255
+         *ep^6 + 19692918904676958*ep^5 + 10712629918136268*ep^4 + 
+         2333804569899768*ep^3 - 479673531197280*ep^2 - 335260558828800*ep - 
+         47413320192000,8388608*ep^10 + 176160768*ep^9 + 1468006400*ep^8 + 
+         6165626880*ep^7 + 13623099392*ep^6 + 14797504512*ep^5 + 6039797760*
+         ep^4) );
+
+
+id,only intbn*dala^6*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-16*miBN*rat(15116544
+         *ep^24 - 40310784*ep^23 - 1829101824*ep^22 + 5394926592*ep^21 + 
+         67745141856*ep^20 - 281974307328*ep^19 + 539718955056*ep^18 + 
+         6033692279232*ep^17 - 152342545570119*ep^16 - 7181691855048*ep^15 + 
+         9097172697965436*ep^14 + 14943011674960152*ep^13 - 328950853687087794
+         *ep^12 - 2301616403966272248*ep^11 - 7140307187117150604*ep^10 - 
+         11919900242908426968*ep^9 - 9277396851562325199*ep^8 + 
+         1408610648195587872*ep^7 + 8430966650367874296*ep^6 + 
+         4887946510400738592*ep^5 - 827458459095546288*ep^4 - 
+         1571605382270542464*ep^3 - 265760210153007360*ep^2 + 
+         114201282034022400*ep + 29714897350656000,268435456*ep^8 + 7516192768
+         *ep^7 + 86436216832*ep^6 + 526133493760*ep^5 + 1817039601664*ep^4 + 
+         3525094408192*ep^3 + 3507914539008*ep^2 + 1352914698240*ep) + Gam(1,1
+         )^3*M^-16*rat(7558272*ep^21 - 8817984*ep^20 - 916440480*ep^19 + 
+         1226434608*ep^18 + 34933405896*ep^17 - 81398025900*ep^16 + 
+         174370679154*ep^15 + 24413519344689*ep^14 + 604921089938085*ep^13 + 
+         9694105263680391*ep^12 + 90039439355115537*ep^11 + 517053506711573421
+         *ep^10 + 1951999971378659307*ep^9 + 5013106757265984417*ep^8 + 
+         8852598075971018457*ep^7 + 10623551524854856542*ep^6 + 
+         8302392182260351980*ep^5 + 3776555787160435416*ep^4 + 
+         625304218958220672*ep^3 - 216008361397825920*ep^2 - 
+         114054194272435200*ep - 14857448675328000,67108864*ep^11 + 1879048192
+         *ep^10 + 21609054208*ep^9 + 131533373440*ep^8 + 454259900416*ep^7 + 
+         881273602048*ep^6 + 876978634752*ep^5 + 338228674560*ep^4) );
+
+
+id,only intbn*dala^7*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-10*miBN*rat(279936*
+         ep^21 - 6205248*ep^20 + 30754080*ep^19 + 270681264*ep^18 - 3380688360
+         *ep^17 + 7392219156*ep^16 + 86610022614*ep^15 - 744794946567*ep^14 - 
+         133886923821*ep^13 + 27514741243185*ep^12 - 3184892281557*ep^11 - 
+         738666634740993*ep^10 - 2777751399430647*ep^9 - 4146602087714121*ep^8
+          - 1658132540490573*ep^7 + 2403228943597356*ep^6 + 2616032460193992*
+         ep^5 + 142396871844528*ep^4 - 699416922626064*ep^3 - 180920010922560*
+         ep^2 + 48114251942400*ep + 15692092416000,2097152*ep^7 + 44040192*
+         ep^6 + 367001600*ep^5 + 1541406720*ep^4 + 3405774848*ep^3 + 
+         3699376128*ep^2 + 1509949440*ep) + Gam(1,1)^3*M^-10*rat(139968*ep^18
+          - 2892672*ep^17 + 11247984*ep^16 + 146333952*ep^15 - 1412913996*
+         ep^14 + 1404752904*ep^13 + 44816186565*ep^12 + 365853074580*ep^11 + 
+         12611898920367*ep^10 + 130154054570874*ep^9 + 633927266752311*ep^8 + 
+         1753695964092024*ep^7 + 2938584791517309*ep^6 + 2982183884312922*ep^5
+          + 1701736203888468*ep^4 + 396069350533272*ep^3 - 70411881748320*ep^2
+          - 54133636435200*ep - 7846046208000,524288*ep^10 + 11010048*ep^9 + 
+         91750400*ep^8 + 385351680*ep^7 + 851443712*ep^6 + 924844032*ep^5 + 
+         377487360*ep^4) );
+
+
+id,only intbn*dala^7*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-12*miBN*rat(839808*
+         ep^22 - 17216064*ep^21 + 61236000*ep^20 + 965814192*ep^19 - 
+         8788658760*ep^18 + 5273215668*ep^17 + 296791163622*ep^16 - 
+         1801334726631*ep^15 - 4125635504298*ep^14 + 81874789110450*ep^13 + 
+         128019029371254*ep^12 - 2231924365630764*ep^11 - 12026587371996906*
+         ep^10 - 26328563260295598*ep^9 - 25707408060042324*ep^8 - 
+         1080975871660797*ep^7 + 19864242098568756*ep^6 + 13507352916503544*
+         ep^5 - 1386266408655552*ep^4 - 4039844645898000*ep^3 - 
+         760257298785600*ep^2 + 287647536960000*ep + 78460462080000,8388608*
+         ep^7 + 176160768*ep^6 + 1468006400*ep^5 + 6165626880*ep^4 + 
+         13623099392*ep^3 + 14797504512*ep^2 + 6039797760*ep) + Gam(1,1)^3*
+         M^-12*rat(419904*ep^19 - 7978176*ep^18 + 19280592*ep^17 + 495241776*
+         ep^16 - 3507072228*ep^15 - 2850311268*ep^14 + 141472324215*ep^13 + 
+         1321640156565*ep^12 + 39664962134001*ep^11 + 453521658314457*ep^10 + 
+         2552552073111303*ep^9 + 8430724226037627*ep^8 + 17584234195012047*
+         ep^7 + 23639475610525311*ep^6 + 20016128033230014*ep^5 + 
+         9696889071042156*ep^4 + 1769111107421400*ep^3 - 514460318047200*ep^2
+          - 294206320800000*ep - 39230231040000,2097152*ep^10 + 44040192*ep^9
+          + 367001600*ep^8 + 1541406720*ep^7 + 3405774848*ep^6 + 3699376128*
+         ep^5 + 1509949440*ep^4) );
+
+
+id,only intbn*dala^7*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-14*miBN*rat(5038848*
+         ep^24 - 60466176*ep^23 - 445098240*ep^22 + 7610340096*ep^21 + 
+         119369376*ep^20 - 328430386368*ep^19 + 1385421347952*ep^18 + 
+         3139077567888*ep^17 - 85631459993397*ep^16 + 232608496652064*ep^15 + 
+         3933200436002964*ep^14 - 5843444427326520*ep^13 - 155215302656563350*
+         ep^12 - 638958730961167704*ep^11 - 1167980732603948484*ep^10 - 
+         758329620479678808*ep^9 + 637148351890024947*ep^8 + 
+         1215972674955217368*ep^7 + 261657404658357768*ep^6 - 
+         481494820509529056*ep^5 - 216726178630769424*ep^4 + 74006503761378816
+         *ep^3 + 42528421906871040*ep^2 - 3820152110745600*ep - 
+         2485715226624000,67108864*ep^8 + 1879048192*ep^7 + 21609054208*ep^6
+          + 131533373440*ep^5 + 454259900416*ep^4 + 881273602048*ep^3 + 
+         876978634752*ep^2 + 338228674560*ep) + Gam(1,1)^3*M^-14*rat(2519424*
+         ep^21 - 26453952*ep^20 - 258450912*ep^19 + 3350099088*ep^18 + 
+         5154432408*ep^17 - 151744560516*ep^16 + 447887488230*ep^15 + 
+         12812115487635*ep^14 + 267043587157143*ep^13 + 3982872325196637*ep^12
+          + 31773702688472619*ep^11 + 147947222729676303*ep^10 + 
+         429011211721788297*ep^9 + 788142926636915931*ep^8 + 
+         882399581654092515*ep^7 + 503002260487668978*ep^6 - 5713101262882188*
+         ep^5 - 184496065554456216*ep^4 - 87561818231813568*ep^3 - 
+         3067248624693120*ep^2 + 6674363573068800*ep + 1242857613312000,
+         16777216*ep^11 + 469762048*ep^10 + 5402263552*ep^9 + 32883343360*ep^8
+          + 113564975104*ep^7 + 220318400512*ep^6 + 219244658688*ep^5 + 
+         84557168640*ep^4) );
+
+
+id,only intbn*dala^7*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-16*miBN*rat(15116544
+         *ep^25 - 161243136*ep^24 - 1506615552*ep^23 + 20027741184*ep^22 + 
+         24585729120*ep^21 - 823935442176*ep^20 + 2795513413680*ep^19 + 
+         1715940638784*ep^18 - 200612083803975*ep^17 + 1211558672705904*ep^16
+          + 9154626232805820*ep^15 - 57834369908763336*ep^14 - 
+         448494947086769010*ep^13 + 329990425530430104*ep^12 + 
+         11272624044613027380*ep^11 + 45202557254028777864*ep^10 + 
+         86081805091705090545*ep^9 + 75627785460694189464*ep^8 - 
+         2837918535196828680*ep^7 - 62559786692542255776*ep^6 - 
+         39931030542301455024*ep^5 + 5048062290493827840*ep^4 + 
+         12307082848011332352*ep^3 + 2240282963258081280*ep^2 - 
+         883895358921523200*ep - 237719178805248000,268435456*ep^8 + 
+         7516192768*ep^7 + 86436216832*ep^6 + 526133493760*ep^5 + 
+         1817039601664*ep^4 + 3525094408192*ep^3 + 3507914539008*ep^2 + 
+         1352914698240*ep) + Gam(1,1)^3*M^-16*rat(7558272*ep^22 - 69284160*
+         ep^21 - 845896608*ep^20 + 8557958448*ep^19 + 25121929032*ep^18 - 
+         360865273068*ep^17 + 825554886354*ep^16 + 23018553911457*ep^15 + 
+         409612935180573*ep^14 + 4854736544175711*ep^13 + 12486597245672409*
+         ep^12 - 203262008129350875*ep^11 - 2184428082313928061*ep^10 - 
+         10602893013763290039*ep^9 - 31252255982156856879*ep^8 - 
+         60197233082913291114*ep^7 - 76686020016578500356*ep^6 - 
+         62642581670922380424*ep^5 - 29587142078325262656*ep^4 - 
+         5218442113063591296*ep^3 + 1614012696910172160*ep^2 + 
+         897576105504153600*ep + 118859589402624000,67108864*ep^11 + 
+         1879048192*ep^10 + 21609054208*ep^9 + 131533373440*ep^8 + 
+         454259900416*ep^7 + 881273602048*ep^6 + 876978634752*ep^5 + 
+         338228674560*ep^4) );
+
+
+id,only intbn*dala^7*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-18*miBN*rat(90699264
+         *ep^27 - 136048896*ep^26 - 16471994112*ep^25 + 26247359232*ep^24 + 
+         1029784746816*ep^23 - 1953785388384*ep^22 - 11821798414656*ep^21 + 
+         31451703633936*ep^20 - 2176923322169946*ep^19 + 6649384311155871*
+         ep^18 + 205276275541861839*ep^17 - 578321748894945834*ep^16 - 
+         14308894652978231136*ep^15 - 9315029383336648494*ep^14 + 
+         690983965966386183714*ep^13 + 5148911488775812662816*ep^12 + 
+         18970044518066835858714*ep^11 + 41403081627879826525911*ep^10 + 
+         52544833339721954438439*ep^9 + 28269535507104284372466*ep^8 - 
+         16783777969883346983400*ep^7 - 34921480093247596422528*ep^6 - 
+         15156143725123148129424*ep^5 + 4947848075235662004384*ep^4 + 
+         5643031072155927314688*ep^3 + 737938259706696491520*ep^2 - 
+         425198770807968460800*ep - 100193994274332672000,2147483648*ep^9 + 
+         77309411328*ep^8 + 1172526071808*ep^7 + 9740985827328*ep^6 + 
+         48208860413952*ep^5 + 144491289772032*ep^4 + 253669358436352*ep^3 + 
+         235329848082432*ep^2 + 86586540687360*ep) + Gam(1,1)^3*M^-18*rat(
+         45349632*ep^24 - 8167972608*ep^22 + 372874752*ep^21 + 506192802336*
+         ep^20 - 152093427840*ep^19 - 5662880495280*ep^18 + 2712153240864*
+         ep^17 - 3829215163823973*ep^16 - 113642091476855640*ep^15 - 
+         2138191098711604236*ep^14 - 26679067733202665688*ep^13 - 
+         221059293781597756326*ep^12 - 1255437269938050589224*ep^11 - 
+         5033740178700919410516*ep^10 - 14511283089558556947624*ep^9 - 
+         30253896123152597280333*ep^8 - 45289335604407799858272*ep^7 - 
+         47531205020955544324200*ep^6 - 33177141456359875735104*ep^5 - 
+         13549882297927013606736*ep^4 - 1801624486034238983424*ep^3 + 
+         884343905812130077440*ep^2 + 404637874429788518400*ep + 
+         50096997137166336000,536870912*ep^12 + 19327352832*ep^11 + 
+         293131517952*ep^10 + 2435246456832*ep^9 + 12052215103488*ep^8 + 
+         36122822443008*ep^7 + 63417339609088*ep^6 + 58832462020608*ep^5 + 
+         21646635171840*ep^4) );
+
+
+id,only intbn*dala^8*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-12*miBN*rat(1679616*
+         ep^24 - 40310784*ep^23 + 157324032*ep^22 + 3364830720*ep^21 - 
+         34128918432*ep^20 + 12009223296*ep^19 + 1516880262384*ep^18 - 
+         11019798314208*ep^17 - 2392486627455*ep^16 + 653179013024688*ep^15 - 
+         1962455890159044*ep^14 - 29812517272399176*ep^13 + 40872994614441342*
+         ep^12 + 1178561385652668120*ep^11 + 5160879809787087828*ep^10 + 
+         10701889297573629096*ep^9 + 10404262429732923129*ep^8 + 
+         616729535308622232*ep^7 - 8028409335246106920*ep^6 - 
+         5696514901754521632*ep^5 + 474146237540206800*ep^4 + 
+         1696446119520200448*ep^3 + 335752744805694720*ep^2 - 
+         120663702683596800*ep - 33819860938752000,16777216*ep^8 + 469762048*
+         ep^7 + 5402263552*ep^6 + 32883343360*ep^5 + 113564975104*ep^4 + 
+         220318400512*ep^3 + 219244658688*ep^2 + 84557168640*ep) + Gam(1,1)^3*
+         M^-12*rat(839808*ep^21 - 18895680*ep^20 + 51578208*ep^19 + 1722201264
+         *ep^18 - 14140510200*ep^17 - 14898381516*ep^16 + 714531348738*ep^15
+          - 4387763330487*ep^14 - 92505758659227*ep^13 - 2098194591487401*
+         ep^12 - 31410617711700447*ep^11 - 251841528319039155*ep^10 - 
+         1200887484686245989*ep^9 - 3660003641008227375*ep^8 - 
+         7363678090777500231*ep^7 - 9791587734126974298*ep^6 - 
+         8322366352039418628*ep^5 - 4086469336632201864*ep^4 - 
+         770085834768679104*ep^3 + 211357616014419840*ep^2 + 
+         125153251474406400*ep + 16909930469376000,4194304*ep^11 + 117440512*
+         ep^10 + 1350565888*ep^9 + 8220835840*ep^8 + 28391243776*ep^7 + 
+         55079600128*ep^6 + 54811164672*ep^5 + 21139292160*ep^4) );
+
+
+id,only intbn*dala^8*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-14*miBN*rat(5038848*
+         ep^24 - 120932352*ep^23 + 471972096*ep^22 + 10094492160*ep^21 - 
+         102386755296*ep^20 + 36027669888*ep^19 + 4550640787152*ep^18 - 
+         33059394942624*ep^17 - 7177459882365*ep^16 + 1959537039074064*ep^15
+          - 5887367670477132*ep^14 - 89437551817197528*ep^13 + 
+         122618983843324026*ep^12 + 3535684156958004360*ep^11 + 
+         15482639429361263484*ep^10 + 32105667892720887288*ep^9 + 
+         31212787289198769387*ep^8 + 1850188605925866696*ep^7 - 
+         24085228005738320760*ep^6 - 17089544705263564896*ep^5 + 
+         1422438712620620400*ep^4 + 5089338358560601344*ep^3 + 
+         1007258234417084160*ep^2 - 361991108050790400*ep - 101459582816256000
+         ,67108864*ep^7 + 1744830464*ep^6 + 18119393280*ep^5 + 95294586880*
+         ep^4 + 263670726656*ep^3 + 353932148736*ep^2 + 169114337280*ep) + 
+         Gam(1,1)^3*M^-14*rat(2519424*ep^21 - 56687040*ep^20 + 154734624*ep^19
+          + 5166603792*ep^18 - 42421530600*ep^17 - 44695144548*ep^16 + 
+         2143594046214*ep^15 - 13163289991461*ep^14 - 277517275977681*ep^13 - 
+         6294583774462203*ep^12 - 94231853135101341*ep^11 - 755524584957117465
+         *ep^10 - 3602662454058737967*ep^9 - 10980010923024682125*ep^8 - 
+         22091034272332500693*ep^7 - 29374763202380922894*ep^6 - 
+         24967099056118255884*ep^5 - 12259408009896605592*ep^4 - 
+         2310257504306037312*ep^3 + 634072848043259520*ep^2 + 
+         375459754423219200*ep + 50729791408128000,16777216*ep^10 + 436207616*
+         ep^9 + 4529848320*ep^8 + 23823646720*ep^7 + 65917681664*ep^6 + 
+         88483037184*ep^5 + 42278584320*ep^4) );
+
+
+id,only intbn*dala^8*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-16*miBN*rat(30233088
+         *ep^27 - 367835904*ep^26 - 4630701312*ep^25 + 68409080064*ep^24 + 
+         173132157888*ep^23 - 4593825179424*ep^22 + 9440725525056*ep^21 + 
+         91464597184176*ep^20 - 1239348796952094*ep^19 + 6203332022517621*
+         ep^18 + 76816635798773061*ep^17 - 594845289406647054*ep^16 - 
+         5098221203337985824*ep^15 + 16333281541167798726*ep^14 + 
+         299831330546954796726*ep^13 + 1419502817349666232416*ep^12 + 
+         3435165780989041352286*ep^11 + 4250045595982655488221*ep^10 + 
+         1210256954428173317901*ep^9 - 3423421287506181199194*ep^8 - 
+         3775645777179955443192*ep^7 - 111761117319556114560*ep^6 + 
+         1655155975314530620368*ep^5 + 525195626743365626592*ep^4 - 
+         267191151891464017152*ep^3 - 117505771503487879680*ep^2 + 
+         14189893467795763200*ep + 7172741757984768000,536870912*ep^9 + 
+         19327352832*ep^8 + 293131517952*ep^7 + 2435246456832*ep^6 + 
+         12052215103488*ep^5 + 36122822443008*ep^4 + 63417339609088*ep^3 + 
+         58832462020608*ep^2 + 21646635171840*ep) + Gam(1,1)^3*M^-16*rat(
+         15116544*ep^24 - 161243136*ep^23 - 2534540544*ep^22 + 29994582528*
+         ep^21 + 130527508320*ep^20 - 2047190537088*ep^19 + 1523356438896*
+         ep^18 + 44879886775008*ep^17 - 1908362238656823*ep^16 - 
+         50547606310359432*ep^15 - 886205353450434372*ep^14 - 
+         9987945022514554632*ep^13 - 71481221017034524578*ep^12 - 
+         337187908169243848440*ep^11 - 1078909282558445893596*ep^10 - 
+         2360819161217904535800*ep^9 - 3466706047660611975663*ep^8 - 
+         3186815661631723595040*ep^7 - 1419612515176106598264*ep^6 + 
+         263145817388399950656*ep^5 + 644238247137196905360*ep^4 + 
+         255640354417356247296*ep^3 + 174844747285367040*ep^2 - 
+         20842701770035353600*ep - 3586370878992384000,134217728*ep^12 + 
+         4831838208*ep^11 + 73282879488*ep^10 + 608811614208*ep^9 + 
+         3013053775872*ep^8 + 9030705610752*ep^7 + 15854334902272*ep^6 + 
+         14708115505152*ep^5 + 5411658792960*ep^4) );
+
+
+id,only intbn*dala^8*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-18*miBN*rat(90699264
+         *ep^28 - 952342272*ep^27 - 15247554048*ep^26 + 174495306240*ep^25 + 
+         793558513728*ep^24 - 11221848109728*ep^23 + 5762270080800*ep^22 + 
+         137847889365840*ep^21 - 2459988654875370*ep^20 + 26241694210685385*
+         ep^19 + 145431816741459000*ep^18 - 2425808228771702385*ep^17 - 
+         9103998912923718630*ep^16 + 119465022493467431730*ep^15 + 
+         774819230416416020160*ep^14 - 1069944204921662990610*ep^13 - 
+         27370158880915478106630*ep^12 - 129327319034721696202515*ep^11 - 
+         320082901311196484294760*ep^10 - 444633964550393305573485*ep^9 - 
+         271209597533821906335594*ep^8 + 116132521635702526428072*ep^7 + 
+         299137177114105219673328*ep^6 + 141353141601343995169200*ep^5 - 
+         38887601604965030724768*ep^4 - 50049341389696649340672*ep^3 - 
+         7066643108168236884480*ep^2 + 3726594942997383475200*ep + 
+         901745948468994048000,2147483648*ep^9 + 77309411328*ep^8 + 
+         1172526071808*ep^7 + 9740985827328*ep^6 + 48208860413952*ep^5 + 
+         144491289772032*ep^4 + 253669358436352*ep^3 + 235329848082432*ep^2 + 
+         86586540687360*ep) + Gam(1,1)^3*M^-18*rat(45349632*ep^25 - 408146688*
+         ep^24 - 8167972608*ep^23 + 73884628224*ep^22 + 502836929568*ep^21 - 
+         4707828648864*ep^20 - 4294039644720*ep^19 + 53678077698384*ep^18 - 
+         3853624542991749*ep^17 - 79179155002439883*ep^16 - 
+         1115412275419903476*ep^15 - 7435347844798227564*ep^14 + 
+         19052315817226234866*ep^13 + 734096374096329217710*ep^12 + 
+         6265195250741535892500*ep^11 + 30792378518749717747020*ep^10 + 
+         100347651682874415248283*ep^9 + 226995729503965575664725*ep^8 + 
+         360072815418714654400248*ep^7 + 394603703732240023182696*ep^6 + 
+         285044390809311868009200*ep^5 + 120147316195308883477200*ep^4 + 
+         17098964280120280928256*ep^3 - 7554457277879382178560*ep^2 - 
+         3591643872730930329600*ep - 450872974234497024000,536870912*ep^12 + 
+         19327352832*ep^11 + 293131517952*ep^10 + 2435246456832*ep^9 + 
+         12052215103488*ep^8 + 36122822443008*ep^7 + 63417339609088*ep^6 + 
+         58832462020608*ep^5 + 21646635171840*ep^4) );
+
+
+id,only intbn*dala^8*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-20*miBN*rat(
+         544195584*ep^30 - 140054780160*ep^28 - 4232632320*ep^27 + 
+         13253795268480*ep^26 + 1833294145536*ep^25 - 424911131647776*ep^24 - 
+         878371617763584*ep^23 - 22122565352089740*ep^22 + 203506148567917440*
+         ep^21 + 3496232389190102235*ep^20 - 26487165310177100760*ep^19 - 
+         310655735717668257735*ep^18 + 2012289454051748761680*ep^17 + 
+         29076072521319304971570*ep^16 - 12861710493694822181520*ep^15 - 
+         1899484361547846258112650*ep^14 - 15090210246782293708256640*ep^13 - 
+         64248093593662592985309585*ep^12 - 172678845436780702664073240*ep^11
+          - 298604947145606411197776579*ep^10 - 304578658611203122644195600*
+         ep^9 - 104556716847330730858228140*ep^8 + 145214387713435922164825920
+         *ep^7 + 197026718512673533091183280*ep^6 + 65004635072054061924873984
+         *ep^5 - 34190198595329347139022144*ep^4 - 28924846690141651178474496*
+         ep^3 - 2871133844206328779760640*ep^2 + 2261524130479752787353600*ep
+          + 491960527946797400064000,17179869184*ep^10 + 773094113280*ep^9 + 
+         14946486190080*ep^8 + 162349763788800*ep^7 + 1087021862879232*ep^6 + 
+         4626968267980800*ep^5 + 12432727731077120*ep^4 + 20146832592076800*
+         ep^3 + 17636441387433984*ep^2 + 6234230929489920*ep) + Gam(1,1)^3*
+         M^-20*rat(272097792*ep^27 + 408146688*ep^26 - 69007023360*ep^25 - 
+         108007706880*ep^24 + 6374844379584*ep^23 + 10953535332384*ep^22 - 
+         188493102765504*ep^21 - 761913245220912*ep^20 - 12273728886236430*
+         ep^19 + 480674018402803107*ep^18 + 23237302549180019229*ep^17 + 
+         526562953293857516046*ep^16 + 8122873819146068108448*ep^15 + 
+         88763541194931757426890*ep^14 + 696652090474139759220102*ep^13 + 
+         3995900348865770815415424*ep^12 + 17013912094570015187070606*ep^11 + 
+         54312597425757359425322043*ep^10 + 130365008815103084162924325*ep^9
+          + 234078605482539100897704762*ep^8 + 309689066319615921933141192*
+         ep^7 + 292916885242242333403363968*ep^6 + 186667653091158042613309008
+         *ep^5 + 69525225925124673137974560*ep^4 + 7252737950922177201239808*
+         ep^3 - 5051348304416933744494080*ep^2 - 2073686410471238077132800*ep
+          - 245980263973398700032000,4294967296*ep^13 + 193273528320*ep^12 + 
+         3736621547520*ep^11 + 40587440947200*ep^10 + 271755465719808*ep^9 + 
+         1156742066995200*ep^8 + 3108181932769280*ep^7 + 5036708148019200*ep^6
+          + 4409110346858496*ep^5 + 1558557732372480*ep^4) );
+
+
+id,only intbn*dala^9*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-14*miBN*rat(10077696
+         *ep^27 - 256981248*ep^26 + 566030592*ep^25 + 35935384320*ep^24 - 
+         299599591104*ep^23 - 902371713120*ep^22 + 22232874631104*ep^21 - 
+         117254345273712*ep^20 - 207981399667338*ep^19 + 11706826904851671*
+         ep^18 - 63134185183443585*ep^17 - 674414842151557386*ep^16 + 
+         5110290673106502528*ep^15 + 44199321317598029922*ep^14 - 
+         131857061519788187454*ep^13 - 2594417232577918296960*ep^12 - 
+         12930538297480930817046*ep^11 - 34092098213381717698737*ep^10 - 
+         50619819087367764950313*ep^9 - 34270833211552453869774*ep^8 + 
+         10337422367168026942104*ep^7 + 34801473245014912384512*ep^6 + 
+         18001576775161556524656*ep^5 - 4063594227768707227488*ep^4 - 
+         6103729911565000707840*ep^3 - 937720678490414784000*ep^2 + 
+         449704732794960384000*ep + 112426011477319680000,134217728*ep^9 + 
+         4831838208*ep^8 + 73282879488*ep^7 + 608811614208*ep^6 + 
+         3013053775872*ep^5 + 9030705610752*ep^4 + 15854334902272*ep^3 + 
+         14708115505152*ep^2 + 5411658792960*ep) + Gam(1,1)^3*M^-14*rat(
+         5038848*ep^24 - 120932352*ep^23 + 109175040*ep^22 + 17894628864*ep^21
+          - 121131269856*ep^20 - 617989606272*ep^19 + 9913407771600*ep^18 - 
+         43283084425056*ep^17 - 150665554367613*ep^16 + 17834837439120480*
+         ep^15 + 446972090124290940*ep^14 + 7863674408189265024*ep^13 + 
+         88925385784734434322*ep^12 + 643231342071409422528*ep^11 + 
+         3105133650688821099012*ep^10 + 10346876602432971141024*ep^9 + 
+         24208678046883771261747*ep^8 + 39791970420537471877728*ep^7 + 
+         45119099363804047324440*ep^6 + 33652505597884199194176*ep^5 + 
+         14659347350544560209584*ep^4 + 2237597359489033009920*ep^3 - 
+         884937532158406944000*ep^2 - 440335555062342912000*ep - 
+         56213005738659840000,33554432*ep^12 + 1207959552*ep^11 + 18320719872*
+         ep^10 + 152202903552*ep^9 + 753263443968*ep^8 + 2257676402688*ep^7 + 
+         3963583725568*ep^6 + 3677028876288*ep^5 + 1352914698240*ep^4) );
+
+
+id,only intbn*dala^9*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-16*miBN*rat(30233088
+         *ep^28 - 700399872*ep^27 - 100776960*ep^26 + 111768367104*ep^25 - 
+         647251083072*ep^24 - 4804312277088*ep^23 + 60382021901472*ep^22 - 
+         196132913403408*ep^21 - 1444724615917998*ep^20 + 33664610916883647*
+         ep^19 - 107454767216369058*ep^18 - 2465183822738777253*ep^17 + 
+         10609968124258605882*ep^16 + 168369998664539607462*ep^15 - 
+         86175935336178352908*ep^14 - 8706251128372272203058*ep^13 - 
+         56952535520488220529858*ep^12 - 192790062722511668815533*ep^11 - 
+         390504144755775318742098*ep^10 - 457151233246231716261513*ep^9 - 
+         208883565379363096262106*ep^8 + 176766376305220925748264*ep^7 + 
+         297615043040589056265552*ep^6 + 113820254742824773990128*ep^5 - 
+         46756349329075952715936*ep^4 - 45539271416426249306880*ep^3 - 
+         5214930551048022336000*ep^2 + 3485211163996681728000*ep + 
+         786982080341237760000,536870912*ep^9 + 19327352832*ep^8 + 
+         293131517952*ep^7 + 2435246456832*ep^6 + 12052215103488*ep^5 + 
+         36122822443008*ep^4 + 63417339609088*ep^3 + 58832462020608*ep^2 + 
+         21646635171840*ep) + Gam(1,1)^3*M^-16*rat(15116544*ep^25 - 327525120*
+         ep^24 - 519001344*ep^23 + 54448111872*ep^22 - 238131407520*ep^21 - 
+         2701887707808*ep^20 + 25414296070896*ep^19 - 60455398873968*ep^18 - 
+         754978254078231*ep^17 + 52449853436788149*ep^16 + 1465760132446716180
+         *ep^15 + 26719827855437831652*ep^14 + 321821878211528158134*ep^13 + 
+         2552171726707369307838*ep^12 + 13818020346566329254732*ep^11 + 
+         52776565362120661116156*ep^10 + 145054170357682111772409*ep^9 + 
+         288836657589798814465413*ep^8 + 413901091035174445117416*ep^7 + 
+         416791212340280928853608*ep^6 + 279545581236823074987984*ep^5 + 
+         109328223532279020496848*ep^4 + 13008368919948010237440*ep^3 - 
+         7515569390295877344000*ep^2 - 3250987902652379904000*ep - 
+         393491040170618880000,134217728*ep^12 + 4831838208*ep^11 + 
+         73282879488*ep^10 + 608811614208*ep^9 + 3013053775872*ep^8 + 
+         9030705610752*ep^7 + 15854334902272*ep^6 + 14708115505152*ep^5 + 
+         5411658792960*ep^4) );
+
+
+id,only intbn*dala^9*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-18*miBN*rat(
+         181398528*ep^30 - 2176782336*ep^29 - 43419753216*ep^28 + 570236350464
+         *ep^27 + 3523516080768*ep^26 - 56125292428800*ep^25 - 43721328214368*
+         ep^24 + 1992834170507520*ep^23 - 11927188132929540*ep^22 + 
+         97099966469959920*ep^21 + 1066967684793331425*ep^20 - 
+         17987624654695426080*ep^19 - 76745786831523706005*ep^18 + 
+         1413233702675439882840*ep^17 + 8791327399121406519750*ep^16 - 
+         48687343219814557131360*ep^15 - 774843746701108034617470*ep^14 - 
+         4142078320855713888888000*ep^13 - 12400221222776467015210755*ep^12 - 
+         21942924602624965551873600*ep^11 - 19725860549440923791160393*ep^10
+          + 1023747146628972207861816*ep^9 + 20941853598938427514805196*ep^8
+          + 16140878980428369740985216*ep^7 - 2330532817521138969771888*ep^6
+          - 7930764456686454910861440*ep^5 - 1795826725084616158948032*ep^4 + 
+         1338641611389963549987840*ep^3 + 479912017996959037056000*ep^2 - 
+         72745033624106425344000*ep - 30790282220370247680000,4294967296*ep^10
+          + 193273528320*ep^9 + 3736621547520*ep^8 + 40587440947200*ep^7 + 
+         271755465719808*ep^6 + 1156742066995200*ep^5 + 3108181932769280*ep^4
+          + 5036708148019200*ep^3 + 4409110346858496*ep^2 + 1558557732372480*
+         ep) + Gam(1,1)^3*M^-18*rat(90699264*ep^27 - 952342272*ep^26 - 
+         23002341120*ep^25 + 248188458240*ep^24 + 2115999132480*ep^23 - 
+         24375987561888*ep^22 - 58455923469120*ep^21 + 865976857887600*ep^20
+          - 4452004263580506*ep^19 + 241117197049885401*ep^18 + 
+         10478450137738114719*ep^17 + 219393576521890536834*ep^16 + 
+         3127002006147879315168*ep^15 + 30736626619840239992670*ep^14 + 
+         210483750296547151783938*ep^13 + 1023037280132652966026448*ep^12 + 
+         3579004772913173416981722*ep^11 + 9044701741480194809125569*ep^10 + 
+         16332012666771647211392247*ep^9 + 20353376684607317583381702*ep^8 + 
+         15983471753189181404208792*ep^7 + 5563496361826781294771520*ep^6 - 
+         2230572973112762489003664*ep^5 - 3187120132534714527361824*ep^4 - 
+         1094489992862816441137920*ep^3 + 34179456828510963648000*ep^2 + 
+         95387224401096187392000*ep + 15395141110185123840000,1073741824*ep^13
+          + 48318382080*ep^12 + 934155386880*ep^11 + 10146860236800*ep^10 + 
+         67938866429952*ep^9 + 289185516748800*ep^8 + 777045483192320*ep^7 + 
+         1259177037004800*ep^6 + 1102277586714624*ep^5 + 389639433093120*ep^4)
+          );
+
+
+id,only intbn*dala^9*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-20*miBN*rat(
+         544195584*ep^31 - 5441955840*ep^30 - 140054780160*ep^29 + 
+         1396315169280*ep^28 + 13296121591680*ep^27 - 130704658539264*ep^26 - 
+         443244073103136*ep^25 + 3370739698714176*ep^24 - 13338849174453900*
+         ep^23 + 424731802088814840*ep^22 + 1461170903510927835*ep^21 - 
+         61449489202078123110*ep^20 - 45784082615897250135*ep^19 + 
+         5118846811228431339030*ep^18 + 8953177980801817354770*ep^17 - 
+         303622435706887871897220*ep^16 - 1770867256610898036297450*ep^15 + 
+         3904633368696168872869860*ep^14 + 86654008874160344097256815*ep^13 + 
+         469802090499845227189022610*ep^12 + 1428183507222200615442955821*
+         ep^11 + 2681470812844860989333570190*ep^10 + 
+         2941229869264700495583727860*ep^9 + 1190781556186743230747107320*ep^8
+          - 1255117158621685688557075920*ep^7 - 1905262550054681268986958816*
+         ep^6 - 684236549315869966387761984*ep^5 + 312977139263151820211746944
+         *ep^4 + 286377333057210183004984320*ep^3 + 30972862572543040584960000
+         *ep^2 - 22123280776850730473472000*ep - 4919605279467974000640000,
+         17179869184*ep^10 + 773094113280*ep^9 + 14946486190080*ep^8 + 
+         162349763788800*ep^7 + 1087021862879232*ep^6 + 4626968267980800*ep^5
+          + 12432727731077120*ep^4 + 20146832592076800*ep^3 + 
+         17636441387433984*ep^2 + 6234230929489920*ep) + Gam(1,1)^3*M^-20*rat(
+         272097792*ep^28 - 2312831232*ep^27 - 73088490240*ep^26 + 582062526720
+         *ep^25 + 7454921448384*ep^24 - 52794908463456*ep^23 - 298028456089344
+         *ep^22 + 1123017782434128*ep^21 - 4654596434027310*ep^20 + 
+         603411307265167407*ep^19 + 18430562365151988159*ep^18 + 
+         294189927802057323756*ep^17 + 2857244286207492947988*ep^16 + 
+         7534803003471076342410*ep^15 - 190983321475177815048798*ep^14 - 
+         2970620555875626776785596*ep^13 - 22945091394087692967083634*ep^12 - 
+         115826523519942792445384017*ep^11 - 412760965442470510090296105*ep^10
+          - 1069571482668491740731538488*ep^9 - 2031096988505775087043906428*
+         ep^8 - 2803973777953916885928047952*ep^7 - 
+         2742501199331265291420330672*ep^6 - 1797151304986455752995115520*ep^5
+          - 687999521300324554178505792*ep^4 - 77578727813638705756892160*ep^3
+          + 48439796633698099367808000*ep^2 + 20490883840738982071296000*ep + 
+         2459802639733987000320000,4294967296*ep^13 + 193273528320*ep^12 + 
+         3736621547520*ep^11 + 40587440947200*ep^10 + 271755465719808*ep^9 + 
+         1156742066995200*ep^8 + 3108181932769280*ep^7 + 5036708148019200*ep^6
+          + 4409110346858496*ep^5 + 1558557732372480*ep^4) );
+
+
+id,only intbn*dala^9*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-22*miBN*rat(
+         3265173504*ep^33 + 5986151424*ep^32 - 1139092056576*ep^31 - 
+         2242977682176*ep^30 + 152134622102016*ep^29 + 355089430025856*ep^28
+          - 8377295133132864*ep^27 - 38635972665742944*ep^26 - 
+         111682385417068200*ep^25 + 4749775401491976060*ep^24 + 
+         50824575511677228510*ep^23 - 662468457919076761815*ep^22 - 
+         4925919138765021735705*ep^21 + 79604237481550312423095*ep^20 + 
+         529150600383042646368495*ep^19 - 6876544985586954321801030*ep^18 - 
+         74881829624402656771098390*ep^17 + 132829157984336057196468810*ep^16
+          + 6632984272334024032107826860*ep^15 + 56093817018756495209903396685
+         *ep^14 + 270613847484516190241273219451*ep^13 + 
+         863044766465804227583563068531*ep^12 + 
+         1880334276482576530334975225031*ep^11 + 
+         2724199210222218555416237552256*ep^10 + 
+         2291198171149489932796618925964*ep^9 + 370232193063213127794803356224
+         *ep^8 - 1433032963863471713850420441456*ep^7 - 
+         1486118174588413766104422110976*ep^6 - 366913104033633541162932968640
+         *ep^5 + 297541676659176768908501280000*ep^4 + 
+         204166847893514411703215232000*ep^3 + 14706173107832430874406400000*
+         ep^2 - 16571231247337783311052800000*ep - 
+         3373001869828765999104000000,137438953472*ep^11 + 7559142440960*ep^10
+          + 181419418583040*ep^9 + 2494517005516800*ep^8 + 21684156006137856*
+         ep^7 + 123977495174184960*ep^6 + 469619283287080960*ep^5 + 
+         1155792879222784000*ep^4 + 1752838138465615872*ep^3 + 
+         1460789158430638080*ep^2 + 498738474359193600*ep) + Gam(1,1)^3*M^-22*
+         rat(1632586752*ep^30 + 5441955840*ep^29 - 558934214400*ep^28 - 
+         1969685683200*ep^27 + 72322270416000*ep^26 + 288684747429120*ep^25 - 
+         3655985720460768*ep^24 - 25072770210817536*ep^23 - 98177725972516644*
+         ep^22 + 2216508213736491048*ep^21 - 34986392754763335435*ep^20 - 
+         4564854074573730877428*ep^19 - 137853743467274890548651*ep^18 - 
+         2604133437300206253876294*ep^17 - 35467394451131609806082022*ep^16 - 
+         360051968984974448116739760*ep^15 - 2761725726418491625010723298*
+         ep^14 - 16179848001717402246452263116*ep^13 - 
+         73038694075893031189824138879*ep^12 - 255425888730744027784705989852*
+         ep^11 - 692754312494677954279013646687*ep^10 - 
+         1451175895236914272270531408518*ep^9 - 
+         2323368639453955158084117536496*ep^8 - 
+         2788189985175795082694701090224*ep^7 - 
+         2423987247526844498385974231472*ep^6 - 
+         1431626115188386827102841642080*ep^5 - 491570270920606085141206896000
+         *ep^4 - 38446629150439257838497216000*ep^3 + 
+         39165323183982053821728000000*ep^2 + 14750535874174026487142400000*ep
+          + 1686500934914382999552000000,34359738368*ep^14 + 1889785610240*
+         ep^13 + 45354854645760*ep^12 + 623629251379200*ep^11 + 
+         5421039001534464*ep^10 + 30994373793546240*ep^9 + 117404820821770240*
+         ep^8 + 288948219805696000*ep^7 + 438209534616403968*ep^6 + 
+         365197289607659520*ep^5 + 124684618589798400*ep^4) );
+
+
+id,only intbn*dala^10*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-16*miBN*rat(
+         60466176*ep^30 - 1612431360*ep^29 - 377913600*ep^28 + 346807111680*
+         ep^27 - 2263207257216*ep^26 - 21257235025920*ep^25 + 274837242417120*
+         ep^24 - 675547557926400*ep^23 - 6650369171439660*ep^22 + 
+         166141402971048000*ep^21 - 1249898362101132525*ep^20 - 
+         11560157107386058800*ep^19 + 174655330563585433905*ep^18 + 
+         758853641445431603400*ep^17 - 13379504199054122134350*ep^16 - 
+         85818536286337032638400*ep^15 + 447246901679558774136390*ep^14 + 
+         7519334079197023693556400*ep^13 + 41952396153846646193070375*ep^12 + 
+         133757584161432798340666800*ep^11 + 264182399292289818744555669*ep^10
+          + 307009871367740374400762760*ep^9 + 141613247495193048535500900*
+         ep^8 - 117119848838849864095121280*ep^7 - 201344374641185051064765264
+         *ep^6 - 78898811098815816397073280*ep^5 + 31099784381727328500742080*
+         ep^4 + 31275487346025451988966400*ep^3 + 3706020415997768373120000*
+         ep^2 - 2389409004045385405440000*ep - 545672524937663692800000,
+         1073741824*ep^10 + 48318382080*ep^9 + 934155386880*ep^8 + 
+         10146860236800*ep^7 + 67938866429952*ep^6 + 289185516748800*ep^5 + 
+         777045483192320*ep^4 + 1259177037004800*ep^3 + 1102277586714624*ep^2
+          + 389639433093120*ep) + Gam(1,1)^3*M^-16*rat(30233088*ep^27 - 
+         760866048*ep^26 - 1284906240*ep^25 + 170002333440*ep^24 - 
+         868162577472*ep^23 - 11728539034848*ep^22 + 117159826413888*ep^21 - 
+         164669307402672*ep^20 - 3340272296540574*ep^19 + 76011722760723435*
+         ep^18 - 2491513746435988659*ep^17 - 104425739249840635194*ep^16 - 
+         2170146063161190087936*ep^15 - 30954439280527236870822*ep^14 - 
+         305858195660392847839386*ep^13 - 2119512352065212886078096*ep^12 - 
+         10520557721926696700299458*ep^11 - 38057850379975576655636829*ep^10
+          - 101255606360950899277415403*ep^9 - 198069871050662943828013038*
+         ep^8 - 281621914643260538576363448*ep^7 - 283275981696297135060813888
+         *ep^6 - 190658378109181583087233200*ep^5 - 75119908777301311480153440
+         *ep^4 - 9161036236854522654163200*ep^3 + 5114007679690383163200000*
+         ep^2 + 2240576841486548113920000*ep + 272836262468831846400000,
+         268435456*ep^13 + 12079595520*ep^12 + 233538846720*ep^11 + 
+         2536715059200*ep^10 + 16984716607488*ep^9 + 72296379187200*ep^8 + 
+         194261370798080*ep^7 + 314794259251200*ep^6 + 275569396678656*ep^5 + 
+         97409858273280*ep^4) );
+
+
+id,only intbn*dala^10*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-18*miBN*rat(
+         181398528*ep^31 - 4353564672*ep^30 - 14033191680*ep^29 + 
+         1037398026240*ep^28 - 4015164878208*ep^27 - 81877363135488*ep^26 + 
+         654453847044000*ep^25 + 172055265557760*ep^24 - 25355487977730180*
+         ep^23 + 445221255541626720*ep^22 - 2420563862535013575*ep^21 - 
+         44679658218967236600*ep^20 + 431484734831667831315*ep^19 + 
+         3673803568844978281440*ep^18 - 34067683465598913575850*ep^17 - 
+         364491642451444074990000*ep^16 + 655192414747980061301970*ep^15 + 
+         26135977451027541273760320*ep^14 + 186011861095116128127662325*ep^13
+          + 736891921715071564566563400*ep^12 + 1862607871168331842959001407*
+         ep^11 + 3034488808441539673158733632*ep^10 + 
+         2880918713427502140812604780*ep^9 + 781546433444994795998643360*ep^8
+          - 1540991914634354065955266032*ep^7 - 1847451430425927857709341952*
+         ep^6 - 537891135645344545674360000*ep^5 + 342624737091894983972835840
+         *ep^4 + 261321960016196921031091200*ep^3 + 22479936315845990768640000
+         *ep^2 - 20752289607176074321920000*ep - 4365380199501309542400000,
+         4294967296*ep^10 + 193273528320*ep^9 + 3736621547520*ep^8 + 
+         40587440947200*ep^7 + 271755465719808*ep^6 + 1156742066995200*ep^5 + 
+         3108181932769280*ep^4 + 5036708148019200*ep^3 + 4409110346858496*ep^2
+          + 1558557732372480*ep) + Gam(1,1)^3*M^-18*rat(90699264*ep^28 - 
+         2040733440*ep^27 - 9941647104*ep^26 + 499727750400*ep^25 - 
+         1244469064896*ep^24 - 42130917724320*ep^23 + 257651166962880*ep^22 + 
+         443270689103088*ep^21 - 11338171348843098*ep^20 + 201312989909845713*
+         ep^19 - 6866447457222178497*ep^18 - 333209327721009814854*ep^17 - 
+         7345844103482295345360*ep^16 - 110224486346871231315954*ep^15 - 
+         1165210101225396438484734*ep^14 - 8805402621478781440949376*ep^13 - 
+         48517771982301793189523142*ep^12 - 198338012915340303569306151*ep^11
+          - 608229622122657311077340841*ep^10 - 1404254464039596025703362338*
+         ep^9 - 2429424712335085166353194648*ep^8 - 
+         3102803262234975713793349248*ep^7 - 2838182987897921829748210704*ep^6
+          - 1750626751205356599138325920*ep^5 - 628442378928974059803717120*
+         ep^4 - 57946266855765031743705600*ep^3 + 47633791961982709647360000*
+         ep^2 + 18743123519298880450560000*ep + 2182690099750654771200000,
+         1073741824*ep^13 + 48318382080*ep^12 + 934155386880*ep^11 + 
+         10146860236800*ep^10 + 67938866429952*ep^9 + 289185516748800*ep^8 + 
+         777045483192320*ep^7 + 1259177037004800*ep^6 + 1102277586714624*ep^5
+          + 389639433093120*ep^4) );
+
+
+id,only intbn*dala^10*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-20*miBN*rat(
+         1088391168*ep^33 - 12516498432*ep^32 - 379697352192*ep^31 + 
+         4438323134208*ep^30 + 50824410895872*ep^29 - 608550810910848*ep^28 - 
+         2852606574445248*ep^27 + 33795760004639712*ep^26 - 8915434277231160*
+         ep^25 + 1040097192158982420*ep^24 + 9172370228045053770*ep^23 - 
+         373049190623667620205*ep^22 - 392965575135838051635*ep^21 + 
+         44142185150828196973965*ep^20 + 52090040525828646451365*ep^19 - 
+         3895958891011281593802210*ep^18 - 19251525717497693634378930*ep^17 + 
+         172465495692906065872680270*ep^16 + 2579102469375682983772066020*
+         ep^15 + 15345929871288910861275654495*ep^14 + 
+         54568824381733432262781986217*ep^13 + 124316137829383998865636171617*
+         ep^12 + 174423268559075719611308317677*ep^11 + 
+         114574723468384574767561057152*ep^10 - 52349416252403307376710649212*
+         ep^9 - 160661226398815533906105475392*ep^8 - 
+         92172744320582887161934333392*ep^7 + 30943596466866948798721966848*
+         ep^6 + 51812654759336762110112287680*ep^5 + 
+         8083259534692832699568326400*ep^4 - 9137615852685725982523008000*ep^3
+          - 2767418162684647718561280000*ep^2 + 506987265500079662592000000*ep
+          + 187560784581871067136000000,34359738368*ep^11 + 1889785610240*
+         ep^10 + 45354854645760*ep^9 + 623629251379200*ep^8 + 5421039001534464
+         *ep^7 + 30994373793546240*ep^6 + 117404820821770240*ep^5 + 
+         288948219805696000*ep^4 + 438209534616403968*ep^3 + 
+         365197289607659520*ep^2 + 124684618589798400*ep) + Gam(1,1)^3*M^-20*
+         rat(544195584*ep^30 - 5441955840*ep^29 - 197195316480*ep^28 + 
+         1909219507200*ep^27 + 28076020156800*ep^26 - 257786329939200*ep^25 - 
+         1798776734030496*ep^24 + 13668477682364928*ep^23 + 16801205434742772*
+         ep^22 + 563487234170457816*ep^21 - 26511873396251626665*ep^20 - 
+         2174009369866007951916*ep^19 - 58711129194520355658777*ep^18 - 
+         1022688307479483849573378*ep^17 - 12785324706791763423955074*ep^16 - 
+         116933715223245694662254640*ep^15 - 790429808256099743609612406*ep^14
+          - 3989248081829961795885698532*ep^13 - 15138833026342484473508836773
+         *ep^12 - 43247930893130717673725029284*ep^11 - 
+         92326607175740735649417894549*ep^10 - 144343650007219624240596034626*
+         ep^9 - 158057715471007245858249519312*ep^8 - 
+         108536955622053450212878758288*ep^7 - 28738061220971935003366817424*
+         ep^6 + 20378296834934579875843745760*ep^5 + 
+         21678548114914884887383036800*ep^4 + 6580389789925286272530624000*
+         ep^3 - 408594943411848079407360000*ep^2 - 612985136531959376640000000
+         *ep - 93780392290935533568000000,8589934592*ep^14 + 472446402560*
+         ep^13 + 11338713661440*ep^12 + 155907312844800*ep^11 + 
+         1355259750383616*ep^10 + 7748593448386560*ep^9 + 29351205205442560*
+         ep^8 + 72237054951424000*ep^7 + 109552383654100992*ep^6 + 
+         91299322401914880*ep^5 + 31171154647449600*ep^4) );
+
+
+id,only intbn*dala^10*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-22*miBN*rat(
+         3265173504*ep^34 - 29930757120*ep^33 - 1204939722240*ep^32 + 
+         10287034940160*ep^31 + 176807376605952*ep^30 - 1318391413096320*ep^29
+          - 12283278863417280*ep^28 + 53514273798718560*ep^27 + 
+         313313313906104184*ep^26 + 5978281641079726260*ep^25 - 
+         1422953904734508150*ep^24 - 1221538788547526275425*ep^23 + 
+         2361233898344822644260*ep^22 + 133789348007965551515850*ep^21 - 
+         346496011914010790285550*ep^20 - 12697201589800423431854475*ep^19 + 
+         760165217053840768712940*ep^18 + 956529283852765281678551100*ep^17 + 
+         5171863534506327402946669950*ep^16 - 16869009976917769143282698775*
+         ep^15 - 346418139721805257067664144084*ep^14 - 
+         2113707555863873865070442345430*ep^13 - 
+         7613158154641269973084218528810*ep^12 - 
+         17959477831086123278268489923085*ep^11 - 
+         27674993141294914176781994148852*ep^10 - 
+         24832947689581176132968004829380*ep^9 - 
+         5505587087558816119593257359920*ep^8 + 
+         14277244427909775086250202745040*ep^7 + 
+         15980386816438917885985710252096*ep^6 + 
+         4333585821029145721700763935040*ep^5 - 
+         3068791595357430046290298848000*ep^4 - 
+         2231129153720826097860961152000*ep^3 - 178339135433494522929523200000
+         *ep^2 + 178910541850886850422476800000*ep + 
+         37103020568116425990144000000,137438953472*ep^11 + 7559142440960*
+         ep^10 + 181419418583040*ep^9 + 2494517005516800*ep^8 + 
+         21684156006137856*ep^7 + 123977495174184960*ep^6 + 469619283287080960
+         *ep^5 + 1155792879222784000*ep^4 + 1752838138465615872*ep^3 + 
+         1460789158430638080*ep^2 + 498738474359193600*ep) + Gam(1,1)^3*M^-22*
+         rat(1632586752*ep^31 - 12516498432*ep^30 - 618795728640*ep^29 + 
+         4178590675200*ep^28 + 93988812931200*ep^27 - 506860227146880*ep^26 - 
+         6831517942181088*ep^25 + 15143072714250912*ep^24 + 177622746346476252
+         *ep^23 + 3296463199434174132*ep^22 - 59367983105864736963*ep^21 - 
+         4180003754271334187643*ep^20 - 87640348646963850896943*ep^19 - 
+         1087742259160182457841133*ep^18 - 6821926640829341013442788*ep^17 + 
+         30089369977473259750162482*ep^16 + 1198845932416227304273414062*ep^15
+          + 14199134988886005628665693162*ep^14 + 
+         104939633942998393521150755397*ep^13 + 547999746104079315303359537817
+         *ep^12 + 2116930463543506351352752241685*ep^11 + 
+         6169121542204543224798618705039*ep^10 + 
+         13639566208152101836891727957202*ep^9 + 
+         22768865048817711656230591811232*ep^8 + 
+         28246102589406901411255737760992*ep^7 + 
+         25232233607606902655142874904112*ep^6 + 
+         15256316996151649012990051166880*ep^5 + 
+         5368826350976227678714778640000*ep^4 + 462078243838813890045197376000
+         *ep^3 - 416068019149628565551865600000*ep^2 - 
+         160569393680999908359014400000*ep - 18551510284058212995072000000,
+         34359738368*ep^14 + 1889785610240*ep^13 + 45354854645760*ep^12 + 
+         623629251379200*ep^11 + 5421039001534464*ep^10 + 30994373793546240*
+         ep^9 + 117404820821770240*ep^8 + 288948219805696000*ep^7 + 
+         438209534616403968*ep^6 + 365197289607659520*ep^5 + 
+         124684618589798400*ep^4) );
+
+
+id,only intbn*dala^10*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat(
+         19591041024*ep^36 + 78364164096*ep^35 - 8941133445120*ep^34 - 
+         38121989050368*ep^33 + 1602649207551744*ep^32 + 7817986923816960*
+         ep^31 - 129467506239422208*ep^30 - 963239522958484992*ep^29 + 
+         1367431245248829552*ep^28 + 103073015495689614144*ep^27 + 
+         680361892509151089288*ep^26 - 13475107885183654280400*ep^25 - 
+         68677506788506593048135*ep^24 + 1941102306018155084843520*ep^23 + 
+         4722868610817737013500130*ep^22 - 256464716144965835096428740*ep^21
+          - 917392642218552511646333325*ep^20 + 26561732989954897972211394420*
+         ep^19 + 238982173488701029493059143960*ep^18 - 
+         828001361557521028387706989320*ep^17 - 
+         28709516473350672436395672527649*ep^16 - 
+         257846595976727315185371223979736*ep^15 - 
+         1388779447897560847583604992826150*ep^14 - 
+         5123784539350667201184159587985492*ep^13 - 
+         13451397611907859164197830908645579*ep^12 - 
+         25026255065374177655693288600413020*ep^11 - 
+         31351059224744618890074255595027452*ep^10 - 
+         21937157132011915543113003030431568*ep^9 + 
+         629409471015685201612703222680368*ep^8 + 
+         17265598682329160347629266372903616*ep^7 + 
+         14676867679660186526492140683087552*ep^6 + 
+         2573238779464291113104111553050880*ep^5 - 
+         3297628271940500292332122482048000*ep^4 - 
+         1926207101275417321994823289344000*ep^3 - 
+         91703550183707227240503705600000*ep^2 + 
+         162347768650437671194487193600000*ep + 
+         31228469227906297060589568000000,1099511627776*ep^12 + 72567767433216
+         *ep^11 + 2116559883468800*ep^10 + 35921044879441920*ep^9 + 
+         392990744534581248*ep^8 + 2900025689933611008*ep^7 + 
+         14666973841624924160*ep^6 + 50572839963045396480*ep^5 + 
+         115732478479329918976*ep^4 + 165936069452419301376*ep^3 + 
+         132539353736769699840*ep^2 + 43888985743609036800*ep) + Gam(1,1)^3*
+         M^-24*rat(9795520512*ep^33 + 53875362816*ep^32 - 4375060397568*ep^31
+          - 25650522802944*ep^30 + 756340104337920*ep^29 + 5051331531768960*
+         ep^28 - 56002249062767808*ep^27 - 566046056811327840*ep^26 - 
+         259825949649945720*ep^25 + 50888665987139518236*ep^24 + 
+         419635528008516070362*ep^23 + 5178537392413495846833*ep^22 + 
+         878432481614586229450569*ep^21 + 36576770887604900460485385*ep^20 + 
+         865654877912942089764853821*ep^19 + 14426228026554761017690799832*
+         ep^18 + 181579749950473160176206018018*ep^17 + 
+         1769679535544441920038295855134*ep^16 + 
+         13507323970046566289374545162660*ep^15 + 
+         81336709192397795743504933306161*ep^14 + 
+         388422719969888862949987000910925*ep^13 + 
+         1475245603492303444675240904873037*ep^12 + 
+         4456127751847278752594021688673317*ep^11 + 
+         10667458203783993867270965849789814*ep^10 + 
+         20080232645001010983344576102398416*ep^9 + 
+         29320637164020458822618505111258432*ep^8 + 
+         32483599122039644241107933778531216*ep^7 + 
+         26318130249039674084157436311186144*ep^6 + 
+         14562136868081205363021190227807360*ep^5 + 
+         4645881605981242416226161312576000*ep^4 + 
+         249684095692602874822867875072000*ep^3 - 
+         401939334360241972475927961600000*ep^2 - 
+         141028450345372571630040268800000*ep - 
+         15614234613953148530294784000000,274877906944*ep^15 + 18141941858304*
+         ep^14 + 529139970867200*ep^13 + 8980261219860480*ep^12 + 
+         98247686133645312*ep^11 + 725006422483402752*ep^10 + 
+         3666743460406231040*ep^9 + 12643209990761349120*ep^8 + 
+         28933119619832479744*ep^7 + 41484017363104825344*ep^6 + 
+         33134838434192424960*ep^5 + 10972246435902259200*ep^4) );
+
+
+id,only intbn*dala^11*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-18*miBN*rat(
+         362797056*ep^33 - 9976919040*ep^32 - 35140925952*ep^31 + 
+         3106868016384*ep^30 - 13856573339136*ep^29 - 331022949713280*ep^28 + 
+         2857385683703232*ep^27 + 5752804708338336*ep^26 - 132182086669090920*
+         ep^25 + 1755344907442734300*ep^24 - 18789247456996290930*ep^23 - 
+         163261528249375164015*ep^22 + 4025834205111409209255*ep^21 + 
+         5710593787674411905775*ep^20 - 461638380023767243273185*ep^19 - 
+         597446399360175994606230*ep^18 + 40853137355505481288323690*ep^17 + 
+         209650190205785897008618650*ep^16 - 1774167676651744318376211780*
+         ep^15 - 27725136672381183891963140715*ep^14 - 
+         170982718619873227930357646661*ep^13 - 638290617192817152228045197685
+         *ep^12 - 1567903964537249006522383939113*ep^11 - 
+         2521985656123055253776107646304*ep^10 - 
+         2387972624350100591131608392244*ep^9 - 657627764194857865812368454720
+         *ep^8 + 1270210935604127041721345635728*ep^7 + 
+         1542304566983518518799778252544*ep^6 + 459049491577079572197680688960
+         *ep^5 - 283426405806897111893248224000*ep^4 - 
+         220447967361280413759128448000*ep^3 - 19603431363406186313740800000*
+         ep^2 + 17475378519951316313395200000*ep + 
+         3705756097386556071936000000,8589934592*ep^11 + 472446402560*ep^10 + 
+         11338713661440*ep^9 + 155907312844800*ep^8 + 1355259750383616*ep^7 + 
+         7748593448386560*ep^6 + 29351205205442560*ep^5 + 72237054951424000*
+         ep^4 + 109552383654100992*ep^3 + 91299322401914880*ep^2 + 
+         31171154647449600*ep) + Gam(1,1)^3*M^-18*rat(181398528*ep^30 - 
+         4716361728*ep^29 - 24372907776*ep^28 + 1507804720128*ep^27 - 
+         4639286669184*ep^26 - 170351463460608*ep^25 + 1151641765269792*ep^24
+          + 4472292047567616*ep^23 - 56533282199472132*ep^22 + 
+         780754720731217416*ep^21 - 8213591161117198899*ep^20 + 
+         257391591278589679860*ep^19 + 23648524272629904113397*ep^18 + 
+         639673407078507739153530*ep^17 + 11148476086212431057851050*ep^16 + 
+         139775669927962679344371264*ep^15 + 1286799608013892190212796766*
+         ep^14 + 8801676948514298126904722484*ep^13 + 
+         45262389698551305081246632409*ep^12 + 176636920376742898129922213388*
+         ep^11 + 525603337455638697652262898657*ep^10 + 
+         1191303649544349635799267525786*ep^9 + 
+         2040273931113120697075579985424*ep^8 + 
+         2594875963154625733380373281744*ep^7 + 
+         2373478051966094228365562341968*ep^6 + 
+         1468311923553874713389487561120*ep^5 + 530195550412751741731007376000
+         *ep^4 + 50111551794437910947663424000*ep^3 - 
+         39905442740936445925190400000*ep^2 - 15840388446633223961241600000*ep
+          - 1852878048693278035968000000,2147483648*ep^14 + 118111600640*ep^13
+          + 2834678415360*ep^12 + 38976828211200*ep^11 + 338814937595904*ep^10
+          + 1937148362096640*ep^9 + 7337801301360640*ep^8 + 18059263737856000*
+         ep^7 + 27388095913525248*ep^6 + 22824830600478720*ep^5 + 
+         7792788661862400*ep^4) );
+
+
+id,only intbn*dala^11*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-20*miBN*rat(
+         1088391168*ep^33 - 29930757120*ep^32 - 105422777856*ep^31 + 
+         9320604049152*ep^30 - 41569720017408*ep^29 - 993068849139840*ep^28 + 
+         8572157051109696*ep^27 + 17258414125015008*ep^26 - 396546260007272760
+         *ep^25 + 5266034722328202900*ep^24 - 56367742370988872790*ep^23 - 
+         489784584748125492045*ep^22 + 12077502615334227627765*ep^21 + 
+         17131781363023235717325*ep^20 - 1384915140071301729819555*ep^19 - 
+         1792339198080527983818690*ep^18 + 122559412066516443864971070*ep^17
+          + 628950570617357691025855950*ep^16 - 5322503029955232955128635340*
+         ep^15 - 83175410017143551675889422145*ep^14 - 
+         512948155859619683791072939983*ep^13 - 
+         1914871851578451456684135593055*ep^12 - 
+         4703711893611747019567151817339*ep^11 - 
+         7565956968369165761328322938912*ep^10 - 
+         7163917873050301773394825176732*ep^9 - 
+         1972883292584573597437105364160*ep^8 + 
+         3810632806812381125164036907184*ep^7 + 
+         4626913700950555556399334757632*ep^6 + 
+         1377148474731238716593042066880*ep^5 - 850279217420691335679744672000
+         *ep^4 - 661343902083841241277385344000*ep^3 - 
+         58810294090218558941222400000*ep^2 + 52426135559853948940185600000*ep
+          + 11117268292159668215808000000,34359738368*ep^10 + 1786706395136*
+         ep^9 + 39994735460352*ep^8 + 503645044998144*ep^7 + 3910103866540032*
+         ep^6 + 19264062193926144*ep^5 + 59612634239991808*ep^4 + 
+         110110317085720576*ep^3 + 107878583359242240*ep^2 + 41561539529932800
+         *ep) + Gam(1,1)^3*M^-20*rat(544195584*ep^30 - 14149085184*ep^29 - 
+         73118723328*ep^28 + 4523414160384*ep^27 - 13917860007552*ep^26 - 
+         511054390381824*ep^25 + 3454925295809376*ep^24 + 13416876142702848*
+         ep^23 - 169599846598416396*ep^22 + 2342264162193652248*ep^21 - 
+         24640773483351596697*ep^20 + 772174773835769039580*ep^19 + 
+         70945572817889712340191*ep^18 + 1919020221235523217460590*ep^17 + 
+         33445428258637293173553150*ep^16 + 419327009783888038033113792*ep^15
+          + 3860398824041676570638390298*ep^14 + 26405030845542894380714167452
+         *ep^13 + 135787169095653915243739897227*ep^12 + 
+         529910761130228694389766640164*ep^11 + 
+         1576810012366916092956788695971*ep^10 + 
+         3573910948633048907397802577358*ep^9 + 
+         6120821793339362091226739956272*ep^8 + 
+         7784627889463877200141119845232*ep^7 + 
+         7120434155898282685096687025904*ep^6 + 
+         4404935770661624140168462683360*ep^5 + 
+         1590586651238255225193022128000*ep^4 + 150334655383313732842990272000
+         *ep^3 - 119716328222809337775571200000*ep^2 - 
+         47521165339899671883724800000*ep - 5558634146079834107904000000,
+         8589934592*ep^13 + 446676598784*ep^12 + 9998683865088*ep^11 + 
+         125911261249536*ep^10 + 977525966635008*ep^9 + 4816015548481536*ep^8
+          + 14903158559997952*ep^7 + 27527579271430144*ep^6 + 
+         26969645839810560*ep^5 + 10390384882483200*ep^4) );
+
+
+id,only intbn*dala^11*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-22*miBN*rat(
+         6530347008*ep^36 - 69657034752*ep^35 - 3155971590144*ep^34 + 
+         32295226466304*ep^33 + 621257261315328*ep^32 - 5899637346527232*ep^31
+          - 61532867480502528*ep^30 + 464630634966491136*ep^29 + 
+         2849463030249841104*ep^28 + 7899875611597626624*ep^27 - 
+         49671393255657890568*ep^26 - 6378954856710730860960*ep^25 + 
+         13398441994486241026155*ep^24 + 971921090092605375586680*ep^23 - 
+         3112089475827006613179450*ep^22 - 118493718656081179806214380*ep^21
+          + 178456412405549065117757625*ep^20 + 12928576529926989955533262500*
+         ep^19 + 51357252193183188947077507080*ep^18 - 
+         736348566454518210837283803240*ep^17 - 
+         10743802498928011225946390515683*ep^16 - 
+         70344199341184017344239708962048*ep^15 - 
+         289146807910277486205302391651666*ep^14 - 
+         802585902555335180721520055691324*ep^13 - 
+         1500475489693176993921560086508673*ep^12 - 
+         1735360376149619291590858289922588*ep^11 - 
+         792122155762666155749366944651092*ep^10 + 
+         861875965069279590708077430693744*ep^9 + 
+         1567473420705519665929652835173136*ep^8 + 
+         679650678755291096724109204506816*ep^7 - 
+         391167436967750270217231355741632*ep^6 - 
+         450539544966822700476227212481280*ep^5 - 
+         43566214035691770303782871936000*ep^4 + 
+         83073254481496619584128382464000*ep^3 + 
+         21728201744345809372698931200000*ep^2 - 
+         4700900557071681833867673600000*ep - 1562418227343467765956608000000,
+         274877906944*ep^12 + 18141941858304*ep^11 + 529139970867200*ep^10 + 
+         8980261219860480*ep^9 + 98247686133645312*ep^8 + 725006422483402752*
+         ep^7 + 3666743460406231040*ep^6 + 12643209990761349120*ep^5 + 
+         28933119619832479744*ep^4 + 41484017363104825344*ep^3 + 
+         33134838434192424960*ep^2 + 10972246435902259200*ep) + Gam(1,1)^3*
+         M^-22*rat(3265173504*ep^33 - 29930757120*ep^32 - 1617984170496*ep^31
+          + 13639823933184*ep^30 + 329206130081280*ep^29 - 2421519926590080*
+         ep^28 - 34126573330414656*ep^27 + 175256073992929248*ep^26 + 
+         1673497673175755736*ep^25 + 6866456640418241748*ep^24 - 
+         14130684001693421730*ep^23 + 2403981176225770713267*ep^22 + 
+         434580339878980234447779*ep^21 + 16111788400890790277684931*ep^20 + 
+         348737351403099717907704783*ep^19 + 5359830692604933215354660640*
+         ep^18 + 61845170126926105139734779462*ep^17 + 
+         545018194451206600608026045034*ep^16 + 
+         3699105742815229921171766450796*ep^15 + 
+         19452419578724094555031758616803*ep^14 + 
+         79539058885302479424939143452911*ep^13 + 
+         252830656157242036180848891665967*ep^12 + 
+         621352122474388266900759690892935*ep^11 + 
+         1165155574870870354673143627692762*ep^10 + 
+         1624490810404605926495030453479488*ep^9 + 
+         1598239589632368871732262438339520*ep^8 + 
+         973645086008118747119935544776368*ep^7 + 
+         183590740404949066945336300440096*ep^6 - 
+         226144901026499639093359940684160*ep^5 - 
+         197268395740520533031240593344000*ep^4 - 
+         53664552886067218990773004032000*ep^3 + 
+         4981538273508823637957068800000*ep^2 + 
+         5345085214277487468350668800000*ep + 781209113671733882978304000000,
+         68719476736*ep^15 + 4535485464576*ep^14 + 132284992716800*ep^13 + 
+         2245065304965120*ep^12 + 24561921533411328*ep^11 + 181251605620850688
+         *ep^10 + 916685865101557760*ep^9 + 3160802497690337280*ep^8 + 
+         7233279904958119936*ep^7 + 10371004340776206336*ep^6 + 
+         8283709608548106240*ep^5 + 2743061608975564800*ep^4) );
+
+
+id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat(
+         19591041024*ep^37 - 156728328192*ep^36 - 9881503414272*ep^35 + 
+         69171612291072*ep^34 + 2060113076156160*ep^33 - 11413803566803968*
+         ep^32 - 223283349325225728*ep^31 + 590370551914581504*ep^30 + 
+         12926305520750649456*ep^29 + 86663840552703659520*ep^28 - 
+         556514293439124280440*ep^27 - 21639450595293467351856*ep^26 + 
+         93023787833697258316665*ep^25 + 2765232387480234201421140*ep^24 - 
+         18570359061400124004622110*ep^23 - 313139139474778679258430300*ep^22
+          + 2160183951521037509510811555*ep^21 + 37570444696577528111967394320
+         *ep^20 - 79758622390757746173477589080*ep^19 - 
+         3695787443421933382304416716840*ep^18 - 
+         18773500134660420095743188655809*ep^17 + 
+         86667601703480754051376846352052*ep^16 + 
+         1705379703823166934640849694930682*ep^15 + 
+         11541568835420062969819100325928308*ep^14 + 
+         48034016860300147250012084147180325*ep^13 + 1363905162775201323146806\
+         82303333928*ep^12 + 268964001559745512978245207609928788*ep^11 + 
+         354275553564923511137778064109897856*ep^10 + 263875295055158671718968\
+         739587859184*ep^9 + 9712685030140937928276827700739200*ep^8 - 
+         192510316508289737645059055791755840*ep^7 - 1735491733764579472048015\
+         76643999744*ep^6 - 34176493625511993649581461118658560*ep^5 + 
+         37645332162010586185990646495232000*ep^4 + 
+         23022781665121300636697375766528000*ep^3 + 
+         1262790370854924398080531660800000*ep^2 - 
+         1916944754577345757273256755200000*ep - 
+         374741630734875564727074816000000,1099511627776*ep^12 + 
+         72567767433216*ep^11 + 2116559883468800*ep^10 + 35921044879441920*
+         ep^9 + 392990744534581248*ep^8 + 2900025689933611008*ep^7 + 
+         14666973841624924160*ep^6 + 50572839963045396480*ep^5 + 
+         115732478479329918976*ep^4 + 165936069452419301376*ep^3 + 
+         132539353736769699840*ep^2 + 43888985743609036800*ep) + Gam(1,1)^3*
+         M^-24*rat(9795520512*ep^34 - 63670883328*ep^33 - 5021564751360*ep^32
+          + 26850201967872*ep^31 + 1064146377973248*ep^30 - 4024749720286080*
+         ep^29 - 116618227443995328*ep^28 + 105980931941885856*ep^27 + 
+         6532726732085988360*ep^26 + 54006577382938866876*ep^25 - 
+         191028463837158148470*ep^24 + 142911056311303002489*ep^23 + 
+         816290032905624279288573*ep^22 + 26035581108229865707078557*ep^21 + 
+         426733627261683284239029201*ep^20 + 4038369491599455940512553980*
+         ep^19 + 8465013631816027963916420034*ep^18 - 
+         409277463861236002076176361082*ep^17 - 
+         7728830456486736751085005098948*ep^16 - 
+         80751178448160999728989608645759*ep^15 - 
+         587617790338884685972072198763007*ep^14 - 
+         3185827036146362910724603106058063*ep^13 - 
+         13246819490060362583508869169803127*ep^12 - 
+         42806074818383351163857294414289990*ep^11 - 1079292658004069154239070\
+         14095079352*ep^10 - 211642154575991672977516408117522560*ep^9 - 
+         319364046846205861630314127556569968*ep^8 - 3634850592154360568091377\
+         69031188448*ep^7 - 301255426120394883646868045506426368*ep^6 - 
+         170099760810993221940028121421112320*ep^5 - 
+         55500895176082306119891067875840000*ep^4 - 
+         3398148482671476470350342462464000*ep^3 + 
+         4682243561977531098081095270400000*ep^2 + 
+         1676727169530517711030188441600000*ep + 
+         187370815367437782363537408000000,274877906944*ep^15 + 18141941858304
+         *ep^14 + 529139970867200*ep^13 + 8980261219860480*ep^12 + 
+         98247686133645312*ep^11 + 725006422483402752*ep^10 + 
+         3666743460406231040*ep^9 + 12643209990761349120*ep^8 + 
+         28933119619832479744*ep^7 + 41484017363104825344*ep^6 + 
+         33134838434192424960*ep^5 + 10972246435902259200*ep^4) );
+
+
+id,only intbn*dala^11*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-26*miBN*rat(
+         117546246144*ep^39 + 764050599936*ep^38 - 68163762069504*ep^37 - 
+         473930138585088*ep^36 + 15772167650824704*ep^35 + 124707552876382464*
+         ep^34 - 1717847922431953152*ep^33 - 18955118424913761024*ep^32 + 
+         49485051068399701920*ep^31 + 2131544589272534194704*ep^30 + 
+         9185804495047780880256*ep^29 - 255521678386522145190408*ep^28 - 
+         1033101614468459222211618*ep^27 + 38212718159020864066545591*ep^26 - 
+         16597308281441078659345245*ep^25 - 6072240237232074709835032020*ep^24
+          + 11834329595021542071248282820*ep^23 + 
+         936009633646094203530579046725*ep^22 + 918406534159715755057076201985
+         *ep^21 - 119395078208054202227541840073530*ep^20 - 
+         924673004277439424147840351921454*ep^19 + 
+         5244584967371225707121888213422329*ep^18 + 15094091487726711436382903\
+         9697576309*ep^17 + 1436020004178076261229808028632643248*ep^16 + 
+         8535977551588009138511855199394163256*ep^15 + 35762163649750460888461\
+         249097983627491*ep^14 + 109874861296835618027897543713240626327*ep^13
+          + 249146219179515273759925413361790407974*ep^12 + 408201825433476028\
+         733345559718288623060*ep^11 + 450881398248611050810239394921454268216
+         *ep^10 + 261506715636871759774169268106156833264*ep^9 - 6530846200873\
+         5668875412702439676141152*ep^8 - 257112687634003617856991165159301920\
+         832*ep^7 - 186063735309283830597840339973817187456*ep^6 - 20461025267\
+         393573399921080676517450240*ep^5 + 4624560640156279339067576364652723\
+         2000*ep^4 + 23690794181716538145445788271475712000*ep^3 + 59415359615\
+         1716364731110464921600000*ep^2 - 2073992136723656453875266817228800000
+         *ep - 379877015415849782690317860864000000,8796093022208*ep^13 + 
+         686095255732224*ep^12 + 23898984741339136*ep^11 + 490558107848540160*
+         ep^10 + 6592346264703074304*ep^9 + 60927316994788687872*ep^8 + 
+         395738256966626050048*ep^7 + 1812612208500355891200*ep^6 + 
+         5780852464286997413888*ep^5 + 12437806489635026632704*ep^4 + 
+         16990177497326410530816*ep^3 + 13074889844678763479040*ep^2 + 
+         4213342631386467532800*ep) + Gam(1,1)^3*M^-26*rat(58773123072*ep^36
+          + 470184984576*ep^35 - 33288443873280*ep^34 - 286838961979392*ep^33
+          + 7404599707925760*ep^32 + 73395356204132352*ep^31 - 
+         736686933144028416*ep^30 - 10556095513519319040*ep^29 + 
+         7477919438265561168*ep^28 + 1070267874588428909184*ep^27 + 
+         6275512254014221315320*ep^26 - 117177451528637290295232*ep^25 - 
+         2847806458414012074010077*ep^24 - 194660375948344105847074152*ep^23
+          - 9895504639437722640727314702*ep^22 - 
+         293100939355154997812128084512*ep^21 - 
+         5966875760161228205460501912867*ep^20 - 
+         91277399940832290749003573387832*ep^19 - 
+         1092863670607994352708051499377672*ep^18 - 
+         10431330020087185059014145274498512*ep^17 - 
+         80103988363760414000723990259535779*ep^16 - 4975369127359427462402128\
+         64851406808*ep^15 - 2507612103080672492568368537076876102*ep^14 - 
+         10269952146214799100609751372828650240*ep^13 - 3415565109366136728063\
+         6220547943673437*ep^12 - 91956963747734557809497699874822574344*ep^11
+          - 199184801601537898976504689140428029116*ep^10 - 343631779683690525\
+         645301608721126419792*ep^9 - 464881702323681656012599674034987545840*
+         ep^8 - 481507482312589606890150346083647006976*ep^7 - 367268995906878\
+         886098487666223845396032*ep^6 - 1919353066676336628222634051939928332\
+         80*ep^5 - 57229067783694783072253262934506112000*ep^4 - 1734097151163\
+         089072756617456928256000*ep^3 + 5340036739755492820165513475174400000
+         *ep^2 + 1765093681242206977094075975270400000*ep + 189938507707924891\
+         345158930432000000,2199023255552*ep^16 + 171523813933056*ep^15 + 
+         5974746185334784*ep^14 + 122639526962135040*ep^13 + 
+         1648086566175768576*ep^12 + 15231829248697171968*ep^11 + 
+         98934564241656512512*ep^10 + 453153052125088972800*ep^9 + 
+         1445213116071749353472*ep^8 + 3109451622408756658176*ep^7 + 
+         4247544374331602632704*ep^6 + 3268722461169690869760*ep^5 + 
+         1053335657846616883200*ep^4) );
+#endprocedure
 
 #procedure reduceBNBN
 *
 * reduce BN to BM and simpler integrals
 *
-
-* Note: this file contains ALL procedures connected to the topology BN,
-*       also the ones using the old reduction method.
- 
 
 * new method: 
 * 1. Reduce indices of massless lines to zero:
@@ -6517,34 +6832,6 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         
 ************************************************************
         
-* split epression
-
-* * AFP
-*         if ( match(x3*x4*x5*x6)>0 ) Multiply intd6^20;
-*         b intd6,intbn;        
-* * AFP        
-*         Print+s;
-*         .end        
-
-        
-* G diabnh7 = diabnbn;
-* .sort
-* skip diabnbn;
-* if ( match(x3*x4*x5*x6)>0 ) discard;
-* .sort
-* g diabnbntmp1 = diabnbn-diabnh7;
-* .sort
-* drop diabnbn;
-* .sort
-* .store
-* g diabnbn = diabnbntmp1;
-* .sort
-
-* #include matad.info # time
-* #include matad.info # print
-
-************************************************************
-
 * n2<0:
 
         #call redBNn2p(p1,p2,x3,x4,x5,x6)
@@ -6563,10 +6850,6 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         
 * #include expandnomdeno
 
-* If `EXPAND' is defined, `redBNn3456exp.prc' should be used,
-* otherwise `redBNn3456.prc':
-        
-*         #call redBNn3456exp(p1,p2,x3,x4,x5,x6)
         #call redBNn3456(p1,p2,x3,x4,x5,x6)
         .sort
         
@@ -6575,7 +6858,7 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         multiply replace_(x3,x4,x4,x3);
         endif;
         endif;
-*         #call redBNn3456exp(p1,p2,x3,x4,x5,x6)
+
         #call redBNn3456(p1,p2,x3,x4,x5,x6)
         .sort
         
@@ -6587,7 +6870,6 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         
 * #include expandnomdeno
 
-*         #call redBNn3456exp(p1,p2,x3,x4,x5,x6)
         #call redBNn3456(p1,p2,x3,x4,x5,x6)
         .sort
         
@@ -6596,7 +6878,7 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         multiply replace_(x3,x6,x6,x3);
         endif;
         endif;
-*         #call redBNn3456exp(p1,p2,x3,x4,x5,x6)
+
         #call redBNn3456(p1,p2,x3,x4,x5,x6)
         .sort
 
@@ -6623,15 +6905,14 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         #message Use table for BN
 
 
-*         Print+s;
-*         .end
 * Check if table is too small:
         
-        if ( count(intbn,1) );       
-*         if (count(dala,1) > 11) exit "table is too small"; 
-        if (count(dala,1) > 11) multiply 1/(1-1); 
+        if ( count(intbn,1) );   
+        
+        if ( count(dala,1) > 11) exit "ERROR: Table is too small for dala > 11 in BN reduction"; 
+*         if (count(dala,1) > 11) multiply 1/(1-1); 
 
-        #call BNd
+        #call BNdExact
         
 * Replace temporarily x6 by s6m, in order not to touch
 * terms, which are not listed in the previous table.
@@ -6642,7 +6923,7 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         .sort
 
         if ( count(intbn,1) );                
-        #call BNd0
+        #call BNd0Exact
 
         id s6m^n1? = x6^n1;
         endif;        
@@ -6886,10 +7167,11 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
         #message do recursion
 
 * Modified: applyed only to intbn        
-*         #call reduceBNBN
-*         id acc(x1?)*intbn = rat(x1,1)*int0;        
-        #call reduceBNnotab
-        
+        #ifdef `REDBNTAB'
+                #call reduceBNBN
+                #else                
+                #call reduceBNnotab
+        #endif
 
 *         #call expansion(2)        
 *         b ep;
@@ -7141,6 +7423,8 @@ id	xpower = 1;
 
 
 
+
+************************************************************
 #procedure topbn3
 *
 * this is topbn3
@@ -7305,12 +7589,12 @@ id	xpower = 1;
 
         if( count(intbm,1));
         if (count(`x4',1) > count(`x6',1)) 
-                    multiply replace_(`x4',`x6',`x6',`x4',`p2',`p3',`p3',`p2');
-if (count(`x5',1) > count(`x6',1)) 
-                    multiply replace_(`x5',`x6',`x6',`x5',`p1',`p2',`p2',`p1');
-if (count(`x4',1) > count(`x5',1)) 
+        multiply replace_(`x4',`x6',`x6',`x4',`p2',`p3',`p3',`p2');
+        if (count(`x5',1) > count(`x6',1)) 
+        multiply replace_(`x5',`x6',`x6',`x5',`p1',`p2',`p2',`p1');
+        if (count(`x4',1) > count(`x5',1)) 
         multiply replace_(`x4',`x5',`x5',`x4',`p1',`p3',`p3',`p1');
-endif;        
+        endif;        
 #endprocedure
 
 
@@ -7319,29 +7603,29 @@ endif;
 #procedure symBMnom (p1,p2,p3,p4,p5,p6,x4,x5,x6)
 
 * sort: n6>=n5>=n4
-if( count(intbm,1));        
-if ( (count(`x4',1) > count(`x6',1)) && (count(`x4',1) > count(`x5',1)) );
-  id `p1'=-`p1';
-  multiply replace_(`x4',`x6',`x6',`x4',
-                    `p4',`p6',`p6',`p4',
-                    `p2',`p3',`p3',`p2');
-endif;
-if ( (count(`x5',1) > count(`x6',1)) && (count(`x5',1) > count(`x4',1)) );
-  id `p3'=-`p3';
-  multiply replace_(`x5',`x6',`x6',`x5',
-                    `p5',`p6',`p6',`p5',
-                    `p1',`p2',`p2',`p1');
-endif;
+        if( count(intbm,1));        
+        if ( (count(`x4',1) > count(`x6',1)) && (count(`x4',1) > count(`x5',1)) );
+        id `p1'=-`p1';
+        multiply replace_(`x4',`x6',`x6',`x4',
+        `p4',`p6',`p6',`p4',
+        `p2',`p3',`p3',`p2');
+        endif;
+        if ( (count(`x5',1) > count(`x6',1)) && (count(`x5',1) > count(`x4',1)) );
+        id `p3'=-`p3';
+        multiply replace_(`x5',`x6',`x6',`x5',
+        `p5',`p6',`p6',`p5',
+        `p1',`p2',`p2',`p1');
+        endif;
 
-if (count(`x4',1) > count(`x5',1));
-  id `p4'=-`p4';
-  id `p5'=-`p5';
-  id `p6'=-`p6';
-  multiply replace_(`x5',`x4',`x4',`x5',
-                    `p5',`p4',`p4',`p5',
-                    `p3',`p1',`p1',`p3');
-endif;
-endif;
+        if (count(`x4',1) > count(`x5',1));
+        id `p4'=-`p4';
+        id `p5'=-`p5';
+        id `p6'=-`p6';
+        multiply replace_(`x5',`x4',`x4',`x5',
+        `p5',`p4',`p4',`p5',
+        `p3',`p1',`p1',`p3');
+        endif;
+        endif;
 #endprocedure
 
 
@@ -7352,115 +7636,115 @@ endif;
 
 ************************************************************
 
-#call symBMnom(p1,p2,p3,p4,p5,p6,x4,x5,x6)
-.sort
+        #call symBMnom(p1,p2,p3,p4,p5,p6,x4,x5,x6)
+        .sort
 
 ************************************************************
 
-if( count(intbm,1));        
-id p4.p4 = 1/x4 - M^2;
-id p5.p5 = 1/x5 - M^2;
-id p6.p6 = 1/x6 - M^2;
+        if( count(intbm,1));        
+        id p4.p4 = 1/x4 - M^2;
+        id p5.p5 = 1/x5 - M^2;
+        id p6.p6 = 1/x6 - M^2;
 
-if ( (count(x4,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p2.p2,-1)<=0) ) )
-  discard;
-if ( (count(x5,1)<=0) && ( (count(p2.p2,-1)<=0) || (count(p3.p3,-1)<=0) ) )
-  discard;
-if ( (count(x6,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p3.p3,-1)<=0) ) )
-  discard;
-if ( (count(x4,1)<=0) && (count(x5,1)<=0) ) discard;
-if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
-if ( (count(x5,1)<=0) && (count(x6,1)<=0) ) discard;
-endif;
+        if ( (count(x4,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p2.p2,-1)<=0) ) )
+        discard;
+        if ( (count(x5,1)<=0) && ( (count(p2.p2,-1)<=0) || (count(p3.p3,-1)<=0) ) )
+        discard;
+        if ( (count(x6,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p3.p3,-1)<=0) ) )
+        discard;
+        if ( (count(x4,1)<=0) && (count(x5,1)<=0) ) discard;
+        if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
+        if ( (count(x5,1)<=0) && (count(x6,1)<=0) ) discard;
+        endif;
 
-#call ACCU(pi.pi)
-
-************************************************************
-
-if( count(intbm,1));        
-id  p1.p2 = 1/2 * (-p3.p3 + p1.p1 + p2.p2);
-id  p1.p3 = 1/2 * ( p2.p2 - p1.p1 - p3.p3);
-id  p1.p4 = 1/2 * (-1/x6  + 1/x4  + p1.p1);
-id  p1.p5 = 1/2 * ( p3.p3 + 1/x4  - p2.p2 - 1/x6);
-
-if ( (count(x4,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p2.p2,-1)<=0) ) )
-  discard;
-if ( (count(x5,1)<=0) && ( (count(p2.p2,-1)<=0) || (count(p3.p3,-1)<=0) ) )
-  discard;
-if ( (count(x6,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p3.p3,-1)<=0) ) )
-  discard;
-if ( (count(x4,1)<=0) && (count(x5,1)<=0) ) discard;
-if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
-if ( (count(x5,1)<=0) && (count(x6,1)<=0) ) discard;
-endif;
-
-#call ACCU(p1)
+        #call ACCU(pi.pi)
 
 ************************************************************
 
-if( count(intbm,1));        
-id  p1.p6 = 1/2 * ( 1/x4  - p1.p1 - 1/x6);
-id  p2.p3 = 1/2 * (-p1.p1 + p2.p2 + p3.p3);
-id  p2.p4 = 1/2 * (-1/x5  + p2.p2 + 1/x4);
-id  p2.p5 = 1/2 * ( 1/x4  - p2.p2 - 1/x5);
+        if( count(intbm,1));        
+        id  p1.p2 = 1/2 * (-p3.p3 + p1.p1 + p2.p2);
+        id  p1.p3 = 1/2 * ( p2.p2 - p1.p1 - p3.p3);
+        id  p1.p4 = 1/2 * (-1/x6  + 1/x4  + p1.p1);
+        id  p1.p5 = 1/2 * ( p3.p3 + 1/x4  - p2.p2 - 1/x6);
 
-if ( (count(x4,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p2.p2,-1)<=0) ) )
-  discard;
-if ( (count(x5,1)<=0) && ( (count(p2.p2,-1)<=0) || (count(p3.p3,-1)<=0) ) )
-  discard;
-if ( (count(x6,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p3.p3,-1)<=0) ) )
-  discard;
-if ( (count(x4,1)<=0) && (count(x5,1)<=0) ) discard;
-if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
-if ( (count(x5,1)<=0) && (count(x6,1)<=0) ) discard;
-endif;
+        if ( (count(x4,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p2.p2,-1)<=0) ) )
+        discard;
+        if ( (count(x5,1)<=0) && ( (count(p2.p2,-1)<=0) || (count(p3.p3,-1)<=0) ) )
+        discard;
+        if ( (count(x6,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p3.p3,-1)<=0) ) )
+        discard;
+        if ( (count(x4,1)<=0) && (count(x5,1)<=0) ) discard;
+        if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
+        if ( (count(x5,1)<=0) && (count(x6,1)<=0) ) discard;
+        endif;
 
-#call ACCU(p1 p2)
-
-************************************************************
-
-if( count(intbm,1));        
-id  p2.p6 = 1/2 * ( p3.p3 + 1/x4  - p1.p1 - 1/x5);
-id  p3.p4 = 1/2 * ( p2.p2 + 1/x6  - p1.p1 - 1/x5);
-id  p3.p5 = 1/2 * ( 1/x6  - p3.p3 - 1/x5);
-id  p3.p6 = 1/2 * (-1/x5  + p3.p3 + 1/x6);
-
-if ( (count(x4,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p2.p2,-1)<=0) ) )
-  discard;
-if ( (count(x5,1)<=0) && ( (count(p2.p2,-1)<=0) || (count(p3.p3,-1)<=0) ) )
-  discard;
-if ( (count(x6,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p3.p3,-1)<=0) ) )
-  discard;
-if ( (count(x4,1)<=0) && (count(x5,1)<=0) ) discard;
-if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
-if ( (count(x5,1)<=0) && (count(x6,1)<=0) ) discard;
-endif;
-
-#call ACCU(p2 p3)
+        #call ACCU(p1)
 
 ************************************************************
 
-if( count(intbm,1));        
-id  p4.p5 = 1/2 * (-p2.p2 + 1/x4  + 1/x5 - 2*M^2);
-id  p4.p6 = 1/2 * (-p1.p1 + 1/x4  + 1/x6 - 2*M^2);
-id  p5.p6 = 1/2 * (-p3.p3 + 1/x5  + 1/x6 - 2*M^2);
+        if( count(intbm,1));        
+        id  p1.p6 = 1/2 * ( 1/x4  - p1.p1 - 1/x6);
+        id  p2.p3 = 1/2 * (-p1.p1 + p2.p2 + p3.p3);
+        id  p2.p4 = 1/2 * (-1/x5  + p2.p2 + 1/x4);
+        id  p2.p5 = 1/2 * ( 1/x4  - p2.p2 - 1/x5);
 
-if ( (count(x4,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p2.p2,-1)<=0) ) )
-  discard;
-if ( (count(x5,1)<=0) && ( (count(p2.p2,-1)<=0) || (count(p3.p3,-1)<=0) ) )
-  discard;
-if ( (count(x6,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p3.p3,-1)<=0) ) )
-  discard;
-if ( (count(x4,1)<=0) && (count(x5,1)<=0) ) discard;
-if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
-if ( (count(x5,1)<=0) && (count(x6,1)<=0) ) discard;
-endif;
+        if ( (count(x4,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p2.p2,-1)<=0) ) )
+        discard;
+        if ( (count(x5,1)<=0) && ( (count(p2.p2,-1)<=0) || (count(p3.p3,-1)<=0) ) )
+        discard;
+        if ( (count(x6,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p3.p3,-1)<=0) ) )
+        discard;
+        if ( (count(x4,1)<=0) && (count(x5,1)<=0) ) discard;
+        if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
+        if ( (count(x5,1)<=0) && (count(x6,1)<=0) ) discard;
+        endif;
 
-#call ACCU(p4 p5 p6)
+        #call ACCU(p1 p2)
 
 ************************************************************
 
-#call symBM(p1,p2,p3,x4,x5,x6)
+        if( count(intbm,1));        
+        id  p2.p6 = 1/2 * ( p3.p3 + 1/x4  - p1.p1 - 1/x5);
+        id  p3.p4 = 1/2 * ( p2.p2 + 1/x6  - p1.p1 - 1/x5);
+        id  p3.p5 = 1/2 * ( 1/x6  - p3.p3 - 1/x5);
+        id  p3.p6 = 1/2 * (-1/x5  + p3.p3 + 1/x6);
+
+        if ( (count(x4,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p2.p2,-1)<=0) ) )
+        discard;
+        if ( (count(x5,1)<=0) && ( (count(p2.p2,-1)<=0) || (count(p3.p3,-1)<=0) ) )
+        discard;
+        if ( (count(x6,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p3.p3,-1)<=0) ) )
+        discard;
+        if ( (count(x4,1)<=0) && (count(x5,1)<=0) ) discard;
+        if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
+        if ( (count(x5,1)<=0) && (count(x6,1)<=0) ) discard;
+        endif;
+
+        #call ACCU(p2 p3)
+
+************************************************************
+
+        if( count(intbm,1));        
+        id  p4.p5 = 1/2 * (-p2.p2 + 1/x4  + 1/x5 - 2*M^2);
+        id  p4.p6 = 1/2 * (-p1.p1 + 1/x4  + 1/x6 - 2*M^2);
+        id  p5.p6 = 1/2 * (-p3.p3 + 1/x5  + 1/x6 - 2*M^2);
+
+        if ( (count(x4,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p2.p2,-1)<=0) ) )
+        discard;
+        if ( (count(x5,1)<=0) && ( (count(p2.p2,-1)<=0) || (count(p3.p3,-1)<=0) ) )
+        discard;
+        if ( (count(x6,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p3.p3,-1)<=0) ) )
+        discard;
+        if ( (count(x4,1)<=0) && (count(x5,1)<=0) ) discard;
+        if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
+        if ( (count(x5,1)<=0) && (count(x6,1)<=0) ) discard;
+        endif;
+
+        #call ACCU(p4 p5 p6)
+
+************************************************************
+
+        #call symBM(p1,p2,p3,x4,x5,x6)
 
 ***#message numerator decomposition done (BM)
 * #include matad.info # time
@@ -7480,37 +7764,37 @@ endif;
 * Warning! In this procedure x3 is used for historical reasons!
 *          Therefore not with `x3'
 
-if( count(intbm,1));        
-repeat;
+        if( count(intbm,1));        
+        repeat;
 
 * sort: n6>=n4,n5
 
-  if((count(`x4',1) > 0)  &&  (count(x3,1) = 0)  &&
-     (count(`x5',1) > 0)  &&  (count(`x6',1) > 0) );
+                if((count(`x4',1) > 0)  &&  (count(x3,1) = 0)  &&
+                (count(`x5',1) > 0)  &&  (count(`x6',1) > 0) );
 
-    if (count(`x4',1) > count(`x6',1)) 
-                    multiply replace_(`x4',`x6',`x6',`x4',`p2',`p3',`p3',`p2');
-    if (count(`x5',1) > count(`x6',1)) 
-                    multiply replace_(`x5',`x6',`x6',`x5',`p1',`p2',`p2',`p1');
+                if (count(`x4',1) > count(`x6',1)) 
+                multiply replace_(`x4',`x6',`x6',`x4',`p2',`p3',`p3',`p2');
+                if (count(`x5',1) > count(`x6',1)) 
+                multiply replace_(`x5',`x6',`x6',`x5',`p1',`p2',`p2',`p1');
 
 * Now do the reduction via eq. (M7) resp. (4)
 
-    if (count(`x6',1)>1);
+                if (count(`x6',1)>1);
 
-      id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? *1/`p3'.`p3'^n3?
-        * `x4'^n4? * `x5'^n5? * `x6'^n6?
-      =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 *1/`p3'.`p3'^n3
-        * `x4'^n4  * `x5'^n5  * `x6'^(n6-1) * (-1)
-        *1/(n6-1)/M^2/2
-        *(
-          nom(4-2*(n6-1)-n1-n3,-2)
-         +n1/`p1'.`p1'*(1/`x4'-1/`x6')
-         +n3/`p3'.`p3'*(1/`x5'-1/`x6')
-         )
-        ;
-    endif;
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? *1/`p3'.`p3'^n3?
+                * `x4'^n4? * `x5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 *1/`p3'.`p3'^n3
+                * `x4'^n4  * `x5'^n5  * `x6'^(n6-1) * (-1)
+                *1/(n6-1)/M^2/2
+                *(
+                nom(4-2*(n6-1)-n1-n3,-2)
+                +n1/`p1'.`p1'*(1/`x4'-1/`x6')
+                +n3/`p3'.`p3'*(1/`x5'-1/`x6')
+                )
+                ;
+                endif;
 
-  endif;
+                endif;
 
 endrepeat;
 endif;
@@ -7525,192 +7809,192 @@ endif;
 * at this stage: n4=n5=n6=1,0
 *                n1,n2,n3 <>=0
 
-if( count(intbm,1));                
-  repeat;
+        if( count(intbm,1));                
+        repeat;
 
-    if (count(`p3'.`p3',1) > count(`p1'.`p1',1)) 
-                    multiply replace_(`x4',`x5',`x5',`x4',`p1',`p3',`p3',`p1');
-    if (count(`p3'.`p3',1) > count(`p2'.`p2',1)) 
-                    multiply replace_(`x4',`x6',`x6',`x4',`p2',`p3',`p3',`p2');
+                if (count(`p3'.`p3',1) > count(`p1'.`p1',1)) 
+                multiply replace_(`x4',`x5',`x5',`x4',`p1',`p3',`p3',`p1');
+                if (count(`p3'.`p3',1) > count(`p2'.`p2',1)) 
+                multiply replace_(`x4',`x6',`x6',`x4',`p2',`p3',`p3',`p2');
 
 
-    if ( (count(`p3'.`p3',1) < 0) 
-      && (count(`x4',1) = 1)       &&  (count(x3,1) = 0)  
-      && (count(`x5',1) = 1)       &&  (count(`x6',1) = 1) );  
+                if ( (count(`p3'.`p3',1) < 0) 
+                && (count(`x4',1) = 1)       &&  (count(x3,1) = 0)  
+                && (count(`x5',1) = 1)       &&  (count(`x6',1) = 1) );  
 
-       id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? *1/`p3'.`p3'^n3? 
-        * `x4'^n4? * `x5'^n5? * `x6'^n6?
-      =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 *1/`p3'.`p3'^n3 
-        * `x4'^n4  * `x5'^n5  * `x6'^n6
-        *1/2*deno(n1+n2-3,2)*deno(3-2*n3,-2)*deno(n1+n2+n3-3,2)
-        *(-1)
-        *(
-        -(`x5'*nom(-3 + n1 + n2,2)**2/`x4') - `x6'*nom(-3 + n1 + n2,2)**2/`x4' 
-+(-1)*
-        n3*`p1'.`p1'*nom(-3 + n1 + n2,2)**2/(2*M**2*`x5'*`p3'.`p3') 
--(-1)*
-        n3*`p1'.`p1'*nom(-3 + n1 + n2,2)**2/(2*M**2*`x6'*`p3'.`p3') 
--(-1)*
-        n3*`p2'.`p2'*nom(-3 + n1 + n2,2)**2/(2*M**2*`x5'*`p3'.`p3') 
-+(-1)*
-        n3*`p2'.`p2'*nom(-3 + n1 + n2,2)**2/(2*M**2*`x6'*`p3'.`p3') 
-+(-1)*
-        n2*`p1'.`p1'*nom(-3 + n1 + n2,2)*nom(3 - n1 - n3,-2)/
-         (2*M**2*`x5'*`p2'.`p2') 
-+(-1)*
-        n2*`p3'.`p3'*nom(-3 + n1 + n2,2)*nom(3 - n1 - n3,-2)/
-         (2*M**2*`x4'*`p2'.`p2') 
-+(-1)*
-        n1*`p2'.`p2'*nom(-3 + n1 + n2,2)*nom(3 - n2 - n3,-2)/
-         (2*M**2*`x6'*`p1'.`p1') 
-+(-1)*
-        n1*`p3'.`p3'*nom(-3 + n1 + n2,2)*nom(3 - n2 - n3,-2)/
-         (2*M**2*`x4'*`p1'.`p1') 
-+
-        `x4'*nom(-3 + n1 + n2,2)*nom(-3 + n1 + n3,2)/`x6' 
-+
-        `x5'*nom(-3 + n1 + n2,2)*nom(-3 + n1 + n3,2)/`x6' 
-+(-1)*
-        n2*`p1'.`p1'*nom(-3 + n1 + n2,2)*nom(-3 + n1 + n3,2)/
-         (2*M**2*`x4'*`p2'.`p2') 
-+(-1)*
-        n2*`p3'.`p3'*nom(-3 + n1 + n2,2)*nom(-3 + n1 + n3,2)/
-         (2*M**2*`x5'*`p2'.`p2') 
-+
-        `x4'*nom(-3 + n1 + n2,2)*nom(-3 + n2 + n3,2)/`x5' 
-+
-        `x6'*nom(-3 + n1 + n2,2)*nom(-3 + n2 + n3,2)/`x5' 
-+(-1)*
-        n1*`p2'.`p2'*nom(-3 + n1 + n2,2)*nom(-3 + n2 + n3,2)/
-         (2*M**2*`x4'*`p1'.`p1') 
-+(-1)*
-        n1*`p3'.`p3'*nom(-3 + n1 + n2,2)*nom(-3 + n2 + n3,2)/
-         (2*M**2*`x6'*`p1'.`p1') 
-+(-1)*
-          `p3'.`p3'*nom(-3 + n1 + n2,2)*nom(-3 + n1 + n3,2)*
-          nom(-3 + n2 + n3,2)/M**2 
-+(-1)*
-        nom(-3 + n1 + n2,2)*nom(-6 + 9*n2 - n1*n2 - 2*n2**2 + n3 + n1*n3 -
-            2*n2*n3,4 - 4*n2)/(2*M**2*`x5') 
-+(-1)*
-        nom(-3 + n1 + n2,2)*nom(-6 + 9*n1 - 2*n1**2 - n1*n2 + n3 - 2*n1*n3 +
-            n2*n3,4 - 4*n1)/(2*M**2*`x6') 
-+(-1)*
-        nom(-3 + n1 + n2,2)*nom(12 - 9*n1 + 2*n1**2 - 9*n2 + 2*n1*n2 +
-            2*n2**2 - 2*n3 + n1*n3 + n2*n3,-8 + 4*n1 + 4*n2)/(2*M**2*`x4')
-      );
-    endif;
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? *1/`p3'.`p3'^n3? 
+                * `x4'^n4? * `x5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 *1/`p3'.`p3'^n3 
+                * `x4'^n4  * `x5'^n5  * `x6'^n6
+                *1/2*deno(n1+n2-3,2)*deno(3-2*n3,-2)*deno(n1+n2+n3-3,2)
+                *(-1)
+                *(
+                -(`x5'*nom(-3 + n1 + n2,2)**2/`x4') - `x6'*nom(-3 + n1 + n2,2)**2/`x4' 
+                +(-1)*
+                n3*`p1'.`p1'*nom(-3 + n1 + n2,2)**2/(2*M**2*`x5'*`p3'.`p3') 
+                -(-1)*
+                n3*`p1'.`p1'*nom(-3 + n1 + n2,2)**2/(2*M**2*`x6'*`p3'.`p3') 
+                -(-1)*
+                n3*`p2'.`p2'*nom(-3 + n1 + n2,2)**2/(2*M**2*`x5'*`p3'.`p3') 
+                +(-1)*
+                n3*`p2'.`p2'*nom(-3 + n1 + n2,2)**2/(2*M**2*`x6'*`p3'.`p3') 
+                +(-1)*
+                n2*`p1'.`p1'*nom(-3 + n1 + n2,2)*nom(3 - n1 - n3,-2)/
+                (2*M**2*`x5'*`p2'.`p2') 
+                +(-1)*
+                n2*`p3'.`p3'*nom(-3 + n1 + n2,2)*nom(3 - n1 - n3,-2)/
+                (2*M**2*`x4'*`p2'.`p2') 
+                +(-1)*
+                n1*`p2'.`p2'*nom(-3 + n1 + n2,2)*nom(3 - n2 - n3,-2)/
+                (2*M**2*`x6'*`p1'.`p1') 
+                +(-1)*
+                n1*`p3'.`p3'*nom(-3 + n1 + n2,2)*nom(3 - n2 - n3,-2)/
+                (2*M**2*`x4'*`p1'.`p1') 
+                +
+                `x4'*nom(-3 + n1 + n2,2)*nom(-3 + n1 + n3,2)/`x6' 
+                +
+                `x5'*nom(-3 + n1 + n2,2)*nom(-3 + n1 + n3,2)/`x6' 
+                +(-1)*
+                n2*`p1'.`p1'*nom(-3 + n1 + n2,2)*nom(-3 + n1 + n3,2)/
+                (2*M**2*`x4'*`p2'.`p2') 
+                +(-1)*
+                n2*`p3'.`p3'*nom(-3 + n1 + n2,2)*nom(-3 + n1 + n3,2)/
+                (2*M**2*`x5'*`p2'.`p2') 
+                +
+                `x4'*nom(-3 + n1 + n2,2)*nom(-3 + n2 + n3,2)/`x5' 
+                +
+                `x6'*nom(-3 + n1 + n2,2)*nom(-3 + n2 + n3,2)/`x5' 
+                +(-1)*
+                n1*`p2'.`p2'*nom(-3 + n1 + n2,2)*nom(-3 + n2 + n3,2)/
+                (2*M**2*`x4'*`p1'.`p1') 
+                +(-1)*
+                n1*`p3'.`p3'*nom(-3 + n1 + n2,2)*nom(-3 + n2 + n3,2)/
+                (2*M**2*`x6'*`p1'.`p1') 
+                +(-1)*
+                `p3'.`p3'*nom(-3 + n1 + n2,2)*nom(-3 + n1 + n3,2)*
+                nom(-3 + n2 + n3,2)/M**2 
+                +(-1)*
+                nom(-3 + n1 + n2,2)*nom(-6 + 9*n2 - n1*n2 - 2*n2**2 + n3 + n1*n3 -
+                2*n2*n3,4 - 4*n2)/(2*M**2*`x5') 
+                +(-1)*
+                nom(-3 + n1 + n2,2)*nom(-6 + 9*n1 - 2*n1**2 - n1*n2 + n3 - 2*n1*n3 +
+                n2*n3,4 - 4*n1)/(2*M**2*`x6') 
+                +(-1)*
+                nom(-3 + n1 + n2,2)*nom(12 - 9*n1 + 2*n1**2 - 9*n2 + 2*n1*n2 +
+                2*n2**2 - 2*n3 + n1*n3 + n2*n3,-8 + 4*n1 + 4*n2)/(2*M**2*`x4')
+                );
+                endif;
 
-    id nom(x?,0)=x;
-    if ( (count(`x4',1)==0) && (count(x3,1)==0) && 
-       ((count(`p2'.`p2',1)>=0) || (count(`p1'.`p1',1)>=0)) ) discard;
+                id nom(x?,0)=x;
+                if ( (count(`x4',1)==0) && (count(x3,1)==0) && 
+                ((count(`p2'.`p2',1)>=0) || (count(`p1'.`p1',1)>=0)) ) discard;
 
 endrepeat;
 endif;
-  .sort
+.sort
 
 if( count(intbm,1));        
-  repeat;
+repeat;
 
-    if (count(`p3'.`p3',1) < count(`p1'.`p1',1)) 
-                    multiply replace_(`x4',`x5',`x5',`x4',`p1',`p3',`p3',`p1');
-    if (count(`p3'.`p3',1) < count(`p2'.`p2',1)) 
-                    multiply replace_(`x4',`x6',`x6',`x4',`p2',`p3',`p3',`p2');
+        if (count(`p3'.`p3',1) < count(`p1'.`p1',1)) 
+        multiply replace_(`x4',`x5',`x5',`x4',`p1',`p3',`p3',`p1');
+        if (count(`p3'.`p3',1) < count(`p2'.`p2',1)) 
+        multiply replace_(`x4',`x6',`x6',`x4',`p2',`p3',`p3',`p2');
 
-    if ( (count(`p3'.`p3',1) > 0)
-      && (count(`x4',1) = 1)       &&  (count(x3,1) = 0)  
-      && (count(`x5',1) = 1)       &&  (count(`x6',1) = 1) );  
+        if ( (count(`p3'.`p3',1) > 0)
+        && (count(`x4',1) = 1)       &&  (count(x3,1) = 0)  
+        && (count(`x5',1) = 1)       &&  (count(`x6',1) = 1) );  
 
-       id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? *1/`p3'.`p3'^n3? 
+        id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? *1/`p3'.`p3'^n3? 
         * `x4'^n4? * `x5'^n5? * `x6'^n6?
-      =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 *1/`p3'.`p3'^n3 
+        =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 *1/`p3'.`p3'^n3 
         * `x4'^n4  * `x5'^n5  * `x6'^n6
         *deno(n1+n2-3,2)*deno(n1+n3-2,2)*deno(n2+n3-2,2)
         *(-1)
         *(
-       (1 + n3)*`p1'.`p1'*nom(-3 + n1 + n2,2)**2/(2*`x5'*`p3'.`p3'**2) 
--
+        (1 + n3)*`p1'.`p1'*nom(-3 + n1 + n2,2)**2/(2*`x5'*`p3'.`p3'**2) 
+        -
         (1 + n3)*`p1'.`p1'*nom(-3 + n1 + n2,2)**2/(2*`x6'*`p3'.`p3'**2) 
--
+        -
         (1 + n3)*`p2'.`p2'*nom(-3 + n1 + n2,2)**2/(2*`x5'*`p3'.`p3'**2) 
-+
+        +
         (1 + n3)*`p2'.`p2'*nom(-3 + n1 + n2,2)**2/(2*`x6'*`p3'.`p3'**2) 
-+
+        +
         M**2*`x5'*nom(-3 + n1 + n2,2)**2/(`x4'*`p3'.`p3') 
-+
+        +
         M**2*`x6'*nom(-3 + n1 + n2,2)**2/(`x4'*`p3'.`p3') 
-+
+        +
         n2*nom(-3 + n1 + n2,2)*nom(2 - n1 - n3,-2)/(2*`x4'*`p2'.`p2') 
-+
+        +
         n2*`p1'.`p1'*nom(-3 + n1 + n2,2)*nom(2 - n1 - n3,-2)/
-         (2*`x5'*`p2'.`p2'*`p3'.`p3') 
-+
+        (2*`x5'*`p2'.`p2'*`p3'.`p3') 
+        +
         n1*nom(-3 + n1 + n2,2)*nom(2 - n2 - n3,-2)/(2*`x4'*`p1'.`p1') 
-+
+        +
         n1*`p2'.`p2'*nom(-3 + n1 + n2,2)*nom(2 - n2 - n3,-2)/
-         (2*`x6'*`p1'.`p1'*`p3'.`p3') 
-+
+        (2*`x6'*`p1'.`p1'*`p3'.`p3') 
+        +
         n2*nom(-3 + n1 + n2,2)*nom(-2 + n1 + n3,2)/(2*`x5'*`p2'.`p2') 
--
+        -
         M**2*`x4'*nom(-3 + n1 + n2,2)*nom(-2 + n1 + n3,2)/(`x6'*`p3'.`p3') 
--
+        -
         M**2*`x5'*nom(-3 + n1 + n2,2)*nom(-2 + n1 + n3,2)/(`x6'*`p3'.`p3') 
-+
+        +
         n2*`p1'.`p1'*nom(-3 + n1 + n2,2)*nom(-2 + n1 + n3,2)/
-         (2*`x4'*`p2'.`p2'*`p3'.`p3') 
-+
+        (2*`x4'*`p2'.`p2'*`p3'.`p3') 
+        +
         n1*nom(-3 + n1 + n2,2)*nom(-2 + n2 + n3,2)/(2*`x6'*`p1'.`p1') 
--
+        -
         M**2*`x4'*nom(-3 + n1 + n2,2)*nom(-2 + n2 + n3,2)/(`x5'*`p3'.`p3') 
--
+        -
         M**2*`x6'*nom(-3 + n1 + n2,2)*nom(-2 + n2 + n3,2)/(`x5'*`p3'.`p3') 
-+
+        +
         n1*`p2'.`p2'*nom(-3 + n1 + n2,2)*nom(-2 + n2 + n3,2)/
-         (2*`x4'*`p1'.`p1'*`p3'.`p3') 
--
+        (2*`x4'*`p1'.`p1'*`p3'.`p3') 
+        -
         2*M**2*nom(-3 + n1 + n2,2)*nom(1 - 2*n3,-2)*nom(-2 + n1 + n2 + n3,2)/
-         `p3'.`p3' 
-+       nom(-3 + n1 + n2,2)*
-          nom(-5 + n1 + 7*n2 - n1*n2 - 2*n2**2 + n3 + n1*n3 - 2*n2*n3,
-           4 - 4*n2)/(2*`x5'*`p3'.`p3') 
-+
+        `p3'.`p3' 
+        +       nom(-3 + n1 + n2,2)*
+        nom(-5 + n1 + 7*n2 - n1*n2 - 2*n2**2 + n3 + n1*n3 - 2*n2*n3,
+        4 - 4*n2)/(2*`x5'*`p3'.`p3') 
+        +
         nom(-3 + n1 + n2,2)*nom(-5 + 7*n1 - 2*n1**2 + n2 - n1*n2 + n3 -
-            2*n1*n3 + n2*n3,4 - 4*n1)/(2*`x6'*`p3'.`p3') 
-+
+        2*n1*n3 + n2*n3,4 - 4*n1)/(2*`x6'*`p3'.`p3') 
+        +
         nom(-3 + n1 + n2,2)*nom(10 - 8*n1 + 2*n1**2 - 8*n2 + 2*n1*n2 +
-            2*n2**2 - 2*n3 + n1*n3 + n2*n3,-8 + 4*n1 + 4*n2)/
-         (2*`x4'*`p3'.`p3')
-       );
+        2*n2**2 - 2*n3 + n1*n3 + n2*n3,-8 + 4*n1 + 4*n2)/
+        (2*`x4'*`p3'.`p3')
+        );
 
-    endif;
+        endif;
 
-    id nom(x?,0)=x;
-    if ( (count(`x4',1)==0) && (count(x3,1)==0) && 
-       ((count(`p2'.`p2',1)>=0) || (count(`p1'.`p1',1)>=0)) ) discard;
+        id nom(x?,0)=x;
+        if ( (count(`x4',1)==0) && (count(x3,1)==0) && 
+        ((count(`p2'.`p2',1)>=0) || (count(`p1'.`p1',1)>=0)) ) discard;
 
-  endrepeat;
-  endif;
-  
+endrepeat;
+endif;
+
 #endprocedure
 
 #procedure redBMn25 (p1,p2,p3,x4,x5,x6)
 
-if( count(intbm,1));                
-repeat;
-  if ( (count(`p2'.`p2',1) < 0) && (count(`p1'.`p1',1) == 0)
-    &&  (count(`x4',1) >= 1)  
-    && (count(`x5',1) >= 1)  &&  (count(`x6',1) >= 1) );  
+        if( count(intbm,1));                
+        repeat;
+                if ( (count(`p2'.`p2',1) < 0) && (count(`p1'.`p1',1) == 0)
+                &&  (count(`x4',1) >= 1)  
+                && (count(`x5',1) >= 1)  &&  (count(`x6',1) >= 1) );  
 
-     id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? *1/`p3'.`p3'^n3? 
-      * `x4'^n4? * `x5'^n5? * `x6'^n6?
-    =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 *1/`p3'.`p3'^n3 
-      * `x4'^n4  * `x5'^n5  * `x6'^n6
-      *deno(4-2*n2-n4,-2)
-      *(
-        n4*`x4'*( `p2'.`p2' - 1/`x5' )
-       )
-      ;
-  endif;
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? *1/`p3'.`p3'^n3? 
+                * `x4'^n4? * `x5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 *1/`p3'.`p3'^n3 
+                * `x4'^n4  * `x5'^n5  * `x6'^n6
+                *deno(4-2*n2-n4,-2)
+                *(
+                n4*`x4'*( `p2'.`p2' - 1/`x5' )
+                )
+                ;
+                endif;
 
 endrepeat;
 endif;
@@ -7837,84 +8121,84 @@ endif;
 
 #procedure redBMn3p (p1,p2,p3,x4,x5,x6)
 
-if( count(intbm,1));                
-repeat;
+        if( count(intbm,1));                
+        repeat;
 
-  if (count(`p3'.`p3',1) < count(`p1'.`p1',1)) 
-                    multiply replace_(`x4',`x5',`x5',`x4',`p1',`p3',`p3',`p1');
-  if (count(`p3'.`p3',1) < count(`p2'.`p2',1)) 
-                    multiply replace_(`x4',`x6',`x6',`x4',`p2',`p3',`p3',`p2');
+                if (count(`p3'.`p3',1) < count(`p1'.`p1',1)) 
+                multiply replace_(`x4',`x5',`x5',`x4',`p1',`p3',`p3',`p1');
+                if (count(`p3'.`p3',1) < count(`p2'.`p2',1)) 
+                multiply replace_(`x4',`x6',`x6',`x4',`p2',`p3',`p3',`p2');
 
-  if ( (count(`p3'.`p3',1) > 0)
-    && (count(`x4',1) = 1)       &&  (count(x3,1) = 0)  
-    && (count(`x5',1) = 1)       &&  (count(`x6',1) = 1) );  
+                if ( (count(`p3'.`p3',1) > 0)
+                && (count(`x4',1) = 1)       &&  (count(x3,1) = 0)  
+                && (count(`x5',1) = 1)       &&  (count(`x6',1) = 1) );  
 
-     id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? *1/`p3'.`p3'^n3? 
-      * `x4'^n4? * `x5'^n5? * `x6'^n6?
-     =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 *1/`p3'.`p3'^n3 
-      * `x4'^n4  * `x5'^n5  * `x6'^n6
-      *deno(n1+n2-3,2)*deno(n1+n3-2,2)*deno(n2+n3-2,2)
-      *(-1)
-      *(
-       (1 + n3)*`p1'.`p1'*nom(-3 + n1 + n2,2)**2/(2*`x5'*`p3'.`p3'**2) 
--
-        (1 + n3)*`p1'.`p1'*nom(-3 + n1 + n2,2)**2/(2*`x6'*`p3'.`p3'**2) 
--
-        (1 + n3)*`p2'.`p2'*nom(-3 + n1 + n2,2)**2/(2*`x5'*`p3'.`p3'**2) 
-+
-        (1 + n3)*`p2'.`p2'*nom(-3 + n1 + n2,2)**2/(2*`x6'*`p3'.`p3'**2) 
-+
-        M**2*`x5'*nom(-3 + n1 + n2,2)**2/(`x4'*`p3'.`p3') 
-+
-        M**2*`x6'*nom(-3 + n1 + n2,2)**2/(`x4'*`p3'.`p3') 
-+
-        n2*nom(-3 + n1 + n2,2)*nom(2 - n1 - n3,-2)/(2*`x4'*`p2'.`p2') 
-+
-        n2*`p1'.`p1'*nom(-3 + n1 + n2,2)*nom(2 - n1 - n3,-2)/
-         (2*`x5'*`p2'.`p2'*`p3'.`p3') 
-+
-        n1*nom(-3 + n1 + n2,2)*nom(2 - n2 - n3,-2)/(2*`x4'*`p1'.`p1') 
-+
-        n1*`p2'.`p2'*nom(-3 + n1 + n2,2)*nom(2 - n2 - n3,-2)/
-         (2*`x6'*`p1'.`p1'*`p3'.`p3') 
-+
-        n2*nom(-3 + n1 + n2,2)*nom(-2 + n1 + n3,2)/(2*`x5'*`p2'.`p2') 
--
-        M**2*`x4'*nom(-3 + n1 + n2,2)*nom(-2 + n1 + n3,2)/(`x6'*`p3'.`p3') 
--
-        M**2*`x5'*nom(-3 + n1 + n2,2)*nom(-2 + n1 + n3,2)/(`x6'*`p3'.`p3') 
-+
-        n2*`p1'.`p1'*nom(-3 + n1 + n2,2)*nom(-2 + n1 + n3,2)/
-         (2*`x4'*`p2'.`p2'*`p3'.`p3') 
-+
-        n1*nom(-3 + n1 + n2,2)*nom(-2 + n2 + n3,2)/(2*`x6'*`p1'.`p1') 
--
-        M**2*`x4'*nom(-3 + n1 + n2,2)*nom(-2 + n2 + n3,2)/(`x5'*`p3'.`p3') 
--
-        M**2*`x6'*nom(-3 + n1 + n2,2)*nom(-2 + n2 + n3,2)/(`x5'*`p3'.`p3') 
-+
-        n1*`p2'.`p2'*nom(-3 + n1 + n2,2)*nom(-2 + n2 + n3,2)/
-         (2*`x4'*`p1'.`p1'*`p3'.`p3') 
--
-        2*M**2*nom(-3 + n1 + n2,2)*nom(1 - 2*n3,-2)*nom(-2 + n1 + n2 + n3,2)/
-         `p3'.`p3' 
-+       nom(-3 + n1 + n2,2)*
-          nom(-5 + n1 + 7*n2 - n1*n2 - 2*n2**2 + n3 + n1*n3 - 2*n2*n3,
-           4 - 4*n2)/(2*`x5'*`p3'.`p3') 
-+
-        nom(-3 + n1 + n2,2)*nom(-5 + 7*n1 - 2*n1**2 + n2 - n1*n2 + n3 -
-            2*n1*n3 + n2*n3,4 - 4*n1)/(2*`x6'*`p3'.`p3') 
-+
-        nom(-3 + n1 + n2,2)*nom(10 - 8*n1 + 2*n1**2 - 8*n2 + 2*n1*n2 +
-            2*n2**2 - 2*n3 + n1*n3 + n2*n3,-8 + 4*n1 + 4*n2)/
-         (2*`x4'*`p3'.`p3')
-       );
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? *1/`p3'.`p3'^n3? 
+                * `x4'^n4? * `x5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 *1/`p3'.`p3'^n3 
+                * `x4'^n4  * `x5'^n5  * `x6'^n6
+                *deno(n1+n2-3,2)*deno(n1+n3-2,2)*deno(n2+n3-2,2)
+                *(-1)
+                *(
+                (1 + n3)*`p1'.`p1'*nom(-3 + n1 + n2,2)**2/(2*`x5'*`p3'.`p3'**2) 
+                -
+                (1 + n3)*`p1'.`p1'*nom(-3 + n1 + n2,2)**2/(2*`x6'*`p3'.`p3'**2) 
+                -
+                (1 + n3)*`p2'.`p2'*nom(-3 + n1 + n2,2)**2/(2*`x5'*`p3'.`p3'**2) 
+                +
+                (1 + n3)*`p2'.`p2'*nom(-3 + n1 + n2,2)**2/(2*`x6'*`p3'.`p3'**2) 
+                +
+                M**2*`x5'*nom(-3 + n1 + n2,2)**2/(`x4'*`p3'.`p3') 
+                +
+                M**2*`x6'*nom(-3 + n1 + n2,2)**2/(`x4'*`p3'.`p3') 
+                +
+                n2*nom(-3 + n1 + n2,2)*nom(2 - n1 - n3,-2)/(2*`x4'*`p2'.`p2') 
+                +
+                n2*`p1'.`p1'*nom(-3 + n1 + n2,2)*nom(2 - n1 - n3,-2)/
+                (2*`x5'*`p2'.`p2'*`p3'.`p3') 
+                +
+                n1*nom(-3 + n1 + n2,2)*nom(2 - n2 - n3,-2)/(2*`x4'*`p1'.`p1') 
+                +
+                n1*`p2'.`p2'*nom(-3 + n1 + n2,2)*nom(2 - n2 - n3,-2)/
+                (2*`x6'*`p1'.`p1'*`p3'.`p3') 
+                +
+                n2*nom(-3 + n1 + n2,2)*nom(-2 + n1 + n3,2)/(2*`x5'*`p2'.`p2') 
+                -
+                M**2*`x4'*nom(-3 + n1 + n2,2)*nom(-2 + n1 + n3,2)/(`x6'*`p3'.`p3') 
+                -
+                M**2*`x5'*nom(-3 + n1 + n2,2)*nom(-2 + n1 + n3,2)/(`x6'*`p3'.`p3') 
+                +
+                n2*`p1'.`p1'*nom(-3 + n1 + n2,2)*nom(-2 + n1 + n3,2)/
+                (2*`x4'*`p2'.`p2'*`p3'.`p3') 
+                +
+                n1*nom(-3 + n1 + n2,2)*nom(-2 + n2 + n3,2)/(2*`x6'*`p1'.`p1') 
+                -
+                M**2*`x4'*nom(-3 + n1 + n2,2)*nom(-2 + n2 + n3,2)/(`x5'*`p3'.`p3') 
+                -
+                M**2*`x6'*nom(-3 + n1 + n2,2)*nom(-2 + n2 + n3,2)/(`x5'*`p3'.`p3') 
+                +
+                n1*`p2'.`p2'*nom(-3 + n1 + n2,2)*nom(-2 + n2 + n3,2)/
+                (2*`x4'*`p1'.`p1'*`p3'.`p3') 
+                -
+                2*M**2*nom(-3 + n1 + n2,2)*nom(1 - 2*n3,-2)*nom(-2 + n1 + n2 + n3,2)/
+                `p3'.`p3' 
+                +       nom(-3 + n1 + n2,2)*
+                nom(-5 + n1 + 7*n2 - n1*n2 - 2*n2**2 + n3 + n1*n3 - 2*n2*n3,
+                4 - 4*n2)/(2*`x5'*`p3'.`p3') 
+                +
+                nom(-3 + n1 + n2,2)*nom(-5 + 7*n1 - 2*n1**2 + n2 - n1*n2 + n3 -
+                2*n1*n3 + n2*n3,4 - 4*n1)/(2*`x6'*`p3'.`p3') 
+                +
+                nom(-3 + n1 + n2,2)*nom(10 - 8*n1 + 2*n1**2 - 8*n2 + 2*n1*n2 +
+                2*n2**2 - 2*n3 + n1*n3 + n2*n3,-8 + 4*n1 + 4*n2)/
+                (2*`x4'*`p3'.`p3')
+                );
 
-  endif;
+                endif;
 
-  id nom(x?,0)=x;
-  if ( (count(`x4',1)==0) && (count(x3,1)==0) && 
-     ((count(`p2'.`p2',1)>=0) || (count(`p1'.`p1',1)>=0)) ) discard;
+                id nom(x?,0)=x;
+                if ( (count(`x4',1)==0) && (count(x3,1)==0) && 
+                ((count(`p2'.`p2',1)>=0) || (count(`p1'.`p1',1)>=0)) ) discard;
 
 endrepeat;
 endif;
@@ -7923,30 +8207,30 @@ endif;
 
 #procedure redBMn6 (p1,p2,p3,x4,x5,x6)
 
-#do i = 1,1
+        #do i = 1,1
 
 * Now do the reduction via eq. (M7) resp. (4)
 
-        if( count(intbm,1));        
-  if ( (count(`x4',1)>=1) && (count(`x5',1)>=1) && (count(`x6',1)>1) );
+                if( count(intbm,1));        
+                if ( (count(`x4',1)>=1) && (count(`x5',1)>=1) && (count(`x6',1)>1) );
 
-    id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? *1/`p3'.`p3'^n3?
-      * `x4'^n4? * `x5'^n5? * `x6'^n6?
-    =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 *1/`p3'.`p3'^n3
-      * `x4'^n4  * `x5'^n5  * `x6'^(n6-1) * (-1)
-      *1/(n6-1)/M^2/2
-      *(
-        nom(4-2*(n6-1)-n1-n3, -2)
-       +n1/`p1'.`p1'*(1/`x4'-1/`x6')
-       +n3/`p3'.`p3'*(1/`x5'-1/`x6')
-       )
-      ;
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? *1/`p3'.`p3'^n3?
+                * `x4'^n4? * `x5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 *1/`p3'.`p3'^n3
+                * `x4'^n4  * `x5'^n5  * `x6'^(n6-1) * (-1)
+                *1/(n6-1)/M^2/2
+                *(
+                nom(4-2*(n6-1)-n1-n3, -2)
+                +n1/`p1'.`p1'*(1/`x4'-1/`x6')
+                +n3/`p3'.`p3'*(1/`x5'-1/`x6')
+                )
+                ;
 
-    redefine i "0";
+                redefine i "0";
 
-        endif;
-endif;        
-  .sort
+                endif;
+                endif;        
+                .sort
 
 #enddo
 
@@ -7954,31 +8238,31 @@ endif;
 
 #procedure redBMn6exp (p1,p2,p3,x4,x5,x6)
 
-#do i = 1,1
+        #do i = 1,1
 
 * Now do the reduction via eq. (M7) resp. (4)
 
-if( count(intbm,1));                
-  if ( (count(`x4',1)>=1) && (count(`x5',1)>=1) && (count(`x6',1)>1) );
+                if( count(intbm,1));                
+                if ( (count(`x4',1)>=1) && (count(`x5',1)>=1) && (count(`x6',1)>1) );
 
-    id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? *1/`p3'.`p3'^n3?
-      * `x4'^n4? * `x5'^n5? * `x6'^n6?
-    =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 *1/`p3'.`p3'^n3
-      * `x4'^n4  * `x5'^n5  * `x6'^(n6-1) * (-1)
-      *1/(n6-1)/M^2/2
-      *(
-        num(4-2*(n6-1)-n1-n3 -2*ep)
-       +n1/`p1'.`p1'*(1/`x4'-1/`x6')
-       +n3/`p3'.`p3'*(1/`x5'-1/`x6')
-       )
-      ;
-    redefine i "0";
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? *1/`p3'.`p3'^n3?
+                * `x4'^n4? * `x5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 *1/`p3'.`p3'^n3
+                * `x4'^n4  * `x5'^n5  * `x6'^(n6-1) * (-1)
+                *1/(n6-1)/M^2/2
+                *(
+                num(4-2*(n6-1)-n1-n3 -2*ep)
+                +n1/`p1'.`p1'*(1/`x4'-1/`x6')
+                +n3/`p3'.`p3'*(1/`x5'-1/`x6')
+                )
+                ;
+                redefine i "0";
 
-  endif;
-        endif;
-        
+                endif;
+                endif;
+                
 *   repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-  #call ACCU{BMn6}
+                #call ACCU{BMn6}
 
 #enddo
 
@@ -7989,47 +8273,47 @@ if( count(intbm,1));
 *
 * symmetryBM
 *
-if( count(intbm,1));                        
-if ( (count(x4,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p2.p2,-1)<=0) ) )
-  discard;
-if ( (count(x5,1)<=0) && ( (count(p2.p2,-1)<=0) || (count(p3.p3,-1)<=0) ) )
-  discard;
-if ( (count(x6,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p3.p3,-1)<=0) ) )
-  discard;
-if ( (count(x4,1)<=0) && (count(x5,1)<=0) ) discard;
-if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
+        if( count(intbm,1));                        
+        if ( (count(x4,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p2.p2,-1)<=0) ) )
+        discard;
+        if ( (count(x5,1)<=0) && ( (count(p2.p2,-1)<=0) || (count(p3.p3,-1)<=0) ) )
+        discard;
+        if ( (count(x6,1)<=0) && ( (count(p1.p1,-1)<=0) || (count(p3.p3,-1)<=0) ) )
+        discard;
+        if ( (count(x4,1)<=0) && (count(x5,1)<=0) ) discard;
+        if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
         if ( (count(x5,1)<=0) && (count(x6,1)<=0) ) discard;
-endif;        
-.sort
+        endif;        
+        .sort
 
 *
 * sort n6>=n5>=n4
 *
-if( count(intbm,1));                        
-if ( (count(x4,1) > count(x6,1)) && (count(x4,1) >= count(x5,1)) )
-                             multiply replace_(x4,x6,x6,x4,p2,p3,p3,p2);
-if ( (count(x5,1) > count(x6,1)) && (count(x5,1) >= count(x4,1)) )
-                             multiply replace_(x5,x6,x6,x5,p2,p1,p1,p2);
+        if( count(intbm,1));                        
+        if ( (count(x4,1) > count(x6,1)) && (count(x4,1) >= count(x5,1)) )
+        multiply replace_(x4,x6,x6,x4,p2,p3,p3,p2);
+        if ( (count(x5,1) > count(x6,1)) && (count(x5,1) >= count(x4,1)) )
+        multiply replace_(x5,x6,x6,x5,p2,p1,p1,p2);
         if ( count(x5,1) < count(x4,1) ) multiply replace_(x4,x5,x5,x4,p1,p3,p3,p1);
-endif;        
-.sort
+        endif;        
+        .sort
 
-if( count(intbm,1));                        
+        if( count(intbm,1));                        
         if ( (count(x4,1)<=0) || (count(x5,1)<=0) || (count(x6,1)<=0) );
-endif;        
+        endif;        
 *
 * sort n6>n5>n4
 *
-if( count(intbm,1));                        
-  if ( (count(x4,1) > count(x6,1)) && (count(x4,1) >= count(x5,1)) )
-                             multiply replace_(x4,x6,x6,x4,p2,p3,p3,p2);
-  if ( (count(x5,1) > count(x6,1)) && (count(x5,1) >= count(x4,1)) )
-                             multiply replace_(x5,x6,x6,x5,p2,p1,p1,p2);
-  if ( count(x5,1) < count(x4,1) )
-                             multiply replace_(x4,x5,x5,x4,p1,p3,p3,p1);
+        if( count(intbm,1));                        
+        if ( (count(x4,1) > count(x6,1)) && (count(x4,1) >= count(x5,1)) )
+        multiply replace_(x4,x6,x6,x4,p2,p3,p3,p2);
+        if ( (count(x5,1) > count(x6,1)) && (count(x5,1) >= count(x4,1)) )
+        multiply replace_(x5,x6,x6,x5,p2,p1,p1,p2);
+        if ( count(x5,1) < count(x4,1) )
+        multiply replace_(x4,x5,x5,x4,p1,p3,p3,p1);
         endif;
-endif;        
-.sort
+        endif;        
+        .sort
         
 #endprocedure        
 
@@ -8209,6 +8493,9 @@ endif;
 
 
 
+
+
+************************************************************
 #procedure topbm
 *
 * this is topbmbm
@@ -8461,6 +8748,9 @@ endif;
 
 
 
+
+
+************************************************************
 #procedure topbm1
 *
 * this is topbm1
@@ -8859,17 +9149,20 @@ endif;
 #endprocedure
 
 
+
+
+************************************************************
 #procedure topbm2
 *
 * this is topbm2 
 *
-#-
-
-#message this is topbm2
-
+        #-
+        
+        #message this is topbm2
+        
 ************************************************************
-
-
+        
+        
 ************************************************************
 
         #message numerator
@@ -9090,6 +9383,7 @@ id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
 
 
 
+************************************************************
 #procedure topm1
 *
 * topm1
@@ -9131,7 +9425,7 @@ id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
 #endprocedure        
 
 
-
+************************************************************
 #procedure topm2
 *
 * topm2
@@ -9166,7 +9460,7 @@ id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
 
 
 
-
+************************************************************
 #procedure topm3
 *
 * topm3
@@ -9199,7 +9493,7 @@ if( count(intm3,1)) id p4=-p4;
 #endprocedure        
 
 
-
+************************************************************
 #procedure topm4
 *
 * topm4
@@ -9230,6 +9524,7 @@ if( count(intm3,1)) id p4=-p4;
 #endprocedure        
 
 
+************************************************************
 #procedure topm5
 *
 * this is topm5
@@ -9372,34 +9667,29 @@ if( count(intm3,1)) id p4=-p4;
 #endprocedure
 
 
-#procedure topt1
-#message this is topt1
 
-*         Print+s;
-*         .end        
+************************************************************
+#procedure topt1
+        #message this is topt1
         
         if( count(intt1,1));
         if( (count(x3,1)=0) && (count(x4,1)=1)
         && (count(x5,1)=1) && (count(x6,1)=1) )
         id x4*x5*x6 =  + (M^2*Gam(-1,1))^3;
-
+        
         Multiply int0/intt1;
         endif;
-     
+        
 #endprocedure        
 
 
 
 
-        
+************************************************************        
 #procedure topn1
         #message this is topn1
-
-        b int0,intn1;        
-        Print+s;
-        .sort
         
-************************************************************
+
         
 * integrals of type N1
         
@@ -9414,41 +9704,29 @@ if( count(intm3,1)) id p4=-p4;
         
 * The following commands should not be used if 'EXACTEXP' is defined.
 
-* #ifndef 'EXACTEXP'
-*   if (count(acc,1)!=0);
-*     argument accun;
-*       id n=4-2*ep;
-*     endargument;
-*     id accun(x?)=acc(x);
-*     repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-*   endif;
-*   #call ACCU(TabBN)
-* ***if (count(accun,1)!=0) id acc(x?)=x;
-* #endif
+* id agam=2;
+* id bgam=23/3;
+* id cgam=35/2+3*z2;
+* id dgam=275/192*16+23/2*z2-2*z3;
+* id egam=-16*(189/128 - 89/48*z3 - 3/32*z4 - 105/64*z2 - 9/64*z2^2);
+* id fgam = -384*(
+*          14917/18432 + 1/128*z3*z2 - 175/256*z3 + 649/1536*z4 + 1/320*z5
+*          - 275/3072*z2 - 23/1024*z2^2
+*          )
+*          +16*B4;
 
-id agam=2;
-id bgam=23/3;
-id cgam=35/2+3*z2;
-id dgam=275/192*16+23/2*z2-2*z3;
-id egam=-16*(189/128 - 89/48*z3 - 3/32*z4 - 105/64*z2 - 9/64*z2^2);
-id fgam = -384*(
-         14917/18432 + 1/128*z3*z2 - 175/256*z3 + 649/1536*z4 + 1/320*z5
-         - 275/3072*z2 - 23/1024*z2^2
-         )
-         +16*B4;
-
-argument;
-  id agam=2;
-  id bgam=23/3;
-  id cgam=35/2+3*z2;
-  id dgam=275/192*16+23/2*z2-2*z3;
-  id egam=-16*(189/128 - 89/48*z3 - 3/32*z4 - 105/64*z2 - 9/64*z2^2);
-  id fgam = -384*(
-         14917/18432 + 1/128*z3*z2 - 175/256*z3 + 649/1536*z4 + 1/320*z5
-         - 275/3072*z2 - 23/1024*z2^2
-         )
-         +16*B4;
-endargument;
+* argument;
+*   id agam=2;
+*   id bgam=23/3;
+*   id cgam=35/2+3*z2;
+*   id dgam=275/192*16+23/2*z2-2*z3;
+*   id egam=-16*(189/128 - 89/48*z3 - 3/32*z4 - 105/64*z2 - 9/64*z2^2);
+*   id fgam = -384*(
+*          14917/18432 + 1/128*z3*z2 - 175/256*z3 + 649/1536*z4 + 1/320*z5
+*          - 275/3072*z2 - 23/1024*z2^2
+*          )
+*          +16*B4;
+* endargument;
 
 #call ACCU()
         
@@ -9957,6 +10235,20 @@ endargument;
 
 
 #procedure matad(LOOPS)
+
+        #message "                                                     "
+        #message "                                                     "
+        #message "      _____ _____ _____ _____ ____                   "
+        #message "     |     |  _  |_   _|  _  |    \ ___ ___ ___      "
+        #message "     | | | |     | | | |     |  |  |___|   | . |     "
+        #message "     |_|_|_|__|__| |_| |__|__|____/    |_|_|_  |     "
+        #message "                                           |___|     "
+        #message "                                                     "
+        #message "                                                     "
+        #message "     Originally written by M.Steinhauser             "
+        #message "     About exact version contact to:                 "
+        #message "     pikelner[at]theor.jinr.ru, Andrey Pikelner      "
+        #message "                                                     "
         #message MATAD called for `LOOPS'-loop integral
 
         #call tad`LOOPS'l
@@ -10124,6 +10416,7 @@ multiply, ep^('x');
 *--#[ expansion :
 *
 #procedure expansion(maxeppow)
+*         #call subvalues
 *
 *	Expands the PolyRatFun to sufficient powers in ep.
 *
@@ -10147,15 +10440,70 @@ multiply, ep^('x');
         
         .sort:expansion-2;
         id	num(x1?) = x1;
-        if ( count(ep,1) > `maxeppow' ) discard;
+*
+*       In masters we have minimal power ep^-3
+*       And need to expand rat(ep) up to maxpow+3
+*         
+        if ( count(ep,1) > {`maxeppow' + 3} ) discard;
         repeat;
 	        id den(1,x?) = 1-x*den(1,x);
-	        if ( count(ep,1) > `maxeppow' ) discard;
+	        if ( count(ep,1) > {`maxeppow'+ 3} ) discard;
         endrepeat;
         .sort:expansion-3;
-        Symbol ep(:`maxeppow');
+        Symbol ep(:{`maxeppow'+3});
+*         
         #call subvalues
-*
+
+        if ( count(ep,1) > `maxeppow' ) discard;
 #endprocedure
 *
 *--#] expansion : 
+
+
+
+
+*--#[ fillbntab : 
+* 
+* Example program to fill BNd and BNd0 table
+* Can be used if tables for dala^n, n>11
+* Inverse of eq.4 used with old routine for
+* reduction.        
+*         
+* #-
+* #include matad-ng.hh
+* S n3m2;
+
+* * Fill table upto weight 11
+* #do dp=0,11
+* #do i6=1,2
+* #do i5=1,`i6'
+* #do i4=1,`i5'
+* #do i3=1,`i4'
+*         #message dala^`dp'-- `i3' `i4' `i5' `i6'
+*         L dalaBN`dp' =dala^`dp'*x3^`i3'*x4^`i4'*x5^`i5'*x6^`i6';
+        
+*         #do i=1,1
+*                 id,once dala^n1?pos_*x3^n3m2?*x4^n4?*x5^n5?*x6^n6? = 
+*                 ((4*((n3m2+2)-1)-2*rat(4-2*ep,1))/4/M^2/((n3m2+2)-1)*x3^((n3m2+2)-1)*x4^n4*x5^n5*x6^n6 -
+*                 x3^(n3m2+2)*x4^n4*x5^n5*x6^n6)*4*M^2*(n3m2)*((n3m2+2)-1)*dala^(n1-1);
+                
+*                 if(count(dala,1)) redefine i "0";
+*                 .sort
+*         #enddo
+        
+*         Multiply replace_(x3,s1m,x4,s2m,x5,s5m,x6,s6m);
+*         #call matad(3)
+*         b int0;
+*         .sort
+        
+*         #write<BNtbl> "id,only intbn*dala^`dp'*x3^`i3'*x4^`i4'*x5^`i5'*x6^`i6' = %e\n",dalaBN`dp'
+        
+*         drop;
+*         .sort
+* #enddo
+* #enddo
+* #enddo
+* #enddo
+* #enddo
+* .end
+*--#] fillbntab : 
