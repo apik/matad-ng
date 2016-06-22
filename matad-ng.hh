@@ -1,166 +1,23 @@
-#define SCHEME "2"
-#define NUMMASSES "3"
-
-*
-* load default values for preprocessor variables
-*
-
-*
-* global definition file for boundary values used in the computation
-*
-
-*
-* default value for DALA1 and TOPOLOGY
-*
-
-#ifndef `DALA1'
-        #define DALA1 "1"
-#endif
-
-#ifndef `TOPOLOGY'
-        #define TOPOLOGY "arb"
-#endif
-
-*
-* default value for the number of LOOPS
-*
-
-#ifndef `LOOPS'
-        #define LOOPS "0"
-#endif
-
-*
-* INTLOOPS is used in the declaration and has a minimum value of 1
-*
-
-#if `LOOPS' == "0" 
-        #define INTLOOPS "1"
-        #else
-        #define INTLOOPS "`LOOPS'"
-#endif
-
-*
-* MAXLOOPS is used in cutep 
-*
-
-#ifndef `MAXLOOPS'
-        #define MAXLOOPS "3"
-#endif
-
-*
-* default value for the number of external momenta
-*
-
-#ifndef `NUMEXTMOM'
-        #define NUMEXTMOM "1"
-#endif 
-
-*
-* default value for the number of masses
-*
-
-#ifndef `NUMMASSES'
-        #define NUMMASSES "3"
-#endif
-
-*
-* default value of variants for the indices mu, nu, al, be, is
-* 
-
-#ifndef `NUMINDEX'
-        #define NUMINDEX "40"
-#endif
-
-*
-* default depth of pochhammer table
-*
-
-#ifndef `POCHHAMMER'
-        #define POCHHAMMER "24"
-#endif
-
-*
-* default maximal number of fermion traces
-*
-
-#ifndef `NUMFERMIONTRACES'
-        #define NUMFERMIONTRACES "4"
-#endif
-
-*
-* default SCHEME for MINCER
-*
-
-#ifndef `SCHEME'
-        #define SCHEME "2"
-#endif
-
-
-*
-* global declare file
-*
-
-
-S n,ep(:6);
+S n,ep;
 dimension n;
 
-S eQ,eQ1,...,eQ`NUMEXTMOM';
-V q,q1,...,q`NUMEXTMOM', Q,Q1,...,Q`NUMEXTMOM';
 
-S M,m,M1,...,M`NUMMASSES', eM1,...,eM`NUMMASSES';
+V q, Q;
+
+S M,m;
 
 V P,p,p1,...,p19;
 S e1,...,e19;
 V k,l,v,v1,v2,v3,v4,v5;
 S s1m,s2m,s3m,s4m,s5m,s6m,s7m,s8m,s9m,s10m,s11m,s12m,s13m,s14m,s15m,s16m,s17m,s18m,s19m;
 
-#do i = 1, `INTLOOPS'
-        V p`i'0,...,p`i'19;
-        #do j = 1, 19 
-                S s`i'`j'm1,...,s`i'`j'm`NUMMASSES';
-        #enddo
-        S e`i'1,...,e`i'19;
-#enddo
-
-#do j = 1, 19 
-        S s`j'm1,...,s`j'm`NUMMASSES';
-#enddo
 
 I i1,...,i9,j1,...,j9;
 I MU,NU,al,be,ro,si,tau,mu,nu,la,ka;
 
-I mu1,...,mu`NUMINDEX', nu1,...,nu`NUMINDEX';
-I al1,...,al`NUMINDEX', be1,...,be`NUMINDEX';
 
-#do j = 1, `NUMEXTMOM'
 
-        #ifdef `UPLIMQ`j''
-                S pQ`j', pocoQ`j'(:`UPLIMQ`j'');
-                #else
-                #ifdef `LOWLIMQ`j''
-                        S pQ`j', pocoQ`j'(`LOWLIMQ`j'':);
-                        #else
-                        S pQ`j', pocoQ`j';
-                #endif
-        #endif
-        
-#enddo
 
-#do j = 1, `NUMMASSES'
-
-        #ifdef `UPLIMM`j''
-                S pM`j', pocoM`j'(:`UPLIMM`j'');
-                #else
-                #ifdef `LOWLIMM`j''
-                        S pM`j', pocoM`j'(`LOWLIMM`j'':);
-                        #else
-                        S pM`j', pocoM`j';
-                #endif
-        #endif
-        
-#enddo
-
-F S,SS,SSS,SSSS, FT1,...,FT`NUMFERMIONTRACES', Slash;
 S vmat,vmab,vt,at,vb,ab,ppbt,pmtb,ctt,Htt,ve,ax,sc,ps,nf,nl,nh;
 S L,X,exp,[sqrt2],[sqrt(x)],[x],s,g5,g6,g7,ExpZ2;
 S x1,...,x9, z2,...,z9,z10;
@@ -230,12 +87,18 @@ Symbols z2,z3,z4,z5,z6,z7,z8,z9,zz5,z6z2;
 
 * Master integrals
 S miT1,miD6,miD5,miD4,miDN,miE3;
+S miBN;
 * And its truncation flags
 S miT1trunc,miD6trunc,miD5trunc,miD4trunc,miDNtrunc,miE3trunc;
+S miBNtrunc;
 S iGamtrunc,Gamtrunc;
 
 set trunc:miT1trunc,miD6trunc,miD5trunc,miD4trunc,miDNtrunc,miE3trunc,  iGamtrunc,Gamtrunc;
 
+* Mass distributions
+* Two-loop 
+Symbols   [000],[M00],[0M0],[00M],[MM0],[M0M],[0MM],[MMM];
+* Three-loop 
 Symbols   [000000], [00000M], [0000M0], [0000MM], 
 [000M00], [000M0M], [000MM0], [000MMM], [00M000], 
 [00M00M], [00M0M0], [00M0MM], [00MM00], [00MM0M], 
@@ -252,16 +115,7 @@ Symbols   [000000], [00000M], [0000M0], [0000MM],
 
 CF tad3l,tad2l,tad1l;
 
-
-
 PolyRatFun rat;
-
-*
-* declarations specific to the problem
-*
-
-
-
 
 .global
 
@@ -269,6 +123,26 @@ PolyRatFun rat;
 
 #procedure ToAuxTopo
 
+*
+*
+*       AUX topo is T2
+*
+*       /----1->--\
+*      |           |
+*       ---<-3-----   
+*      |           |
+*       \--<-2----/        
+*
+*         
+        id tad2l([000],n1?,n2?,n3?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3;
+        id tad2l([M00],n1?,n2?,n3?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3;
+        id tad2l([0M0],n1?,n2?,n3?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3;
+        id tad2l([00M],n1?,n2?,n3?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3;
+        id tad2l([MM0],n1?,n2?,n3?) = 1*s1m^n1*s2m^n2/p3.p3^n3;
+        id tad2l([M0M],n1?,n2?,n3?) = 1*s1m^n1/p2.p2^n2*s3m^n3;
+        id tad2l([0MM],n1?,n2?,n3?) = 1/p1.p1^n1*s2m^n2*s3m^n3;
+        id tad2l([MMM],n1?,n2?,n3?) = 1*s1m^n1*s2m^n2*s3m^n3;                
+        
 
 * 
 *          Our AUX topo is D6
@@ -7178,126 +7052,6 @@ id,only dala^( 11 )*x3^( 2 )*x4^( 2 )*x5^( 2 )*x6^( 2 )= M^(12-2*(19))*acc(
 
 
 
-#procedure triown(P,PA,PB,P1,P3)
-*
-*   Routine solves the triangle recursion
-*                     P
-*      N1 -------------------------- N3
-*          P1    \    N2    /    P3
-*                 \        /
-*                A \      / B
-*                PA \    / PB
-*                    \  /
-*                     \/
-*
-*   A,B,N1,N2,N3 are the powers of the denominators
-*       We assume that A and B are integers here. Otherwise see triangl2.
-*   P is the momentum in N2. We need it here to determine the extra
-*   momenta in the numerator.
-*
-*   We follow the algorithm of F.V.Tkachov Theor. Mat. Fiz. 56(1983)350.
-*
-*   There are three sums:
-*   One in which the power of 1 becomes zero, one for 2 and one for 3.
-*   Each sum has 4 constants to sum over, except that for each
-*   one of them has its maximal value:
-*   k1 = (a-A)-k2
-*   k2 = N1-n1          sum1: N1
-*   k3 = (b-B)-k4
-*   k4 = N3-n3          sum3: N3
-*   k1+k3 = N2-n2       sum2: N2
-*   The gamma functions are evaluated using the tables in pochtabl.prc
-*
-*   It turns out that the easy cases are faster when the regular recursion
-*   is used. We do that here is there are fewer than 6 powers in P,P1 and P3
-*   combined. Test timings don't use these special cases.
-*
-*   Programmed by J.A.M.Vermaseren 28-oct-1990 + 13-nov-1990
-*
-*   Test versus benzbar:
-*       1/p1.p1^3/p.p/p3.p3/pa.pa/pb.pb -> 0.96 sec versus 0.80 sec
-*       1/p1.p1^3/p.p^3/p3.p3/pa.pa/pb.pb -> 3.07 sec versus 20.34 sec
-*       1/p1.p1^3/p.p^3/p3.p3^3/pa.pa/pb.pb -> 6.21 sec versus 547.11 sec
-*   triangle generates exactly the right number of terms
-*   (times on Atari TT)
-*
-*   For the easy cases we take the original recursion, because this is much
-*   faster. This is done for the combined powers of P1,P2,P3 at most 4
-*   in the denominator. IT IS VERY DANGEROUS TO INCREASE THIS NUMBER!
-*   In principle each two steps in the recursion can generate one
-*   extra pole that has to be cancelled between the terms. This can
-*   cause problems with the truncation of the powers of ep. We can
-*   tolerate only one such pole here.
-*
-id  'P' = x*'P';
-if ( count('P1'.'P1',1,'P3'.'P3',1,'P'.'P',1) < -4 );
-id  x^m?/'P1'.'P1'^N1?/'P'.'P'^N2?/'P3'.'P3'^N3?/'PA'.'PA'^A?/'PB'.'PB'^B? =
-        ftri(N1,N2,N3,A,B,m)/fac_(A-1)/fac_(B-1);
-id  ftri(N1?,N2?,N3?,A?,B?,m?) =
-        +sum_(k4,0,N3-1,(-1)^(N1+k4)*po(5+m-2*N2-A-B-N1-k4,-2)
-            *sum_(k1,0,N2-1,sum_(k3,0,N2-k1-1,
-            fac_(k1+N1+k3+k4-1)/fac_(k3)
-            *poinv(5+m-2*N2-A-B+k1+k3,-2)
-            *ftri(0,N2-k1-k3,N3-k4,A+k1+N1,B+k3+k4)
-         )/fac_(k1))/fac_(k4))/fac_(N1-1)
-
-        +sum_(k2,0,N1-1,sum_(k4,0,N3-1,(-1)^(k2+k4)*fac_(k2+N2+k4-1)
-            *po(4+m-2*N2-A-B-k2-k4,-2)
-            *sum_(k1,0,N2,1/fac_(k1)/fac_(N2-k1)
-            *ftri(N1-k2,0,N3-k4,A+k1+k2,B+N2-k1+k4)
-         )/fac_(k2)/fac_(k4)))*N2*poinv(4+m-2*N2-A-B+N2,-2)
-
-        +sum_(k2,0,N1-1,(-1)^(k2+N3)*po(5+m-2*N2-A-B-k2-N3,-2)
-            *sum_(k3,0,N2-1,sum_(k1,0,N2-k3-1,
-            fac_(k1+k2+k3+N3-1)/fac_(k1)
-            *poinv(5+m-2*N2-A-B+k1+k3,-2)
-            *ftri(N1-k2,N2-k1-k3,0,A+k1+k2,B+k3+N3)
-         )/fac_(k3))/fac_(k2))/fac_(N3-1)
-    ;
-id  ftri(N1?,N2?,N3?,A?,B?) = fac_(A-1)*fac_(B-1)
-    /'P1'.'P1'^N1/'P'.'P'^N2/'P3'.'P3'^N3/'PA'.'PA'^A/'PB'.'PB'^B;
-*
-*   Evaluate the gamma functions.
-*   We multiply numerator and denominator with gamma(1-2*ep)
-*   Then po(x,-2) represents a normalized gamma function.
-*   The following identities can then be applied:
-*   (the table has overal factors ep taken out)
-*
-id  po(1,-2) = 1;
-id  poinv(1,-2) = 1;
-
-***id  po(x1?neg0_,-2) = -acc(PO(x1,-2))/2/ep;
-***id  po(x1?,-2) = acc(PO(x1,-2));
-***id  poinv(x1?neg0_,-2) = -2*acc(POINV(x1,-2))*ep;
-***id  poinv(x1?,-2) = acc(POINV(x1,-2));
-
-else;
-
-  repeat;
-    if ( match(1/'P'.'P'/'P1'.'P1'/'P3'.'P3') > 0 );
-      id  x^x4?/'PA'.'PA'^x1?/'PB'.'PB'^x2?/'P'.'P'^x3? =
-          x^x4 /'PA'.'PA'^x1 /'PB'.'PB'^x2 /'P'.'P'^x3 *(
-            +x2*'P'.'P'/'PB'.'PB'-x2*'P3'.'P3'/'PB'.'PB'
-            +x1*'P'.'P'/'PA'.'PA'-x1*'P1'.'P1'/'PA'.'PA'
-          )*deno(4+x4-x1-x2-2*x3,-2);
-***      id,many,deno(0,-2)   = -1/2/ep;
-***      id,many,deno(x1?,-2) = accm(1-2*ep/x1)/x1;
-    endif;
-  endrepeat;
-***  repeat id accm(x1?)*accm(x2?) = accm(x1*x2);
-***  id  accm(x1?) = accm(x1-1);
-***  id  accm(x1?) = accm(x1-x1^2,x1^3);
-***  id  accm(x1?,x2?) = acc(1-x1-x2+x2*x1+x2^2);
-  id  x = 1;
-
-endif;
-
-* repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-
-#endprocedure
-
-
-
 
 *--#[ ntriangle :
 *
@@ -9269,7 +9023,8 @@ endif;
         
         if (match(1/p1.p1/p2.p2/p4.p4)>0);
 ***#call triangle(p2,p3,p5,p1,p4)
-        #call triown(p2,p3,p5,p1,p4)
+*         #call triown(p2,p3,p5,p1,p4)
+        #call ntriangle(p2,p3,p5,p1,p4)        
         endif;
         
         if ( (count(p5.p5,1)>=0) && (count(p3.p3,1)>=0) ) discard;
@@ -9628,16 +9383,9 @@ if( count(intm3,1)) id p4=-p4;
         && (count(x5,1)=1) && (count(x6,1)=1) )
         id x4*x5*x6 =  + (M^2*Gam(-1,1))^3;
 
-*         Multiply int0/intt1;        
+        Multiply int0/intt1;
         endif;
      
-*         #call GammaArgToOne   
-* .sort
-*         #call expansion(3)
-*         b ep;
-*         Print+s;
-*         .end        
-
 #endprocedure        
 
 
@@ -9645,24 +9393,25 @@ if( count(intm3,1)) id p4=-p4;
 
         
 #procedure topn1
-#message this is topn1
+        #message this is topn1
 
-* Print+s;
-* .end
+        b int0,intn1;        
+        Print+s;
+        .sort
+        
 ************************************************************
-
+        
 * integrals of type N1
         
         if(count(intn1,1));        
         if( (count(x3,1)=1) && (count(x4,1)=1)
         && (count(x5,1)=1) && (count(x6,1)=1) )
-        id x3*x4*x5*x6 =M^4*rat(agam/ep^3+bgam/ep^2+cgam/ep+dgam+egam*ep
-        +fgam*ep^2+ggam*ep^3+hgam*ep^4,1);
+        id x3*x4*x5*x6 =M^4*miBN*int0/intn1;
         
-*         Multiply int0/intn1;        
-        endif;        
-.sort 
-
+        endif;
+        
+        .sort 
+        
 * The following commands should not be used if 'EXACTEXP' is defined.
 
 * #ifndef 'EXACTEXP'
@@ -10229,236 +9978,6 @@ endargument;
 
 #procedure subSimple
 
-* 
-* Here we substitute all integrals known in terms of Gamma functions
-* 
-*   gm3norm(a1,a2,a3) - Two loop tadpole    [MM0]
-*   gm2norm(a1,a2)    - One-loop tadpole    [M0]
-*   G(a1,a2)          - One-loop propagator [00]
-*         
-
-
-*       Upto ep^5        
-*           (M,M,0)   
-*         id gm3norm(0,0,0) = -7 - ep^(-2) - 3/ep - z2 + ep*(-15 - 3*z2 + (2*z3)/3) +
-*         ep^2*(-31 - 7*z2 + 2*z3 - (7*z4)/4) +
-*         ep^3*(-63 - 15*z2 + 12*z2^2 + (14*z3)/3 + (2*z2*z3)/3 - (141*z4)/4 + (2*z5)/5) +
-*         ep^4*(-127 - 31*z2 + 28*z2^2 + (17*z2^3)/4 + 10*z3 + 2*z2*z3 - (2*z3^2)/9 -
-*         (329*z4)/4 + (81*z2*z4)/16 + (6*z5)/5 - (1881*z6)/64) +
-*         ep^5*(-255 - 63*z2 + 60*z2^2 + (51*z2^3)/4 + (62*z3)/3 + (14*z2*z3)/3 -
-*         (8*z2^2*z3)/3 - (2*z3^2)/3 - (705*z4)/4 + (243*z2*z4)/16 + (47*z3*z4)/6 +
-*         (14*z5)/5 + (2*z2*z5)/5 - (5643*z6)/64 + (2*z7)/7);
-        
-*         id gm3norm(0,0,1) = -13/3 - 1/(3*ep^2) - 4/(3*ep) - (2*z2)/3 + ep*(-40/3 - (8*z2)/3 - (28*z3)/9) +
-*         ep^2*(-121/3 - (26*z2)/3 - (112*z3)/9 + 9*z4) +
-*         ep^3*(-364/3 - (80*z2)/3 + (185*z2^2)/3 - (364*z3)/9 - (56*z2*z3)/9 - (709*z4)/6 -
-*         (748*z5)/15) + ep^4*(-1093/3 - (242*z2)/3 + (2405*z2^2)/12 + (455*z2^3)/6 -
-*         (1120*z3)/9 - (224*z2*z3)/9 - (392*z3^2)/27 - (9217*z4)/24 - (185*z2*z4)/12 -
-*         (2992*z5)/15 - (2231*z6)/24) + ep^5*(-3280/3 - (728*z2)/3 + (1850*z2^2)/3 +
-*         (910*z2^3)/3 - (3388*z3)/9 - (728*z2*z3)/9 + (1295*z2^2*z3)/9 - (1568*z3^2)/27 -
-*         (3545*z4)/3 - (185*z2*z4)/3 - (4963*z3*z4)/18 - (9724*z5)/15 - (1496*z2*z5)/15 -
-*         (2231*z6)/6 - (14068*z7)/21);
-
-*         id gm3norm(0,0,2) = -7/2 - 1/(6*ep^2) - 5/(6*ep) - z2/2 + ep*(-85/6 - (5*z2)/2 - (62*z3)/9) +
-*         ep^2*(-341/6 - (21*z2)/2 - (310*z3)/9 + (251*z4)/8) +
-*         ep^3*(-455/2 - (85*z2)/2 + (550*z2^2)/3 - (434*z3)/3 - (62*z2*z3)/3 - (7235*z4)/24 -
-*         (3254*z5)/15) + ep^4*(-5461/6 - (341*z2)/2 + 770*z2^2 + (3135*z2^3)/8 -
-*         (5270*z3)/9 - (310*z2*z3)/3 - (3844*z3^2)/27 - (10129*z4)/8 - (12419*z2*z4)/96 -
-*         (3254*z5)/3 - (74989*z6)/384) + ep^5*(-21845/6 - (1365*z2)/2 + (9350*z2^2)/3 +
-*         (15675*z2^3)/8 - (21142*z3)/9 - 434*z2*z3 + (13640*z2^2*z3)/9 - (19220*z3^2)/27 -
-*         (122995*z4)/24 - (62095*z2*z4)/96 - (44857*z3*z4)/18 - (22778*z5)/5 -
-*         (3254*z2*z5)/5 - (374945*z6)/384 - (130682*z7)/21);
-
-*         id gm3norm(0,0,3) = -31/10 - 1/(10*ep^2) - 3/(5*ep) - (2*z2)/5 + ep*(-78/5 - (12*z2)/5 - (161*z3)/15) +
-*         ep^2*(-781/10 - (62*z2)/5 - (322*z3)/5 + (328*z4)/5) +
-*         ep^3*(-1953/5 - (312*z2)/5 + (8139*z2^2)/20 - (4991*z3)/15 - (644*z2*z3)/15 -
-*         (24951*z4)/40 - (14309*z5)/25) + ep^4*(-19531/10 - (1562*z2)/5 + (84103*z2^2)/40 +
-*         (6247*z2^3)/5 - (8372*z3)/5 - (1288*z2*z3)/5 - (25921*z3^2)/45 - (257827*z4)/80 -
-*         450*z2*z4 - (85854*z5)/25 - (12249*z6)/40) +
-*         ep^5*(-48828/5 - (7812*z2)/5 + (105807*z2^2)/10 + (37482*z2^3)/5 - (125741*z3)/15 -
-*         (19964*z2*z3)/15 + (436793*z2^2*z3)/60 - (51842*z3^2)/15 - (324363*z4)/20 -
-*         2700*z2*z4 - (1339037*z3*z4)/120 - (443579*z5)/25 - (57236*z2*z5)/25 -
-*         (36747*z6)/20 - (1001321*z7)/35);
-
-*         id gm3norm(0,0,4) = -43/15 - 1/(15*ep^2) - 7/(15*ep) - z2/3 + ep*(-259/15 - (7*z2)/3 - (658*z3)/45) +
-*         ep^2*(-311/3 - (43*z2)/3 - (4606*z3)/45 + (447*z4)/4) +
-*         ep^3*(-9331/15 - (259*z2)/3 + (11438*z2^2)/15 - (28294*z3)/45 - (658*z2*z3)/9 -
-*         (13489*z4)/12 - (89098*z5)/75) + ep^4*(-55987/15 - (1555*z2)/3 + (70262*z2^2)/15 +
-*         (36785*z2^3)/12 - (170422*z3)/45 - (4606*z2*z3)/9 - (216482*z3^2)/135 -
-*         (82861*z4)/12 - (271811*z2*z4)/240 - (623686*z5)/75 - (352693*z6)/960) +
-*         ep^5*(-335923/15 - (9331*z2)/3 + (423206*z2^2)/15 + (257495*z2^3)/12 - (204638*z3)/9 -
-*         (28294*z2*z3)/9 + (1075172*z2^2*z3)/45 - (1515374*z3^2)/135 - (499093*z4)/12 -
-*         (1902677*z2*z4)/240 - (633983*z3*z4)/18 - (3831214*z5)/75 - (89098*z2*z5)/15 -
-*         (2468851*z6)/960 - (9641938*z7)/105);
-
-* *       Upto ep^10        
-*         id gm2norm(0,0) = 1 + ep + ep^2*(1 + z2/2) + ep^3*(1 + z2/2 - z3/3) +
-*         ep^4*(1 + z2/2 - z2^2/4 - z3/3 + (19*z4)/16) +
-*         ep^5*(1 + z2/2 - z2^2/4 - z3/3 - (z2*z3)/6 + (19*z4)/16 - z5/5) +
-*         ep^6*(1 + z2/2 - z2^2/4 - z2^3/8 - z3/3 - (z2*z3)/6 + z3^2/18 + (19*z4)/16 +
-*         (z2*z4)/16 - z5/5 + (117*z6)/128) +
-*         ep^7*(1 + z2/2 - z2^2/4 - z2^3/8 - z3/3 - (z2*z3)/6 + (z2^2*z3)/12 + z3^2/18 +
-*         (19*z4)/16 + (z2*z4)/16 - (19*z3*z4)/48 - z5/5 - (z2*z5)/10 + (117*z6)/128 -
-*         z7/7) + ep^8*(1 + z2/2 - z2^2/4 - z2^3/8 - z3/3 - (z2*z3)/6 + (z2^2*z3)/12 +
-*         z3^2/18 + (z2*z3^2)/36 + (19*z4)/16 + (z2*z4)/16 - (17*z2^2*z4)/64 -
-*         (19*z3*z4)/48 + (99*z4^2)/256 - z5/5 - (z2*z5)/10 + (z3*z5)/15 +
-*         (117*z6)/128 - (5*z2*z6)/128 - z7/7 + (2455*z8)/3072) +
-*         ep^9*(1 + z2/2 - z2^2/4 - z2^3/8 - z3/3 - (z2*z3)/6 + (z2^2*z3)/12 +
-*         (z2^3*z3)/24 + z3^2/18 + (z2*z3^2)/36 - z3^3/162 + (19*z4)/16 + (z2*z4)/16 -
-*         (17*z2^2*z4)/64 - (19*z3*z4)/48 - (z2*z3*z4)/48 + (99*z4^2)/256 - z5/5 -
-*         (z2*z5)/10 + (z2^2*z5)/20 + (z3*z5)/15 - (19*z4*z5)/80 + (117*z6)/128 -
-*         (5*z2*z6)/128 - (39*z3*z6)/128 - z7/7 - (z2*z7)/14 + (2455*z8)/3072 -
-*         z9/9) + ep^10*(1 + (12883*z10)/20480 + z2/2 - z2^2/4 - z2^3/8 + z2^5/960 -
-*         z3/3 - (z2*z3)/6 + (z2^2*z3)/12 + (z2^3*z3)/24 + z3^2/18 + (z2*z3^2)/36 -
-*         (z2^2*z3^2)/72 - z3^3/162 + (19*z4)/16 + (z2*z4)/16 - (17*z2^2*z4)/64 +
-*         (7*z2^3*z4)/768 - (19*z3*z4)/48 - (z2*z3*z4)/48 + (19*z3^2*z4)/288 +
-*         (99*z4^2)/256 - (67*z2*z4^2)/512 - z5/5 - (z2*z5)/10 + (z2^2*z5)/20 +
-*         (z3*z5)/15 + (z2*z3*z5)/30 - (19*z4*z5)/80 + z5^2/50 + (117*z6)/128 -
-*         (5*z2*z6)/128 - (683*z2^2*z6)/3072 - (39*z3*z6)/128 + (1565*z4*z6)/3072 -
-*         z7/7 - (z2*z7)/14 + (z3*z7)/21 + (2455*z8)/3072 - (67*z2*z8)/6144 - z9/9);
-
-* * Insertions into the massless line
-*         id gm2norm(0,1) = 1 + ep + ep^2*(1 + (7*z2)/2) + ep^3*(1 + (7*z2)/2 - z3/3) +
-*         ep^4*(1 + (7*z2)/2 + 2*z2^2 - z3/3 + (289*z4)/16) +
-*         ep^5*(1 + (7*z2)/2 + 2*z2^2 - z3/3 - (7*z2*z3)/6 + (289*z4)/16 - z5/5) +
-*         ep^6*(1 + (7*z2)/2 + 2*z2^2 - 2*z2^3 - z3/3 - (7*z2*z3)/6 + z3^2/18 + (289*z4)/16 +
-*         (109*z2*z4)/4 - z5/5 + (7803*z6)/128) +
-*         ep^7*(1 + (7*z2)/2 + 2*z2^2 - 2*z2^3 - z3/3 - (7*z2*z3)/6 - (2*z2^2*z3)/3 + z3^2/18 +
-*         (289*z4)/16 + (109*z2*z4)/4 - (289*z3*z4)/48 - z5/5 - (7*z2*z5)/10 + (7803*z6)/128 -
-*         z7/7) + ep^8*(1 + (7*z2)/2 + 2*z2^2 - 2*z2^3 - z3/3 - (7*z2*z3)/6 - (2*z2^2*z3)/3 +
-*         z3^2/18 + (7*z2*z3^2)/36 + (289*z4)/16 + (109*z2*z4)/4 - (71*z2^2*z4)/4 -
-*         (289*z3*z4)/48 + (657*z4^2)/8 - z5/5 - (7*z2*z5)/10 + (z3*z5)/15 + (7803*z6)/128 +
-*         (2923*z2*z6)/32 - z7/7 + (645565*z8)/3072) +
-*         ep^9*(1 + (7*z2)/2 + 2*z2^2 - 2*z2^3 - z3/3 - (7*z2*z3)/6 - (2*z2^2*z3)/3 +
-*         (2*z2^3*z3)/3 + z3^2/18 + (7*z2*z3^2)/36 - z3^3/162 + (289*z4)/16 + (109*z2*z4)/4 -
-*         (71*z2^2*z4)/4 - (289*z3*z4)/48 - (109*z2*z3*z4)/12 + (657*z4^2)/8 - z5/5 -
-*         (7*z2*z5)/10 - (2*z2^2*z5)/5 + (z3*z5)/15 - (289*z4*z5)/80 + (7803*z6)/128 +
-*         (2923*z2*z6)/32 - (2601*z3*z6)/128 - z7/7 - (z2*z7)/2 + (645565*z8)/3072 - z9/9) +
-*         ep^10*(1 + (14929*z10)/20 + (7*z2)/2 + 2*z2^2 - 2*z2^3 + z2^5/960 - z3/3 -
-*         (7*z2*z3)/6 - (2*z2^2*z3)/3 + (2*z2^3*z3)/3 + z3^2/18 + (7*z2*z3^2)/36 +
-*         (z2^2*z3^2)/9 - z3^3/162 + (289*z4)/16 + (109*z2*z4)/4 - (71*z2^2*z4)/4 +
-*         (7*z2^3*z4)/768 - (289*z3*z4)/48 - (109*z2*z3*z4)/12 + (289*z3^2*z4)/288 +
-*         (657*z4^2)/8 - (4897*z2*z4^2)/128 - z5/5 - (7*z2*z5)/10 - (2*z2^2*z5)/5 +
-*         (z3*z5)/15 + (7*z2*z3*z5)/30 - (289*z4*z5)/80 + z5^2/50 + (7803*z6)/128 +
-*         (2923*z2*z6)/32 - (187793*z2^2*z6)/3072 - (2601*z3*z6)/128 + (847975*z4*z6)/1536 -
-*         z7/7 - (z2*z7)/2 + (z3*z7)/21 + (645565*z8)/3072 + (1936427*z2*z8)/6144 - z9/9);
-
-*         id gm2norm(0,2) =1 + ep + ep^2*(1 + (17*z2)/2) + ep^3*(1 + (17*z2)/2 - z3/3) +
-*         ep^4*(1 + (17*z2)/2 + (63*z2^2)/4 - z3/3 + (1459*z4)/16) +
-*         ep^5*(1 + (17*z2)/2 + (63*z2^2)/4 - z3/3 - (17*z2*z3)/6 + (1459*z4)/16 - z5/5) +
-*         ep^6*(1 + (17*z2)/2 + (63*z2^2)/4 - (81*z2^3)/8 - z3/3 - (17*z2*z3)/6 + z3^2/18 +
-*         (1459*z4)/16 + (5841*z2*z4)/16 - z5/5 + (88933*z6)/128) +
-*         ep^7*(1 + (17*z2)/2 + (63*z2^2)/4 - (81*z2^3)/8 - z3/3 - (17*z2*z3)/6 -
-*         (21*z2^2*z3)/4 + z3^2/18 + (1459*z4)/16 + (5841*z2*z4)/16 - (1459*z3*z4)/48 - z5/5 -
-*         (17*z2*z5)/10 + (88933*z6)/128 - z7/7) +
-*         ep^8*(1 + (17*z2)/2 + (63*z2^2)/4 - (81*z2^3)/8 - z3/3 - (17*z2*z3)/6 -
-*         (21*z2^2*z3)/4 + z3^2/18 + (17*z2*z3^2)/36 + (1459*z4)/16 + (5841*z2*z4)/16 -
-*         (13041*z2^2*z4)/64 - (1459*z3*z4)/48 + (532899*z4^2)/256 - z5/5 - (17*z2*z5)/10 +
-*         (z3*z5)/15 + (88933*z6)/128 + (355707*z2*z6)/128 - z7/7 + (16546775*z8)/3072) +
-*         ep^9*(1 + (17*z2)/2 + (63*z2^2)/4 - (81*z2^3)/8 - z3/3 - (17*z2*z3)/6 -
-*         (21*z2^2*z3)/4 + (27*z2^3*z3)/8 + z3^2/18 + (17*z2*z3^2)/36 - z3^3/162 +
-*         (1459*z4)/16 + (5841*z2*z4)/16 - (13041*z2^2*z4)/64 - (1459*z3*z4)/48 -
-*         (1947*z2*z3*z4)/16 + (532899*z4^2)/256 - z5/5 - (17*z2*z5)/10 - (63*z2^2*z5)/20 +
-*         (z3*z5)/15 - (1459*z4*z5)/80 + (88933*z6)/128 + (355707*z2*z6)/128 -
-*         (88933*z3*z6)/384 - z7/7 - (17*z2*z7)/14 + (16546775*z8)/3072 - z9/9) +
-*         ep^10*(1 + (881658571*z10)/20480 + (17*z2)/2 + (63*z2^2)/4 - (81*z2^3)/8 + z2^5/960 -
-*         z3/3 - (17*z2*z3)/6 - (21*z2^2*z3)/4 + (27*z2^3*z3)/8 + z3^2/18 + (17*z2*z3^2)/36 +
-*         (7*z2^2*z3^2)/8 - z3^3/162 + (1459*z4)/16 + (5841*z2*z4)/16 - (13041*z2^2*z4)/64 +
-*         (7*z2^3*z4)/768 - (1459*z3*z4)/48 - (1947*z2*z3*z4)/16 + (1459*z3^2*z4)/288 +
-*         (532899*z4^2)/256 - (518323*z2*z4^2)/512 - z5/5 - (17*z2*z5)/10 - (63*z2^2*z5)/20 +
-*         (z3*z5)/15 + (17*z2*z3*z5)/30 - (1459*z4*z5)/80 + z5^2/50 + (88933*z6)/128 +
-*         (355707*z2*z6)/128 - (4805003*z2^2*z6)/3072 - (88933*z3*z6)/384 +
-*         (97376045*z4*z6)/3072 - z7/7 - (17*z2*z7)/14 + (z3*z7)/21 + (16546775*z8)/3072 +
-*        (132373597*z2*z8)/6144 - z9/9);
-
-*         id gm2norm(0,3) =1 + ep + ep^2*(1 + (31*z2)/2) + ep^3*(1 + (31*z2)/2 - z3/3) +
-*         ep^4*(1 + (31*z2)/2 + 56*z2^2 - z3/3 + (4609*z4)/16) +
-*         ep^5*(1 + (31*z2)/2 + 56*z2^2 - z3/3 - (31*z2*z3)/6 + (4609*z4)/16 - z5/5) +
-*         ep^6*(1 + (31*z2)/2 + 56*z2^2 - 32*z2^3 - z3/3 - (31*z2*z3)/6 + z3^2/18 +
-*         (4609*z4)/16 + 2161*z2*z4 - z5/5 + (499707*z6)/128) +
-*         ep^7*(1 + (31*z2)/2 + 56*z2^2 - 32*z2^3 - z3/3 - (31*z2*z3)/6 - (56*z2^2*z3)/3 +
-*         z3^2/18 + (4609*z4)/16 + 2161*z2*z4 - (4609*z3*z4)/48 - z5/5 - (31*z2*z5)/10 +
-*         (499707*z6)/128 - z7/7) + ep^8*(1 + (31*z2)/2 + 56*z2^2 - 32*z2^3 - z3/3 -
-*         (31*z2*z3)/6 - (56*z2^2*z3)/3 + z3^2/18 + (31*z2*z3^2)/36 + (4609*z4)/16 +
-*         2161*z2*z4 - 1148*z2^2*z4 - (4609*z3*z4)/48 + 20754*z4^2 - z5/5 - (31*z2*z5)/10 +
-*         (z3*z5)/15 + (499707*z6)/128 + (234235*z2*z6)/8 - z7/7 + (165281725*z8)/3072) +
-*         ep^9*(1 + (31*z2)/2 + 56*z2^2 - 32*z2^3 - z3/3 - (31*z2*z3)/6 - (56*z2^2*z3)/3 +
-*         (32*z2^3*z3)/3 + z3^2/18 + (31*z2*z3^2)/36 - z3^3/162 + (4609*z4)/16 + 2161*z2*z4 -
-*         1148*z2^2*z4 - (4609*z3*z4)/48 - (2161*z2*z3*z4)/3 + 20754*z4^2 - z5/5 -
-*         (31*z2*z5)/10 - (56*z2^2*z5)/5 + (z3*z5)/15 - (4609*z4*z5)/80 + (499707*z6)/128 +
-*         (234235*z2*z6)/8 - (166569*z3*z6)/128 - z7/7 - (31*z2*z7)/14 + (165281725*z8)/3072 -
-*         z9/9) + ep^10*(1 + (7644671*z10)/10 + (31*z2)/2 + 56*z2^2 - 32*z2^3 + z2^5/960 -
-*         z3/3 - (31*z2*z3)/6 - (56*z2^2*z3)/3 + (32*z2^3*z3)/3 + z3^2/18 + (31*z2*z3^2)/36 +
-*         (28*z2^2*z3^2)/9 - z3^3/162 + (4609*z4)/16 + 2161*z2*z4 - 1148*z2^2*z4 +
-*         (7*z2^3*z4)/768 - (4609*z3*z4)/48 - (2161*z2*z3*z4)/3 + (4609*z3^2*z4)/288 +
-*         20754*z4^2 - (1308673*z2*z4^2)/128 - z5/5 - (31*z2*z5)/10 - (56*z2^2*z5)/5 +
-*         (z3*z5)/15 + (31*z2*z3*z5)/30 - (4609*z4*z5)/80 + z5^2/50 + (499707*z6)/128 +
-*         (234235*z2*z6)/8 - (47979953*z2^2*z6)/3072 - (166569*z3*z6)/128 +
-*         (863859775*z4*z6)/1536 - z7/7 - (31*z2*z7)/14 + (z3*z7)/21 + (165281725*z8)/3072 +
-*         (2479224803*z2*z8)/6144 - z9/9);
-
-*         id gm2norm(0,4) =1 + ep + ep^2*(1 + (49*z2)/2) + ep^3*(1 + (49*z2)/2 - z3/3) +
-*         ep^4*(1 + (49*z2)/2 + (575*z2^2)/4 - z3/3 + (11251*z4)/16) +
-*         ep^5*(1 + (49*z2)/2 + (575*z2^2)/4 - z3/3 - (49*z2*z3)/6 + (11251*z4)/16 - z5/5) +
-*         ep^6*(1 + (49*z2)/2 + (575*z2^2)/4 - (625*z2^3)/8 - z3/3 - (49*z2*z3)/6 + z3^2/18 +
-*         (11251*z4)/16 + (135025*z2*z4)/16 - z5/5 + (1906245*z6)/128) +
-*         ep^7*(1 + (49*z2)/2 + (575*z2^2)/4 - (625*z2^3)/8 - z3/3 - (49*z2*z3)/6 -
-*         (575*z2^2*z3)/12 + z3^2/18 + (11251*z4)/16 + (135025*z2*z4)/16 - (11251*z3*z4)/48 -
-*         z5/5 - (49*z2*z5)/10 + (1906245*z6)/128 - z7/7) +
-*         ep^8*(1 + (49*z2)/2 + (575*z2^2)/4 - (625*z2^3)/8 - z3/3 - (49*z2*z3)/6 -
-*         (575*z2^2*z3)/12 + z3^2/18 + (49*z2*z3^2)/36 + (11251*z4)/16 + (135025*z2*z4)/16 -
-*         (280625*z2^2*z4)/64 - (11251*z3*z4)/48 + (31651875*z4^2)/256 - z5/5 - (49*z2*z5)/10 +
-*         (z3*z5)/15 + (1906245*z6)/128 + (22874875*z2*z6)/128 - z7/7 + (985156183*z8)/3072) +
-*         ep^9*(1 + (49*z2)/2 + (575*z2^2)/4 - (625*z2^3)/8 - z3/3 - (49*z2*z3)/6 -
-*         (575*z2^2*z3)/12 + (625*z2^3*z3)/24 + z3^2/18 + (49*z2*z3^2)/36 - z3^3/162 +
-*         (11251*z4)/16 + (135025*z2*z4)/16 - (280625*z2^2*z4)/64 - (11251*z3*z4)/48 -
-*         (135025*z2*z3*z4)/48 + (31651875*z4^2)/256 - z5/5 - (49*z2*z5)/10 - (115*z2^2*z5)/4 +
-*         (z3*z5)/15 - (11251*z4*z5)/80 + (1906245*z6)/128 + (22874875*z2*z6)/128 -
-*         (635415*z3*z6)/128 - z7/7 - (7*z2*z7)/2 + (985156183*z8)/3072 - z9/9) +
-*         ep^10*(1 + (145810544827*z10)/20480 + (49*z2)/2 + (575*z2^2)/4 - (625*z2^3)/8 +
-*         z2^5/960 - z3/3 - (49*z2*z3)/6 - (575*z2^2*z3)/12 + (625*z2^3*z3)/24 + z3^2/18 +
-*         (49*z2*z3^2)/36 + (575*z2^2*z3^2)/72 - z3^3/162 + (11251*z4)/16 + (135025*z2*z4)/16 -
-*         (280625*z2^2*z4)/64 + (7*z2^3*z4)/768 - (11251*z3*z4)/48 - (135025*z2*z3*z4)/48 +
-*         (11251*z3^2*z4)/288 + (31651875*z4^2)/256 - (31359379*z2*z4^2)/512 - z5/5 -
-*         (49*z2*z5)/10 - (115*z2^2*z5)/4 + (z3*z5)/15 + (49*z2*z3*z5)/30 - (11251*z4*z5)/80 +
-*         z5^2/50 + (1906245*z6)/128 + (22874875*z2*z6)/128 - (285956171*z2^2*z6)/3072 -
-*         (635415*z3*z6)/128 + (16086759245*z4*z6)/3072 - z7/7 - (7*z2*z7)/2 + (z3*z7)/21 +
-*         (985156183*z8)/3072 + (23643746717*z2*z8)/6144 - z9/9);
-
-*         id gm2norm(0,5) =1 + ep + ep^2*(1 + (71*z2)/2) + ep^3*(1 + (71*z2)/2 - z3/3) +
-*         ep^4*(1 + (71*z2)/2 + 306*z2^2 - z3/3 + (23329*z4)/16) +
-*         ep^5*(1 + (71*z2)/2 + 306*z2^2 - z3/3 - (71*z2*z3)/6 + (23329*z4)/16 - z5/5) +
-*         ep^6*(1 + (71*z2)/2 + 306*z2^2 - 162*z2^3 - z3/3 - (71*z2*z3)/6 + z3^2/18 +
-*         (23329*z4)/16 + (102069*z2*z4)/4 - z5/5 + (5692027*z6)/128) +
-*         ep^7*(1 + (71*z2)/2 + 306*z2^2 - 162*z2^3 - z3/3 - (71*z2*z3)/6 - 102*z2^2*z3 +
-*         z3^2/18 + (23329*z4)/16 + (102069*z2*z4)/4 - (23329*z3*z4)/48 - z5/5 -
-*         (71*z2*z5)/10 + (5692027*z6)/128 - z7/7) +
-*         ep^8*(1 + (71*z2)/2 + 306*z2^2 - 162*z2^3 - z3/3 - (71*z2*z3)/6 - 102*z2^2*z3 +
-*         z3^2/18 + (71*z2*z3^2)/36 + (23329*z4)/16 + (102069*z2*z4)/4 - (52407*z2^2*z4)/4 -
-*         (23329*z3*z4)/48 + (4252257*z4^2)/8 - z5/5 - (71*z2*z5)/10 + (z3*z5)/15 +
-*         (5692027*z6)/128 + (24902595*z2*z6)/32 - z7/7 + (4235991485*z8)/3072) +
-*         ep^9*(1 + (71*z2)/2 + 306*z2^2 - 162*z2^3 - z3/3 - (71*z2*z3)/6 - 102*z2^2*z3 +
-*         54*z2^3*z3 + z3^2/18 + (71*z2*z3^2)/36 - z3^3/162 + (23329*z4)/16 +
-*         (102069*z2*z4)/4 - (52407*z2^2*z4)/4 - (23329*z3*z4)/48 - (34023*z2*z3*z4)/4 +
-*         (4252257*z4^2)/8 - z5/5 - (71*z2*z5)/10 - (306*z2^2*z5)/5 + (z3*z5)/15 -
-*         (23329*z4*z5)/80 + (5692027*z6)/128 + (24902595*z2*z6)/32 - (5692027*z3*z6)/384 -
-*         z7/7 - (71*z2*z7)/14 + (4235991485*z8)/3072 - z9/9) +
-*         ep^10*(1 + (881660617*z10)/20 + (71*z2)/2 + 306*z2^2 - 162*z2^3 + z2^5/960 - z3/3 -
-*         (71*z2*z3)/6 - 102*z2^2*z3 + 54*z2^3*z3 + z3^2/18 + (71*z2*z3^2)/36 + 17*z2^2*z3^2 -
-*         z3^3/162 + (23329*z4)/16 + (102069*z2*z4)/4 - (52407*z2^2*z4)/4 + (7*z2^3*z4)/768 -
-*         (23329*z3*z4)/48 - (34023*z2*z3*z4)/4 + (23329*z3^2*z4)/288 + (4252257*z4^2)/8 -
-*         (33802273*z2*z4^2)/128 - z5/5 - (71*z2*z5)/10 - (306*z2^2*z5)/5 + (z3*z5)/15 +
-*         (71*z2*z3*z5)/30 - (23329*z4*z5)/80 + z5^2/50 + (5692027*z6)/128 +
-*         (24902595*z2*z6)/32 - (1229517713*z2^2*z6)/3072 - (5692027*z3*z6)/384 +
-*         (49798077415*z4*z6)/1536 - z7/7 - (71*z2*z7)/14 + (z3*z7)/21 + (4235991485*z8)/3072 +
-*         (148259699563*z2*z8)/6144 - z9/9);
-
-* Insertions into the massive line        
-*         id gm2norm(1,0) =;
-*         id gm2norm(2,0) =;
-*         id gm2norm(3,0) =;
-*         id gm2norm(4,0) =;
-*         id gm2norm(5,0) =;                
 
 
         id gm3norm(x1?,x2?,x3?) = 
@@ -10489,66 +10008,9 @@ endargument;
 *         rat(1,ep^(1+x1+x2));
 *       We normalize G function to have 1+a1+a2 maximum pole       
 
-
-
-* id	GschemeConstants(2,0) = GschemeConstants(0,0)*(
-* 		1
-*       +ep*(2)
-*       +ep^2*(8)
-*       +ep^3*(32-16*z3)
-*       +ep^4*(128-24*z4-32*z3)
-*       +ep^5*(512-192*z5-48*z4-128*z3)
-*       +ep^6*(2048-440*z6-384*z5-192*z4-512*z3+128*z3^2)
-*       +ep^7*(8192-2304*z7-880*z6-1536*z5-768*z4-2048*z3+384*z3*z4+256*z3^2
-* 		));
-* id	GschemeConstants(1,0) = GschemeConstants(0,0)*(
-* 		1
-*       +ep*(1)
-*       +ep^2*(3)
-*       +ep^3*(9-6*z3)
-*       +ep^4*(27-9*z4-6*z3)
-*       +ep^5*(81-42*z5-9*z4-18*z3)
-*       +ep^6*(243-90*z6-42*z5-27*z4-54*z3+18*z3^2)
-*       +ep^7*(729-294*z7-90*z6-126*z5-81*z4-162*z3+54*z3*z4+18*z3^2
-* 		));
-
-* id	GschemeConstants(0,0)^3 = epp^3*(1
-*       +ep*(6)
-*       +ep^2*(24)
-*       +ep^3*(80-7*z3)
-*       +ep^4*(240-39/4*z4-42*z3)
-*       +ep^5*(672-93/5*z5-117/2*z4-168*z3)
-*       +ep^6*(1792-61/2*z6-558/5*z5-234*z4-560*z3+49/2*z3^2)
-*       +ep^7*(4608-381/7*z7-183*z6-2232/5*z5-780*z4-1680*z3+273/4*z3*z4+
-*          147*z3^2));
-* id	GschemeConstants(0,0)^2 = epp^2*(1
-*       +ep*(4)
-*       +ep^2*(12)
-*       +ep^3*(32-14/3*z3)
-*       +ep^4*(80-13/2*z4-56/3*z3)
-*       +ep^5*(192-62/5*z5-26*z4-56*z3)
-*       +ep^6*(448-61/3*z6-248/5*z5-78*z4-448/3*z3+98/9*z3^2)
-*       +ep^7*(1024-254/7*z7-244/3*z6-744/5*z5-208*z4-1120/3*z3+91/3*z3*
-*          z4+392/9*z3^2));
-* id	GschemeConstants(0,0) = epp*(1
-*       +ep*(2)
-*       +ep^2*(4)
-*       +ep^3*(8-7/3*z3)
-*       +ep^4*(16-13/4*z4-14/3*z3)
-*       +ep^5*(32-31/5*z5-13/2*z4-28/3*z3)
-*       +ep^6*(64-61/6*z6-62/5*z5-13*z4-56/3*z3+49/18*z3^2)
-*       +ep^7*(128-127/7*z7-61/3*z6-124/5*z5-26*z4-112/3*z3+91/12*z3*z4+
-*          49/9*z3^2));
-
-
-* id	epp = 1/ep;
 #endprocedure
 
 #procedure GammaArgToOne
-*
-* redcut
-*
-
 * 
 * Reduce all Gam[a,b] to Gam[1,x] 
 *         
@@ -10591,34 +10053,6 @@ endargument;
         .sort:All Gam and iGam reduced;
 #endprocedure
 
-* #procedure subMasters()
-
-* * Two-loop fully massive tadpole        
-
-* * MMM(1,1,1)        
-* * id miT1 = M^2*(
-* *         -21/2 - 3/(2*ep^2) - 9/(2*ep) + (27*S2)/2 - (3*z2)/2 
-* *         + ep * T1ep + ep^2 * T1ep2
-* *         );        
-
-* * MMMMMM(1,1,1,1,1,1)        
-* id miD6 = 2*z3/ep + D6 + ep*D6ep;
-
-* * MMMMM0(1,1,1,1,1,1)        
-* id miD5 = 2*z3/ep + D5 + ep*D5ep;
-
-* * 00MMMM(1,1,1,1,1,1)        
-* id miD4 = 2*z3/ep + D4 + ep*D4ep;
-
-* * MM0000(1,1,1,1,1,1)        
-* id miDN = 2*z3/ep + DN + ep*DNep;
-
-* * MMM000(1,1,1,1,1,0)/M^2        
-* *** the coefficients of 1/ep^3 and 1/ep^2 are determined
-* *** from the cancellation of poles 
-* id miE3 = -2/3/ep^3-11/3/ep^2 + (-14 + (27*S2)/2 - 2*z2)/ep + E3 + ep*E3ep;
-
-* #endprocedure
 
 #procedure cutep(x)
 multiply, 1/ep^('x');
@@ -10630,7 +10064,7 @@ multiply, ep^('x');
 
 #procedure subvalues
         
-* Expansion from original MATAD        
+* Expansions from original MATAD        
         repeat  id,once    iGam(1,y?) = 
         1 - ep^2*y^2*z2/2 + ep^3*y^3*z3/3 + ep^4*y^4*(z2^2 - 2*z4)/8 +
         ep^5*y^5*(-5*z2*z3 + 6*z5)/30 +
@@ -10668,6 +10102,21 @@ multiply, ep^('x');
 *** the coefficients of 1/ep^3 and 1/ep^2 are determined
 *** from the cancellation of poles 
         id miE3 = -2/3/ep^3-11/3/ep^2 + (-14 + (27*S2)/2 - 2*z2)/ep + E3 + ep*E3ep + ep^3*miE3trunc;
+
+* MM00MM(1,1,0,0,1,1)/M^4                
+        id miBN = agam/ep^3+bgam/ep^2+cgam/ep+dgam+egam*ep
+        +fgam*ep^2+ggam*ep^3+hgam*ep^4;
+
+        id agam=2;
+        id bgam=23/3;
+        id cgam=35/2+3*z2;
+        id dgam=275/192*16+23/2*z2-2*z3;
+        id egam=-16*(189/128 - 89/48*z3 - 3/32*z4 - 105/64*z2 - 9/64*z2^2);
+        id fgam = -384*(
+        14917/18432 + 1/128*z3*z2 - 175/256*z3 + 649/1536*z4 + 1/320*z5
+        - 275/3072*z2 - 23/1024*z2^2
+        )
+        +16*B4;
         
 #endprocedure
 
@@ -10682,7 +10131,7 @@ multiply, ep^('x');
         S DUMMYSYMBOL;        
         PolyRatFun;
 * 
-* We introduce DUMMYSYMBOL for proper terms order in SplitArg
+* We introduce DUMMYSYMBOL for proper terms ordering in SplitArg
 * First term has smallest power of ep        
 *         
         id	den(x?) = den(DUMMYSYMBOL*x);
@@ -10691,13 +10140,11 @@ multiply, ep^('x');
         SplitArg,den;
         Multiply replace_(DUMMYSYMBOL,1);
         
-* id	den(?a,x1?) = den(x1,?a);
+**** id	den(?a,x1?) = den(x1,?a);
         repeat id den(x1?,x2?,x3?,?a) = den(x1,x2+x3,?a);
         id	den(x1?,x2?) = den(1,x2/x1)/x1;
         id	den(x1?) = 1/x1;
         
-* Print+s;
-* .end
         .sort:expansion-2;
         id	num(x1?) = x1;
         if ( count(ep,1) > `maxeppow' ) discard;
