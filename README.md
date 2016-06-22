@@ -6,3 +6,5 @@ MATAD-ng
 **MATAD-ng** is based on the same code by M.Steinhauser but use FORM4 PolyRatFun for intermediate expressions and allow to produce reduction without expansion in ep in terms of master integrals and Euler gamma functions.
 
 ![MATAD-ng topologies](https://raw.githubusercontent.com/wiki/apik/matad-ng/images/top-newnum123.png)
+
+For origianl MATAD usage and examples see M.Steinhauser lectures at CAPP 2009 https://www.ttp.kit.edu/~ms/capp09.pdf
