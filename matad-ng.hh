@@ -421,6 +421,11 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
 
 
 #procedure Conv2exact()
+
+        id po(1,?a) = 1;
+        id poinv(1,?a) = 1;
+        id po(x1?pos_,0) = fac_(x1-1);
+        id poinv(x1?pos_,0) = 1/(fac_(x1-1));
         
         id po(n?,x?)                = Pochhammer(n,x*ep)*den(x*ep);
         id poinv(n?,x?)             = PochhammerINV(n,x*ep)*num(x*ep);
@@ -809,7 +814,7 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
         if ( count(ep`x',1)  < count(ep`y',1) ) multiply,replace_(`x',`y',ep`x',ep`y');
         
         id `x'^k1?*ep`x'^k2?*`y'^k3?*ep`y'^k4?/`z'.`z'^k5?*ep`z'^k6? = gm3(k1,k2,k3,k4,k5,k6);
-        
+
         id gm3(k1?,k2?,k3?,k4?,k5?,k6?) =
         po(2 - k5    ,      -k6 - 1)
         *po(k1 + k5 - 2, k2 + k6 + 1)
@@ -834,7 +839,7 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
 .sort:TadpoleMM0-`in'-1;        
 *
         #call Conv2exact
-*         #call DoG
+        #call DoG
 *         
 .sort:TadpoleMM0-`in'-2;        
 *         
@@ -9361,16 +9366,10 @@ id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
         
         .sort
 
-        Print+s;
-        .sort: Before Tad2l;
-        
 *         #call two110(x5,s5m1,x6,s6m1,1/p3.p3,e3)
         #call TadpoleMM0(x5,x6,p3,MM0,0)
         .sort
 
-        Print+s;
-        .end        
-        
         #call ACCU(gm3)
 * #include expandnomdeno
         
