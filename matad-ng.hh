@@ -4665,7 +4665,7 @@ endif;
 * #include expandnomdeno
         
         #message numerator decomposition done (BN)
-        
+
 * #include matad.info # time
 * #include matad.info # print
         
@@ -7155,6 +7155,7 @@ id,only intbn*dala^11*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-26*miBN*rat(
 *
 * this is topbnbn
 *
+
         #message this is topbnbn
 
         #message numerator
@@ -7175,17 +7176,15 @@ id,only intbn*dala^11*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-26*miBN*rat(
 *         .end        
         
         #call symBN{p1,p2,x3,x4,x5,x6}
-
+        
         #call BNtoBM{p1,p2,p3,p4,p5,p6,x3,x4,x5,x6}
         .sort
+
 
         #call ACCU(topBN)
 
         if ( count(intbn,1) );                
-        if ( (count(x3,1)==0)) multiply intbm/intbn;
-        endif;
-        
-        if (count(intbm,1)==1);
+        if ( (count(x3,1)==0));
 
         id  p4.p4 = 1/x4 - M^2;
         id  p5.p5 = 1/x5 - M^2;
@@ -7224,6 +7223,8 @@ id,only intbn*dala^11*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-26*miBN*rat(
         multiply replace_(x4,x5,x5,x4,p1,p3,p3,p1);
         endif;
 
+        Multiply intbm/intbn;
+        endif;
         endif;
         .sort
 
@@ -7232,6 +7233,7 @@ id,only intbn*dala^11*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-26*miBN*rat(
         .sort
 
         #message - done
+
 
 #endprocedure        
 
