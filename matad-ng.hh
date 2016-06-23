@@ -782,7 +782,7 @@ endif;
 * BN BM
         endif;
 
-*         #if `TYPE'==bm
+*         #if `TYPE'==bn3
 *                 Print+s;
 *                 .end
                 
@@ -7523,7 +7523,6 @@ id	xpower = 1;
         endif;
 ***if (count(p1.p1,1)>=0) multiply replace_(p1,p2,p2,p1,p4,p3,p3,p4);
         .sort
-
         if( count(intbn3,1));
         if (match(1/p2.p2/p4.p4/p5.p5)>0);
 *         #call triown(p5,p3,p1,p2,p4)
@@ -7545,23 +7544,26 @@ id	xpower = 1;
         .sort
 
 *         Print+s;
-*         .end
+*         .sort:Before match;
 
         if( count(intbn3,1));
         if ( ( match(1/p1.p1/p2.p2/p5.p5*x6) > 0 ) && (count(p4.p4,1)>=0) );
         id p4=p1+p5;
         if ( match(1/p1.p1/p2.p2/p5.p5*x6) <= 0 ) discard;
         multiply replace_(p1,p5,p5,p2,p2,p1);
+
         elseif ( ( match(1/p1.p1/p2.p2/p3.p3/p4.p4*x6) > 0 ) && (count(p5.p5,1)>=0) );
         id p5=p4-p1;
         if ( match(1/p1.p1/p2.p2/p3.p3/p4.p4*x6) <= 0 ) discard;
         id p1=-p1;
         id p4=-p4;
         multiply replace_(p3,p2,p2,p3);
+
         elseif ( ( match(1/p3.p3/p4.p4/p5.p5*x6) > 0 ) && (count(p2.p2,1)>=0) );
         id p2=p5-p3;
         if ( match(1/p3.p3/p4.p4/p5.p5*x6) <= 0 ) discard;
         multiply replace_(p3,p5,p1,p3,p4,p2,p5,p1);
+
         else;
 
 * If more massless lines than in the three cases above are >= zero,
@@ -9433,26 +9435,32 @@ id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
 *
         
         #message this is topm2
-        
+*         
+* Procedure m2 modified        
+* IntOne can deal only with numerator containing first momentum        
+*         
         if( count(intm2,1));        
-*         multiply int1;
-        id p1=-p1;
+***         id p1=-p1;
+        id p1=p2-p3;
         endif;        
-*         #call one00(p2,p1,p3,e2,e1,e3,int1)
         #call IntOne(p2,p1,p3,m2,M00)        
         .sort
 
-* #include expandnomdeno
+        if( count(intM00,1));        
+        id p5=p6-p3;
+        endif;        
         
         #call IntOne(p3,p5,p6,M00,M0)        
-* multiply int1;
-* #call one00(p3,p5,p6,e3,e5,e6,int1)
         .sort
+
         #call averts(p6,M0)
         .sort
-*         #call one10(x6,s6m1,1/p6.p6,e6)
+
         #call TadpoleM0(x6,p6,M0,0)        
         .sort
+
+* Print+s;
+* .end
         
 * #include expandnomdeno
         
@@ -9469,24 +9477,20 @@ id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
 
         #message this is topm3
 
-* multiply int1;
-        if( count(intm3,1)) id p1=-p1;
-*         #call one00(p2,p1,p6,e2,e1,e6,int1)
+        if( count(intm3,1)) id p1=p2-p6;
+
         #call IntOne(p2,p1,p6,m3,M00)                
-.sort
+        .sort
 
-* #include expandnomdeno
-
-if( count(intm3,1)) id p4=-p4;
-* multiply int1;
-*         #call one00(p3,p4,p6,e3,e4,e6,int1)
+        if( count(intM00,1)) id p4=p3-p6;
+        
         #call IntOne(p3,p4,p6,M00,M0)        
         .sort
-#call averts(p6,M0)
-.sort
-*         #call one10(x6,s6m1,1/p6.p6,e6)
-#call TadpoleM0(x6,p6,M0,0)        
-.sort
+        #call averts(p6,M0)
+        .sort
+
+        #call TadpoleM0(x6,p6,M0,0)        
+        .sort
 
 * #include expandnomdeno
         
@@ -10254,17 +10258,13 @@ if( count(intm3,1)) id p4=-p4;
         #call tad`LOOPS'l
         
 
-*         b intn1,x6;        
-*         Print+s;        
-*         .end
-
-*         if(count(int0,1));
-*         Multiply 1/int0;  
+        if(count(int0,1));
+        Multiply 1/int0;  
         
-*         else;
-*         exit "Not all integrals reduced";
+        else;
+        exit "Not all integrals reduced";
 
-*         endif;        
+        endif;        
 #endprocedure
 
 
