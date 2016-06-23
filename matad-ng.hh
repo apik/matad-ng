@@ -91,11 +91,11 @@ S epx1,epx2,epx3,epx4,epx5,epx6;
 Symbols z2,z3,z4,z5,z6,z7,z8,z9,zz5,z6z2;
 
 * Master integrals
-S miT1,miD6,miD5,miD4,miDN,miE3;
-S miBN;
+S miT1,miD6,miD5,miD4,miDN,miDM,miE3;
+S miBN,miBN1x11,miBN1x00;
 * And its truncation flags
-S miT1trunc,miD6trunc,miD5trunc,miD4trunc,miDNtrunc,miE3trunc;
-S miBNtrunc;
+S miT1trunc,miD6trunc,miD5trunc,miD4trunc,miDNtrunc,miDMtrunc,miE3trunc;
+S miBNtrunc,miBN1x11trunc,miBN1x00trunc;
 S iGamtrunc,Gamtrunc;
 
 set trunc:miT1trunc,miD6trunc,miD5trunc,miD4trunc,miDNtrunc,miE3trunc,  iGamtrunc,Gamtrunc;
@@ -1356,16 +1356,16 @@ endif;
 #endprocedure
 
 #procedure redBN1n34 (p1,p2,x3,x4,p5,x6)
-
+        
 * Use this procedure to reduce n3 and n4 to 1.
 * n1=n2=1, n5=n6=1;
-
+        
 * #include expandnomdeno
 
 ***#message BN1-n34-start
 
         #do i=1,1
-
+                
                 if( count(intbn1,1) );        
                 if ( ( count(`x3',1) < count(`x4',1) ) &&
                 (count(`x3',1)>=1) && (count(`x4',1)>1) && (count(`x6',1)==1) &&
@@ -1391,13 +1391,13 @@ endif;
                 + n3*M^-2 + n4*M^-2 + n6*M^-2 - 2*M^-2 )
 
                 - `x4'^-1 * ( n3*M^-2 - M^-2 )
-
+                
                 - `p2'.`p2'*`x3'^-1*`x4' * (  - n4*M^-2 )
-
+                
                 + `p2'.`p2'*`x3'^-1 * ( 3/2*nom(4,-2)*M^-4 
                 - n1*M^-4 - n2*M^-4 - n3*M^-4 - n4*M^-4 -
                 n5*M^-4 - n6*M^-4 + 2*M^-4 )
-
+                
                 - `p5'.`p5' * (  - n3*M^-2 + M^-2 )
                 );
 
@@ -1591,39 +1591,39 @@ endif;
 if( count(intbn1,1) );
 repeat;
         
-  if ( (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)>=0) &&
-     (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-     (count(`p5'.`p5',1)<-1) );
-
-    if (count(`p1'.`p1',1) < count(`p2'.`p2',1))
-                   multiply replace_(`x3',`x4',`x4',`x3',`p1',`p2',`p2',`p1');
-  endif;
-
-  if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)==0) &&
-     (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-     (count(`p5'.`p5',1)<-1) );
-
-    id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-      * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-    =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-      *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-      *(-1)*M^2*deno(4*n5 - 4 - n1*n5 + n1 + 2*n5 - 2*n5^2,-2*n5+2)
-      *(
-       + `p1'.`p1'^-1*`p5'.`p5'*`x3'*`x6'^-1 * (  - n1*n3*M^-2 )
-
-       + `p1'.`p1'^-1*`p5'.`p5' * ( n1*n3*M^-2 - n1*n5*M^-2 + n1*M^-2 )
-
-       + `p1'.`p1'^-1*`x4'^-1 * ( n1*n5*M^-2 - n1*M^-2 )
-
-       - `p1'.`p1'^-1 * ( n1*n5 - n1 )
-
-       + `p5'.`p5'*`x3' *(-nom(4,-2)*n3*M^-2 
-                  + n1*n3*M^-2 + 2*n3*M^-2 + 2*n3^2*M^-2 )
-
-       - `p5'.`p5'*`x3'^2 * ( 2*n3 + 2*n3^2 )
-       );
-  endif;
-
+        if ( (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)>=0) &&
+        (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+        (count(`p5'.`p5',1)<-1) );
+        
+        if (count(`p1'.`p1',1) < count(`p2'.`p2',1))
+        multiply replace_(`x3',`x4',`x4',`x3',`p1',`p2',`p2',`p1');
+        endif;
+        
+        if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)==0) &&
+        (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+        (count(`p5'.`p5',1)<-1) );
+        
+        id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+        * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+        =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+        *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+        *(-1)*M^2*deno(4*n5 - 4 - n1*n5 + n1 + 2*n5 - 2*n5^2,-2*n5+2)
+        *(
+        + `p1'.`p1'^-1*`p5'.`p5'*`x3'*`x6'^-1 * (  - n1*n3*M^-2 )
+        
+        + `p1'.`p1'^-1*`p5'.`p5' * ( n1*n3*M^-2 - n1*n5*M^-2 + n1*M^-2 )
+        
+        + `p1'.`p1'^-1*`x4'^-1 * ( n1*n5*M^-2 - n1*M^-2 )
+        
+        - `p1'.`p1'^-1 * ( n1*n5 - n1 )
+        
+        + `p5'.`p5'*`x3' *(-nom(4,-2)*n3*M^-2 
+        + n1*n3*M^-2 + 2*n3*M^-2 + 2*n3^2*M^-2 )
+        
+        - `p5'.`p5'*`x3'^2 * ( 2*n3 + 2*n3^2 )
+        );
+        endif;
+        
 endrepeat;
 endif;
 
@@ -1650,7 +1650,7 @@ endif;
                 endif;
         endrepeat;
         endif;
-
+        
 #endprocedure
 
 
@@ -1751,6 +1751,7 @@ endif;
         ;
         endif;
         
+        id n = num(4-2*ep);
         id nom(4,-2)=num(4-2*ep);
         #call symBN1(p1,p2,x3,x4,p5,x6)
         .sort
@@ -1898,24 +1899,17 @@ endif;
         endif;
 * topBN1        
         endif;        
-.sort
+        .sort
 
 * insert the expansion for BN1(0,0,1,1,1,1) and BN1(1,1,1,1,1,1).
 
-* id BN1(0,0,1,1,1,1) = +  M^4*(
-*       + ep^-3 + ep^-2 * ( 15/4 ) + ep^-1 * ( 65/8 + 12/8*z2 )
-*       + 81/4*S2 - z3 + 135/16 + 90/16 *z2
-*       + ep*OepS2
-*       + ep^2*Oep2S2
-*                            )
-* #ifdef 'MINCER'
-*       *(1 + z2*ep^2/2 + 1/8*z2^2*ep^4 + 1/48*z2^3*ep^6)^3;
-* #endif
-* ;
-
-* id BN1(1,1,1,1,1,1) = + (2*z3/ep + D3) + ep*OepD3;
-* .sort
-
+        if(count(intbn1,1));        
+        id BN1(0,0,1,1,1,1) = +  M^4*miBN1x00*int0/intbn1;
+        
+        id BN1(1,1,1,1,1,1) = + miBN1x11*int0/intbn1;
+        endif;
+        .sort
+        
 #call ACCU();
 
 #message - done
@@ -1964,6 +1958,8 @@ endif;
                 
                 #call top`type'
                 #call bnm2m(`type')
+                Print+s;        
+                .sort        
                 
         #enddo
         
@@ -3670,7 +3666,7 @@ endif;
         multiply, inte3/intdm;
         elseif ( (count(s1m,1)==1)   && (count(s2m,1)==1)   && (count(s3m,1)==1) && 
         (count(p4.p4,1)==-1) && (count(p5.p5,1)==-1) && (count(p6.p6,1)==-1));
-        id s1m*s2m*s3m/p4.p4/p5.p5/p6.p6 = 2*z3/ep + DM + ep*DMep;
+        id s1m*s2m*s3m/p4.p4/p5.p5/p6.p6 = miDM*int0/intdm;
         else;
         multiply 1/(1-1);
         endif;
@@ -3920,7 +3916,7 @@ s1m,s3m,s2m,s4m);
 multiply, intbn1/intdn;
 elseif ( (count(s1m,1)==1)   && (count(s2m,1)==1)   && (count(p3.p3,1)==-1) && 
 (count(p4.p4,1)==-1) && (count(p5.p5,1)==-1) && (count(p6.p6,1)==-1));
-id s1m*s2m/p3.p3/p4.p4/p5.p5/p6.p6 = miDN;
+id s1m*s2m/p3.p3/p4.p4/p5.p5/p6.p6 = miDN*int0/intdn;
 else;
 multiply 1/(1-1);
 endif;
@@ -8951,7 +8947,6 @@ endif;
         #call redBM1n124(p1,p2,p3,p4,x5,x6)
         .sort
 
-        
 * from now on n1, n2 or n4 is <= zero. 
         if( count(intbm1,1));
         if ( (count(x5,1)<=0) && (count(x6,1)<=0) ) discard;
@@ -9009,7 +9004,7 @@ endif;
         #call redBM1n36(p1,p2,p3,p4,x5,x6)
 
 * #include expandnomdeno
-
+        
         
         if( count(intbm1,1));        
         if ( (match(1/p1.p1/p2.p2*x5*x6)>0) && (count(p4.p4,1)>=0) );
@@ -9049,9 +9044,7 @@ endif;
         if ( (count(p4.p4,1)>=0) && (count(p2.p2,1)>=0) ) discard;
         if ( (count(p1.p1,1)>=0) && (count(p2.p2,1)>=0) ) discard;
         endif;        
-        .sort
-
-        
+        .sort        
         
 * now, we have reduced diagrams with the following lines != 0:
 
@@ -9137,6 +9130,9 @@ endif;
         #call ACCU(BM1)
 
         #message - done
+
+*         Print+s;
+*         .end
 
         
 #endprocedure        
@@ -9363,21 +9359,21 @@ endif;
 
 
 
-#procedure nomgm3(v1,v2,v3,x,y,z)
-
-id  `v3' = -`v1'-`v2';
+#procedure nomgm3(v1,v2,v3,x,y,z,in)
+* Apply only to topo "in"
+if(count(int`in',1)) id  `v3' = -`v1'-`v2';
 
 #call ACCU{nomgm3 1}
 
-id  `v1'.`v1' = 1/`x' - M^2;
+if(count(int`in',1)) id  `v1'.`v1' = 1/`x' - M^2;
 
 #call ACCU{nomgm3 2}
 
-id  `v2'.`v2' = 1/`y' - M^2;
+if(count(int`in',1)) id  `v2'.`v2' = 1/`y' - M^2;
 
 #call ACCU{nomgm3 3}
 
-id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
+if(count(int`in',1)) id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
 
 #call ACCU{nomgm3 4}
 
@@ -9413,7 +9409,7 @@ id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
         if( count(intMM0,1));
         id p6=-p6;
         endif;                
-        #call nomgm3(p5,p6,p3,x5,x6,1/p3.p3)
+        #call nomgm3(p5,p6,p3,x5,x6,1/p3.p3,MM0)
         
         .sort
 
@@ -9507,8 +9503,14 @@ id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
 #message this is topm4
 * if( count(intm4,1)) multiply intM00*intM0/intm4;
 *         #call one00(p3,p4,p6,e3,e4,e6,int1)
+
+* Numerator p4->p3,p6
+        if(count(intm4,1)) id p4=p6-p3;        
         #call IntOne(p3,p4,p6,m4,MxM)
 .sort
+
+Print+s;
+.sort:AFP-one1;
 
 * #include expandnomdeno
 
@@ -9517,8 +9519,10 @@ id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
 *         #call one10(x5,s5m1,1/p5.p5,e5)
         #call TadpoleM0(x5,p5,MxM,M0)        
 .sort
+
 #call averts(p6,M0)
 .sort
+
 *         #call one10(x6,p6)
 #call TadpoleM0(x6,p6,M0,0)        
 .sort
@@ -9643,14 +9647,12 @@ id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
 
         elseif ( (count(s1m,1)!=0) && (count(s2m,1)==0) && (count(s5m,1)==0) );
         multiply intM00/intm5;
+        
         elseif ( (count(s1m,1)==1) && (count(s2m,1)==1) && (count(s5m,1)==1) ); 
 ***  id s1m*s2m*s5m = -3*deno(1,-2)*M^2*(1/2/ep^2 + 1/2/ep) +  M^2*g3fl1;
 *** constant form Davydychev, Tausk, NPB397(93)123
-        id s1m*s2m*s5m = M^2*(
-        -21/2 - 3/(2*ep^2) - 9/(2*ep) + (27*S2)/2 - (3*z2)/2 
-        + ep * T1ep + ep^2 * T1ep2
-        );
-        Multiply int0/intMMM;
+        id s1m*s2m*s5m = M^2*miT1*int0/intMMM;
+
         else;
         multiply 1/(1-1);
         endif;
@@ -10390,6 +10392,9 @@ multiply, ep^('x');
 * MM0000(1,1,1,1,1,1)        
         id miDN = 2*z3/ep + DN + ep*DNep + ep^3*miDNtrunc;
         
+* MMM000(1,1,1,1,1,1)        
+        id miDM = 2*z3/ep + DM + ep*DMep + ep^3*miDMtrunc;
+
 * MMM000(1,1,1,1,1,0)/M^2        
 *** the coefficients of 1/ep^3 and 1/ep^2 are determined
 *** from the cancellation of poles 
@@ -10397,7 +10402,7 @@ multiply, ep^('x');
 
 * MM00MM(1,1,0,0,1,1)/M^4                
         id miBN = agam/ep^3+bgam/ep^2+cgam/ep+dgam+egam*ep
-        +fgam*ep^2+ggam*ep^3+hgam*ep^4;
+        +fgam*ep^2+ggam*ep^3+hgam*ep^4 + ep^5*miBNtrunc;
 
         id agam=2;
         id bgam=23/3;
@@ -10410,6 +10415,18 @@ multiply, ep^('x');
         )
         +16*B4;
         
+* M000MM(1,1,0,0,1,1)
+        id miBN1x00 =
+        + ep^-3 + ep^-2 * ( 15/4 ) + ep^-1 * ( 65/8 + 12/8*z2 )
+        + 81/4*S2 - z3 + 135/16 + 90/16 *z2
+        + ep*OepS2
+        + ep^2*Oep2S2
+        + ep^3*miBN1x00trunc;
+
+* M000MM(1,1,1,1,1,1)
+        id miBN1x11 = + (2*z3/ep + D3) + ep*OepD3 + ep^2*miBN1x11trunc;
+        
+
 #endprocedure
 
 
