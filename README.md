@@ -9,4 +9,4 @@ MATAD-ng
 
 For origianl MATAD usage and examples see M.Steinhauser lectures at CAPP 2009 https://www.ttp.kit.edu/~ms/capp09.pdf
 
-![MATAD-ng master integrals](https://raw.githubusercontent.com/wiki/apik/matad-ng/images/masters.png)
+![MATAD-ng master integrals](https://raw.githubusercontent.com/wiki/apik/matad-ng/images/masterint.png)
