@@ -5,6 +5,13 @@ MATAD-ng
 
 **MATAD-ng** is based on the same code by M.Steinhauser but use FORM4 PolyRatFun for intermediate expressions and allow to produce reduction without expansion in ep in terms of master integrals and Euler gamma functions.
 
-![MATAD-ng topologies](https://raw.githubusercontent.com/wiki/apik/matad-ng/images/top-newnum123.png)
+![MATAD-ng topologies](https://raw.githubusercontent.com/wiki/apik/matad-ng/images/topmtd.png)
 
 For origianl MATAD usage and examples see M.Steinhauser lectures at CAPP 2009 https://www.ttp.kit.edu/~ms/capp09.pdf
+
+To use reduction at rbitrary d only 9 master integrals needed
+![MATAD-ng master integrals](https://raw.githubusercontent.com/wiki/apik/matad-ng/images/masterint.png)
+
+With expansion of Euler gamma functions near d for remaining trivial integrals
+
+> `Gam(n,x)=Gamma(n+(2-d/2)*x), iGam(n,x)=1/Gamma(n+(2-d/2)*x)`
