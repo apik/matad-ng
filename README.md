@@ -9,7 +9,7 @@ MATAD-ng
 
 For origianl MATAD usage and examples see M.Steinhauser lectures at CAPP 2009 https://www.ttp.kit.edu/~ms/capp09.pdf
 
-To use reduction at rbitrary d only 9 master integrals needed
+To use reduction at arbitrary **d** only following 9 master integrals needed:
 ![MATAD-ng master integrals](https://raw.githubusercontent.com/wiki/apik/matad-ng/images/masterint.png)
 
 With expansion of Euler gamma functions near d for remaining trivial integrals
