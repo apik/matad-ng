@@ -13,8 +13,8 @@
 * MINCER exact routines IntOne,DoG,expansion
 * 
 * 
-* 
-* 
+* TABINT
+* REDBNTAB
 * 
 * 
 * 
@@ -50,7 +50,6 @@ S intm1,...,intm5,intn1,intt1;
 S intbm,intbmbm,intbm1,intbm2,intbn,intbnbn,intbn1,intbn2,intbn3;
 S intd4,intd5,intd6,intdm,intdn,inte3,inte4;
 
-* partfrac
 S  diff,[p1^2],[M^2+p1^2];
 
 S  dala,test5,test6;
@@ -93,7 +92,8 @@ S miT1trunc,miD6trunc,miD5trunc,miD4trunc,miDNtrunc,miDMtrunc,miE3trunc;
 S miBNtrunc,miBN1x11trunc,miBN1x00trunc;
 S iGamtrunc,Gamtrunc;
 
-set trunc:miT1trunc,miD6trunc,miD5trunc,miD4trunc,miDNtrunc,miE3trunc,  iGamtrunc,Gamtrunc;
+set trunc:miT1trunc,miD6trunc,miD5trunc,miD4trunc,miDNtrunc,miDMtrunc,miE3trunc,
+          miBNtrunc,miBN1x11trunc,miBN1x00trunc,iGamtrunc,Gamtrunc;
 
 * Mass distributions
 * Two-loop 
@@ -342,25 +342,7 @@ PolyRatFun rat;
 #endprocedure
 
 #procedure ACCU(TEXT)
-*         if ( count(ep,1) != 0);
-*         if ( count(acc,1) == 1 ); 
-*         id ep^x?*acc(y?) = acc(ep^x*y);
-*         else;
-*         id ep^x? = acc(ep^x);
-*         endif;
-*         endif;
-*         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-*         .sort(PolyFun = acc):`TEXT';
-
-        id      nom(x1?,x2?) = num(x1+x2*(2-d/2));
-        id      deno(x1?,x2?)= den(x1+x2*(2-d/2));
-
-        id	num(x?)*den(x?) = 1;
-        id	den(x?number_) = 1/x;
-        id	num(x?number_) = x;
-        id	num(x?) = rat(x,1);
-        id	den(x?) = rat(1,x);
-        
+        #call Conv2exact        
         .sort:`TEXT';
 #endprocedure
 
@@ -769,1130 +751,6 @@ endif;
 
 
 
-#procedure symBN1 (p1,p2,x3,x4,p5,x6)
-        if( count(intbn1,1));
-        if (count(`x3',1) > count(`x4',1))
-        multiply replace_(`x3',`x4',`x4',`x3',`p1',`p2',`p2',`p1');
-        if ( (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) );
-        if (count(`x3',1) < count(`x4',1))
-        multiply replace_(`x3',`x4',`x4',`x3');
-        if (count(`x3',1) < count(`x6',1))
-        multiply replace_(`x3',`x6',`x6',`x3');
-        if (count(`x4',1) < count(`x6',1))
-        multiply replace_(`x4',`x6',`x6',`x4');
-        endif;
-        endif;
-#endprocedure
-
-
-
-
-
-#procedure redBN1n12to0 (p1,p2,x3,x4,p5,x6)
-
-***#message BN1-n12to0-start
-
-* reduces n1 and n2 to zero, if:
-* a. n1<=0, n2>0
-* b. n1<=0, n2<0
-
-* a.
-*
-* reduces n2 to zero if n1<=0 (n3,n4>=1, n5,n6=1)
-* result: BN1(n1,n2,n3,n4,n5,n6) with n1<=0, n2=0
-*         or BM's.
-
-* sort: n2>=n1
-
-        if( count(intbn1,1) );        
-        if ( ( count(`p2'.`p2',1) > count(`p1'.`p1',1) ) &&
-        (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)==1) &&
-        (count(`p5'.`p5',1)<=-1) )
-        multiply replace_(`x3',`x4',`x4',`x3',`p1',`p2',`p2',`p1');
-        endif;
-        
-        #call redBN1n6 (`p1',`p2',`x3',`x4',`p5',`x6')
-        
-        #do i=1,10
-                
-                if( count(intbn1,1) );        
-                if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)<=-1) &&
-                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)==1) &&
-                (count(`p5'.`p5',1)<=-1) );
-                
-                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-                *(-1)/( - 2*n5 - n1 + 2*n2 + n4 )
-                
-                *(
-                + `x4'*`x6'^-1 * (  - n4 )
-                
-                + `p1'.`p1'^-1*`p5'.`p5' * (  - 2*n1 )
-                
-                + `p1'.`p1'^-1*`x3'^-1 * ( n1 )
-                
-                + `p1'.`p1'^-1*`x4'^-1 * ( 2*n1 )
-                
-                + `p1'.`p1'^-1*`x6'^-1 * (  - n1 )
-                
-                - `p1'.`p1'^-1 * ( 2*n1*M^2 )
-                
-                + `p2'.`p2'*`x3' * ( 2*n3 )
-                
-                + `p2'.`p2'*`x4' * ( n4 )
-                
-                + `p5'.`p5'*`x3' * (  - 2*n3 )
-                
-                );
-                
-                redefine i "0";
-                
-                endif;
-                endif;
-                #call ACCU(BN1n12to0)
-                
-        #enddo
-        
-
-* b.
-*
-* reduces n2 to zero if n1<=0,n2<0 (n3,n4,n6>=1, n5=1)
-* result: BN1(n1,n2,n3,n4,n5,n6) with n1<=0, n2=0
-*         or BM's.
-
-        #do i=1,1
-
-* sort: n2>=n1
-                if( count(intbn1,1) );
-                if ( ( count(`p2'.`p2',1) < count(`p1'.`p1',1) ) &&
-                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-                (count(`p5'.`p5',1)<=-1) )
-                multiply replace_(`x3',`x4',`x4',`x3',`p1',`p2',`p2',`p1');
-
-                if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)>0) &&
-                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-                (count(`p5'.`p5',1)<=-1) );
-
-                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-                *(-1)*deno( + 3/2*4 - n1 - n2 - n3 - n4 - n5 - n6,-3)
-                *(
-                - `p1'.`p1'^-1*`p2'.`p2'^-1*`x3'^-1 * ( n1*M^2 )
-
-                - `p1'.`p1'^-1*`p2'.`p2'^-1*`x6'^-1 * (  - n1*M^2 )
-
-                - `p2'.`p2'^-1*`p5'.`p5'*`x3' * (  - n3*M^2 )
-
-                + `p2'.`p2'^-1*`x3' * ( 3*n3*M^4 )
-
-                - `p2'.`p2'^-1*`x4'^-1*`x6' * (  - n6*M^2 )
-
-                - `p2'.`p2'^-1*`x4'*`x6'^-1 * (  - n4*M^2 )
-
-                - `p2'.`p2'^-1 *(- 3*num(d)*M^2 + n1*M^2 + 4*n2*M^2 + 3*n3*M^2 + n4*M^2 + 2*
-                n5*M^2 + n6*M^2 + 4*M^2 )
-
-                );
-
-                redefine i "0";
-
-                endif;
-                endif;
-                
-*                 id n=num(4-2*ep);
-                .sort
-        #enddo
-        
-        #call ACCU(BN1n12to0)
-        
-***#message BN1-n12to0-done
-        
-#endprocedure
-
-#procedure redBN1n12to1 (p1,p2,x3,x4,p5,x6)
-
-        #do i=1,1
-                
-* sort: n2>=n1
-                if( count(intbn1,1) );
-                if ( ( count(`p2'.`p2',1) > count(`p1'.`p1',1) ) &&
-                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-                (count(`p5'.`p5',1)<=-1) )
-                multiply replace_(`x3',`x4',`x4',`x3',`p1',`p2',`p2',`p1');
-                
-                if ( (count(`p1'.`p1',1)<=-1) && (count(`p2'.`p2',1)<-1) &&
-                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-                (count(`p5'.`p5',1)<=-1) );
-
-                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-                *(-1)
-                *(
-                - `x3'^-1 * ( M^-2 )
-
-                - `p1'.`p1'*`p2'.`p2'*`x4' * ( 1/( - 1 + n2)*n4*M^-2 )
-
-                - `p2'.`p2'*`p5'.`p5'*`x4' * (  - 1/( - 1 + n2)*n4*M^-2 )
-
-                + `p2'.`p2'*`x4' * (  - 1/( - 1 + n2)*n4 )
-
-                - `p2'.`p2' * (  - M^-2 + 1/( - 1 + n2)*nom(4,-2)*M^-2 
-                - 1/( - 1 + n2)*n4*M^-2 - 2/( - 1 + n2)*n5*M^-2 )
-
-                - `p5'.`p5' * (  - M^-2 )
-
-                );
-
-                redefine i "0";
-
-                endif;
-                endif;
-                #call ACCU(BN1)
-                
-        #enddo
-        
-* #include expandnomdeno
-        
-***#message BN1-n12to1-done
-        
-#endprocedure
-
-#procedure redBN1n32 (p1,p2,x3,x4,p5,x6)
-
-***#message BN1-n32-start
-
-* reduce n5 to 1 (if n1=n2=0)
-* (take the procedure from redBN1n5.prc)
-
-        #do i=1,1
-                
-                if( count(intbn1,1) );        
-                if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)==0) &&
-                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-                (count(`p5'.`p5',1)<-1) );
-                
-                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2?
-                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2
-                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-                *(-1)*M^2*deno(4*n5 - 4 - n1*n5 + n1 + 2*n5 - 2*n5^2,-2*n5+2)
-                *(
-                + `p1'.`p1'^-1*`p5'.`p5'*`x3'*`x6'^-1 * (  - n1*n3*M^-2 )
-
-                + `p1'.`p1'^-1*`p5'.`p5' * ( n1*n3*M^-2 - n1*n5*M^-2 + n1*M^-2 )
-
-                + `p1'.`p1'^-1*`x4'^-1 * ( n1*n5*M^-2 - n1*M^-2 )
-
-                - `p1'.`p1'^-1 * ( n1*n5 - n1 )
-
-                + `p5'.`p5'*`x3' *(-nom(4,-2)*n3*M^-2+n1*n3*M^-2+2*n3*M^-2+2*n3^2*M^-2 )
-
-                - `p5'.`p5'*`x3'^2 * ( 2*n3 + 2*n3^2 )
-                );
-
-                redefine i "0";
-
-                endif;
-                endif;
-                #call ACCU(BN1n32_0)
-                
-        #enddo
-        
-* reduce n3, n4 and n6 to 2, take care if n6=n3-1!!!
-* n1=n2=0!
-        
-* The condition n6=n3-1 is asked for with the following trick; 
-* it only works if n5=1!
-        
-*if ( count(`x3',1) == count(`x6',1,`p5'.`p5',-1) );
-*endif;
-        
-        #do i=1,1
-                
-                if( count(intbn1,1) );        
-                if ( (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) );
-                if (count(`x3',1) < count(`x4',1))
-                multiply replace_(`x3',`x4',`x4',`x3');
-                if (count(`x3',1) < count(`x6',1))
-                multiply replace_(`x3',`x6',`x6',`x3');
-                if (count(`x4',1) < count(`x6',1))
-                multiply replace_(`x4',`x6',`x6',`x4');
-                endif;
-                
-                if ( ( count(`x3',1) > count(`x6',1,`p5'.`p5',-1) ) &&
-                (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) &&
-                (count(`x3',1)>2) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-                (count(`p5'.`p5',1)==-1) );
-                
-                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-                *(-1)/(- 6*n3*M^2 + 2*n3^2*M^2 + 4*M^2)
-                *(
-                - `x3'^-2*`x6' * (  - nom(4,-2)*n6 + n3*n6 + 2*n5*n6 - 2*n6 )
-                
-                - `x3'^-1*`x4'^-1*`x6' * (  - n3*n6 + 2*n6 )
-                
-                + `x3'^-1*`x6' * ( n3*n6*M^2 - 2*n6*M^2 )
-                
-                - `x3'^-1*(4-2*nom(4,-2)*n3+4*nom(4,-2)+2*n3*n5+n3*n6-6*n3+2*n3^2 - 4*n5
-                - 2*n6 )
-                
-                - `p5'.`p5'*`x3'^-1*`x6' * ( n3*n6 - 2*n6 )
-                );
-*  if (count(`x3',1) < count(`x4',1))
-*                   multiply replace_(`x3',`x4',`x4',`x3');
-*  if (count(`x3',1) < count(`x6',1))
-*                   multiply replace_(`x3',`x6',`x6',`x3');
-*  if (count(`x4',1) < count(`x6',1))
-*                   multiply replace_(`x4',`x6',`x6',`x4');
-
-                redefine i "0";
-                
-                endif;
-                
-                if ( ( count(`x3',1) == count(`x6',1,`p5'.`p5',-1) ) &&
-                (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) &&
-                (count(`x3',1)>2) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-                (count(`p5'.`p5',1)==-1) );
-                
-                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-                *(-1)/( (- 6*n3*M^2 + 2*n3^2*M^2 + 4*M^2) + M^2*n6*(n3-2) )
-                *(
-                - `x3'^-2*`x6' * (  - nom(4,-2)*n6 + n3*n6 + 2*n5*n6 - 2*n6 )
-                
-                - `x3'^-1*`x4'^-1*`x6' * (  - n3*n6 + 2*n6 )
-                
-                - `x3'^-1 * ( 4 - 2*nom(4,-2)*n3 + 4*nom(4,-2) 
-                + 2*n3*n5 + n3*n6 - 6*n3 + 2*n3^2 - 4*n5
-                - 2*n6 )
-                
-                - `p5'.`p5'*`x3'^-1*`x6' * ( n3*n6 - 2*n6 )
-                );
-*  if (count(`x3',1) < count(`x4',1))
-*                   multiply replace_(`x3',`x4',`x4',`x3');
-*  if (count(`x3',1) < count(`x6',1))
-*                   multiply replace_(`x3',`x6',`x6',`x3');
-*  if (count(`x4',1) < count(`x6',1))
-*                   multiply replace_(`x4',`x6',`x6',`x4');
-                
-                redefine i "0";
-
-                endif;
-                
-                if ( ( count(`x3',1) == count(`x6',1) ) &&
-                (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) &&
-                (count(`x3',1)>2) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-                (count(`p5'.`p5',1)==-1) );
-                
-                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-                *(-1)/(M^2 * ( 3 - 9/2*n3 + 3/2*n3^2 ) )
-                *(
-                - 1/`x3'/`x3'*`x6' * (  - nom(4,-2)*n3 + n3^2 )
-                
-                - 1/`x3'/`x4'*`x6' * ( 2*n3 - n3^2 )
-                
-                - 1/`x3'*`p5'.`p5'*`x6' * (  - 2*n3 + n3^2 )
-
-                - 1/`x3' * ( 1 - 3/2*nom(4,-2)*n3 + 3*nom(4,-2) - 11/2*n3 + 5/2*n3^2 )
-                
-                - 1/`x4' * ( 1 - 3/2*n3 + 1/2*n3^2 )
-                
-                - `p5'.`p5' * (  - 1 + 3/2*n3 - 1/2*n3^2 )
-                
-                - 1/`x6' * ( 1 + nom(4,-2)*n3 - 2*nom(4,-2) + 5/2*n3 - 3/2*n3^2 )
-                
-                );
-                
-*  if (count(`x3',1) < count(`x4',1))
-*                   multiply replace_(`x3',`x4',`x4',`x3');
-*  if (count(`x3',1) < count(`x6',1))
-*                   multiply replace_(`x3',`x6',`x6',`x3');
-*  if (count(`x4',1) < count(`x6',1))
-*                   multiply replace_(`x4',`x6',`x6',`x4');
-                
-                redefine i "0";
-                
-                endif;
-                endif;
-                
-*                 id nom(4,-2)=num(4-2*ep);
-*   id acc(x?)*acc(y?)=acc(x*y);
-                #call ACCU(BN1n32_0)
-                
-        #enddo
-
-***#message BN1-n32-end
-
-#endprocedure
-
-#procedure redBN1n32s (p1,p2,x3,x4,p5,x6)
-
-***#message BN1-n32s-start
-
-* reduce n5 to 1 (if n1=n2=0)
-* (take the procedure from redBN1n5.prc)
-        
-* 13Apr04: 'repeat' -> '#do-#enddo'
-***repeat;
-        #do ii=1,1
-                
-                if( count(intbn1,1) );        
-                if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)==0) &&
-                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-                (count(`p5'.`p5',1)<-1) );
-                
-                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2?
-                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2
-                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-                *(-1)*M^2*deno(4*n5 - 4 - n1*n5 + n1 + 2*n5 - 2*n5^2,-2*n5+2)
-                *(
-                + `p1'.`p1'^-1*`p5'.`p5'*`x3'*`x6'^-1 * (  - n1*n3*M^-2 )
-                
-                + `p1'.`p1'^-1*`p5'.`p5' * ( n1*n3*M^-2 - n1*n5*M^-2 + n1*M^-2 )
-                
-                + `p1'.`p1'^-1*`x4'^-1 * ( n1*n5*M^-2 - n1*M^-2 )
-                
-                - `p1'.`p1'^-1 * ( n1*n5 - n1 )
-                
-                + `p5'.`p5'*`x3' *(-nom(4,-2)*n3*M^-2+n1*n3*M^-2+2*n3*M^-2+2*n3^2*M^-2 )
-                
-                - `p5'.`p5'*`x3'^2 * ( 2*n3 + 2*n3^2 )
-                );
-                
-                redefine j "0";
-                redefine ii "0";
-                
-                endif;
-                endif;        
-                .sort
-                
-        #enddo
-***endrepeat;
-        
-        #call ACCU(BN1n32_1)
-        
-* reduce n3, n4 and n6 to 2, take care if n6=n3-1!!!
-* n1=n2=0!
-        
-* The condition n6=n3-1 is asked for with the following trick; 
-* it only works if n5=1!
-        
-*if ( count(`x3',1) == count(`x6',1,`p5'.`p5',-1) );
-*endif;
-        
-        #do i=1,1
-
-***#message 'i'
-                if( count(intbn1,1) );
-                if ( (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) );
-                if (count(`x3',1) < count(`x4',1))
-                multiply replace_(`x3',`x4',`x4',`x3');
-                if (count(`x3',1) < count(`x6',1))
-                multiply replace_(`x3',`x6',`x6',`x3');
-                if (count(`x4',1) < count(`x6',1))
-                multiply replace_(`x4',`x6',`x6',`x4');
-                endif;
-                endif;
-                #call ACCU(BN1n32_2)
-                
-                if( count(intbn1,1) );        
-                if ( ( count(`x3',1) > count(`x6',1,`p5'.`p5',-1) ) &&
-                (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) &&
-                (count(`x3',1)>2) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-                (count(`p5'.`p5',1)==-1) );
-                
-                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-                *(-1)/(- 6*n3*M^2 + 2*n3^2*M^2 + 4*M^2)
-                *(
-                - `x3'^-2*`x6' * (  - nom(4,-2)*n6 + n3*n6 + 2*n5*n6 - 2*n6 )
-                
-                - `x3'^-1*`x4'^-1*`x6' * (  - n3*n6 + 2*n6 )
-                
-                + `x3'^-1*`x6' * ( n3*n6*M^2 - 2*n6*M^2 )
-                
-                - `x3'^-1 * ( 4 - 2*nom(4,-2)*n3 + 4*nom(4,-2) + 2*n3*n5 + n3*n6 
-                 - 6*n3 + 2*n3^2 - 4*n5
-                - 2*n6 )
-                
-                - `p5'.`p5'*`x3'^-1*`x6' * ( n3*n6 - 2*n6 )
-                );
-                
-                redefine i "0";
-                redefine j "0";
-                
-                endif;
-                endif;
-                #call ACCU(BN1n32_3)
-                
-                if( count(intbn1,1) );        
-                if ( ( count(`x3',1) == count(`x6',1,`p5'.`p5',-1) ) &&
-                (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) &&
-                (count(`x3',1)>2) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-                (count(`p5'.`p5',1)==-1) );
-                
-                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-                *(-1)/( (- 6*n3*M^2 + 2*n3^2*M^2 + 4*M^2) + M^2*n6*(n3-2) )
-                *(
-                - `x3'^-2*`x6' * (  - nom(4,-2)*n6 + n3*n6 + 2*n5*n6 - 2*n6 )
-                
-                - `x3'^-1*`x4'^-1*`x6' * (  - n3*n6 + 2*n6 )
-                
-                - `x3'^-1 * ( 4 - 2*nom(4,-2)*n3 + 4*nom(4,-2) 
-                + 2*n3*n5 + n3*n6 - 6*n3 + 2*n3^2 - 4*n5
-                - 2*n6 )
-                
-                - `p5'.`p5'*`x3'^-1*`x6' * ( n3*n6 - 2*n6 )
-                );
-                
-                redefine i "0";
-                redefine j "0";
-                
-                endif;
-                endif;
-                
-                #call ACCU(BN1n32_4)
-                
-                if( count(intbn1,1) );        
-                if ( ( count(`x3',1) == count(`x6',1) ) &&
-                (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) &&
-                (count(`x3',1)>2) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-                (count(`p5'.`p5',1)==-1) );
-                
-                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-                *(-1)/(M^2 * ( 3 - 9/2*n3 + 3/2*n3^2 ) )
-                *(
-                - 1/`x3'/`x3'*`x6' * (  - nom(4,-2)*n3 + n3^2 )
-                
-                - 1/`x3'/`x4'*`x6' * ( 2*n3 - n3^2 )
-                
-                - 1/`x3'*`p5'.`p5'*`x6' * (  - 2*n3 + n3^2 )
-                
-                - 1/`x3' * ( 1 - 3/2*nom(4,-2)*n3 + 3*nom(4,-2) - 11/2*n3 + 5/2*n3^2 )
-                
-                - 1/`x4' * ( 1 - 3/2*n3 + 1/2*n3^2 )
-                
-                - `p5'.`p5' * (  - 1 + 3/2*n3 - 1/2*n3^2 )
-                
-                - 1/`x6' * ( 1 + nom(4,-2)*n3 - 2*nom(4,-2) + 5/2*n3 - 3/2*n3^2 )
-                
-                );
-                
-                redefine i "0";
-                redefine j "0";
-                
-                endif;
-                endif;
-                
-                #call ACCU(BN1n32_5)
-                
-* added Jul. '98
-                
-                if( count(intbn1,1) );        
-                if ( (count(`p1',1)==0) && (count(`p2',1)==0) );
-                if ((count(`x3',1)<=0) || (count(`x4',1)<=0) || (count(`x6',1)<=0)) discard;
-                if (count(`x3',1) > count(`x4',1)) multiply replace_(`x3',`x4',`x4',`x3');
-                if (count(`x3',1) > count(`x6',1)) multiply replace_(`x3',`x6',`x6',`x3');
-                if (count(`x4',1) > count(`x6',1)) multiply replace_(`x4',`x6',`x6',`x4');
-                endif;
-                endif;
-                
-                #call ACCU(BN1n32_6)
-*   #include expandnomdeno
-
-#enddo
-
-***#message BN1-n32s-done
-
-#endprocedure
-
-#procedure redBN1n34 (p1,p2,x3,x4,p5,x6)
-        
-* Use this procedure to reduce n3 and n4 to 1.
-* n1=n2=1, n5=n6=1;
-        
-* #include expandnomdeno
-
-***#message BN1-n34-start
-
-        #do i=1,1
-                
-                if( count(intbn1,1) );        
-                if ( ( count(`x3',1) < count(`x4',1) ) &&
-                (count(`x3',1)>=1) && (count(`x4',1)>1) && (count(`x6',1)==1) &&
-                (count(`p5'.`p5',1)==-1) ) 
-                multiply replace_(`x3',`x4',`x4',`x3',`p1',`p2',`p2',`p1');
-
-                if ( (count(`p1'.`p1',1)==-1) && (count(`p2'.`p2',1)==-1) &&
-                (count(`x3',1)>1) && (count(`x4',1)>=1) && (count(`x6',1)==1) &&
-                (count(`p5'.`p5',1)==-1) );
-
-
-                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-                *(-1)/(n3-1)
-                *(
-                + `x3'^-1*`x4'^-1 * (  - 3/2*nom(4,-2)*M^-4 
-                + n1*M^-4 + n2*M^-4 + n3*M^-4 + n4*M^-4
-                + n5*M^-4 + n6*M^-4 - 2*M^-4 )
-
-                - `x3'^-1 * (  - nom(4,-2)*M^-2 + 2*n2*M^-2 
-                + n3*M^-2 + n4*M^-2 + n6*M^-2 - 2*M^-2 )
-
-                - `x4'^-1 * ( n3*M^-2 - M^-2 )
-                
-                - `p2'.`p2'*`x3'^-1*`x4' * (  - n4*M^-2 )
-                
-                + `p2'.`p2'*`x3'^-1 * ( 3/2*nom(4,-2)*M^-4 
-                - n1*M^-4 - n2*M^-4 - n3*M^-4 - n4*M^-4 -
-                n5*M^-4 - n6*M^-4 + 2*M^-4 )
-                
-                - `p5'.`p5' * (  - n3*M^-2 + M^-2 )
-                );
-
-                redefine i "0";
-
-                endif;
-                endif;
-        
-                #call ACCU(BN1)
-
-#enddo
-
-* #include expandnomdeno
-
-***#message BN1-n34-done
-
-#endprocedure
-
-
-#procedure redBN1n5 (p1,p2,x3,x4,p5,x6)
-        
-        #do i=1,1
-                if( count(intbn1,1) );
-                if ( (count(`p1'.`p1',1)<=-1) &&
-                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-                (count(`p5'.`p5',1)<-1) );
-
-                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-                *(-1)/(1 - n5)
-                *(
-                - `x4'^-1 * (  - n5*M^-2 + M^-2 )
-
-                - `p1'.`p1' * ( n5*M^-2 - M^-2 )
-
-                - `p2'.`p2'^-1*`p5'.`p5'*`x4'^-1 * (  - n2*M^-2 )
-
-                - `p2'.`p2'^-1*`p5'.`p5'*`x6'^-1 * ( n2*M^-2 )
-
-                + `p5'.`p5'*`x4' * (  - 2*n4 )
-
-                - `p5'.`p5' * ( nom(4,-2)*M^-2 - n2*M^-2 - 2*n4*M^-2 - n5*M^-2 + M^-2 )
-                );
-
-                redefine i "0";
-
-                endif;
-
-                if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)<=-1) &&
-                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-                (count(`p5'.`p5',1)<-1) );
-
-                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-                *(-1)/(1 - n5)
-                *(
-                - `x3'^-1 * (  - n5*M^-2 + M^-2 )
-
-                - `p1'.`p1'^-1*`p5'.`p5'*`x3'^-1 * (  - n1*M^-2 )
-
-                - `p1'.`p1'^-1*`p5'.`p5'*`x6'^-1 * ( n1*M^-2 )
-
-                - `p2'.`p2' * ( n5*M^-2 - M^-2 )
-
-                + `p5'.`p5'*`x3' * (  - 2*n3 )
-
-                - `p5'.`p5' * ( nom(4,-2)*M^-2 - n1*M^-2 - 2*n3*M^-2 - n5*M^-2 + M^-2 )
-                );
-
-                redefine i "0";
-
-                endif;
-* topBN1        
-                endif;
-*                 id nom(4,-2) = num(4-2*ep);
-
-                #call ACCU(BN1)
-
-#enddo
-
-* #include expandnomdeno
-
-#do i=1,1
-
-* #message 'i' n5 (2)
-
-        if( count(intbn1,1) );        
-        if ( (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)>=0) &&
-        (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-        (count(`p5'.`p5',1)<-1) );
-
-        if (count(`p1'.`p1',1) < count(`p2'.`p2',1))
-        multiply replace_(`x3',`x4',`x4',`x3',`p1',`p2',`p2',`p1');
-        endif;
-
-        if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)==0) &&
-        (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-        (count(`p5'.`p5',1)<-1) );
-
-        id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-        * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-        =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-        *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-        *(-1)*M^2*deno(4*n5 - 4 - n1*n5 + n1 + 2*n5 - 2*n5^2,-2*n5+2)
-        *(
-        + `p1'.`p1'^-1*`p5'.`p5'*`x3'*`x6'^-1 * (  - n1*n3*M^-2 )
-
-        + `p1'.`p1'^-1*`p5'.`p5' * ( n1*n3*M^-2 - n1*n5*M^-2 + n1*M^-2 )
-
-        + `p1'.`p1'^-1*`x4'^-1 * ( n1*n5*M^-2 - n1*M^-2 )
-
-        - `p1'.`p1'^-1 * ( n1*n5 - n1 )
-
-        + `p5'.`p5'*`x3' *(-nom(4,-2)*n3*M^-2 
-        + n1*n3*M^-2 + 2*n3*M^-2 + 2*n3^2*M^-2 )
-
-        - `p5'.`p5'*`x3'^2 * ( 2*n3 + 2*n3^2 )
-        );
-
-        redefine i "0";
-
-        endif;
-        endif;
-*   #include expandnomdeno
-        .sort
-#enddo
-
-***#message BN1-rep-1
-
-if( count(intbn1,1) );
-repeat;
-
-        if ( (count(`p1'.`p1',1)<=-1) &&
-        (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-        (count(`p5'.`p5',1)<-1) );
-
-        id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-        * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-        =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-        *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-        *(-1)/(1 - n5)
-        *(
-        - `x4'^-1 * (  - n5*M^-2 + M^-2 )
-
-        - `p1'.`p1' * ( n5*M^-2 - M^-2 )
-
-        - `p2'.`p2'^-1*`p5'.`p5'*`x4'^-1 * (  - n2*M^-2 )
-
-        - `p2'.`p2'^-1*`p5'.`p5'*`x6'^-1 * ( n2*M^-2 )
-
-        + `p5'.`p5'*`x4' * (  - 2*n4 )
-
-        - `p5'.`p5' * ( nom(4,-2)*M^-2 - n2*M^-2 - 2*n4*M^-2 - n5*M^-2 + M^-2 )
-        );
-        endif;
-
-        if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)<=-1) &&
-        (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-        (count(`p5'.`p5',1)<-1) );
-
-        id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-        * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-        =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-        *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-        *(-1)/(1 - n5)
-        *(
-        - `x3'^-1 * (  - n5*M^-2 + M^-2 )
-
-        - `p1'.`p1'^-1*`p5'.`p5'*`x3'^-1 * (  - n1*M^-2 )
-
-        - `p1'.`p1'^-1*`p5'.`p5'*`x6'^-1 * ( n1*M^-2 )
-
-        - `p2'.`p2' * ( n5*M^-2 - M^-2 )
-
-        + `p5'.`p5'*`x3' * (  - 2*n3 )
-
-        - `p5'.`p5' * ( nom(4,-2)*M^-2 - n1*M^-2 - 2*n3*M^-2 - n5*M^-2 + M^-2 )
-        );
-        endif;
-
-endrepeat;
-endif;
-* #include expandnomdeno
-
-***#message BN1-rep-2
-
-if( count(intbn1,1) );
-repeat;
-        
-        if ( (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)>=0) &&
-        (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-        (count(`p5'.`p5',1)<-1) );
-        
-        if (count(`p1'.`p1',1) < count(`p2'.`p2',1))
-        multiply replace_(`x3',`x4',`x4',`x3',`p1',`p2',`p2',`p1');
-        endif;
-        
-        if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)==0) &&
-        (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
-        (count(`p5'.`p5',1)<-1) );
-        
-        id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-        * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-        =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-        *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
-        *(-1)*M^2*deno(4*n5 - 4 - n1*n5 + n1 + 2*n5 - 2*n5^2,-2*n5+2)
-        *(
-        + `p1'.`p1'^-1*`p5'.`p5'*`x3'*`x6'^-1 * (  - n1*n3*M^-2 )
-        
-        + `p1'.`p1'^-1*`p5'.`p5' * ( n1*n3*M^-2 - n1*n5*M^-2 + n1*M^-2 )
-        
-        + `p1'.`p1'^-1*`x4'^-1 * ( n1*n5*M^-2 - n1*M^-2 )
-        
-        - `p1'.`p1'^-1 * ( n1*n5 - n1 )
-        
-        + `p5'.`p5'*`x3' *(-nom(4,-2)*n3*M^-2 
-        + n1*n3*M^-2 + 2*n3*M^-2 + 2*n3^2*M^-2 )
-        
-        - `p5'.`p5'*`x3'^2 * ( 2*n3 + 2*n3^2 )
-        );
-        endif;
-        
-endrepeat;
-endif;
-
-***#message BN1-rep-done
-
-#endprocedure
-
-#procedure redBN1n6 (p1,p2,x3,x4,p5,x6)
-        
-        if( count(intbn1,1) );        
-        repeat;
-                if ( (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>1) &&
-                (count(`p5'.`p5',1)<=-1) );
-                
-                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
-                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^(n6-1)
-                *1/(n6-1)
-                *(
-                - n3*`x3' - n4*`x4'
-                - 1/M^2*nom(6-n1-n2-n3-n4-n5-(n6-1),-3)
-                );
-                endif;
-        endrepeat;
-        endif;
-        
-#endprocedure
-
-
-
-
-
-#procedure reduceBN1
-        
-        #call redBN1n5(p1,p2,x3,x4,p5,x6)
-        .sort
-***#call symBN1(p1,p2,x3,x4,p5,x6)
-        
-        #call redBN1n12to1(p1,p2,x3,x4,p5,x6)
-        #call symBN1(p1,p2,x3,x4,p5,x6)
-        .sort
-        
-        #call redBN1n6 (p1,p2,x3,x4,p5,x6)
-        #call symBN1(p1,p2,x3,x4,p5,x6)
-        .sort
-        
-        #call redBN1n34 (p1,p2,x3,x4,p5,x6)
-        #call symBN1(p1,p2,x3,x4,p5,x6)
-        .sort
-        
-* #include expandnomdeno
-        
-        #call redBN1n12to0 (p1,p2,x3,x4,p5,x6)
-        #call symBN1(p1,p2,x3,x4,p5,x6)
-        .sort
-        
-* set massless tadpoles to zero:
-        
-        if( count(intbn1,1) );        
-        if ( (count(x3,1)<=0) && (count(p1.p1,1)>=0) ) discard;
-        if ( (count(x4,1)<=0) && (count(p2.p2,1)>=0) ) discard;
-        if ( (count(x3,1)<=0) && (count(x6,1)<=0) ) discard;
-        if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
-        if ( (count(x4,1)<=0) && (count(p5.p5,1)>=0) ) discard;
-        if ( (count(x3,1)<=0) && (count(p5.p5,1)>=0) ) discard;
-        if ( (count(x3,1)<=0) && (count(x4,1)<=0) &&
-        ( (count(p1.p1,1)>=0) || (count(p2.p2,1)>=0) || (count(p5.p5,1)>=0) )
-        ) discard;
-        if ( (count(p1.p1,1)>=0) && (count(p2.p2,1)>=0) && (count(p5.p5,1)<0) &&
-        ( (count(x3,1)<=0)    || (count(x4,1)<=0) ||
-        (count(x6,1)<=0) )
-        ) discard;
-        endif;        
-        .sort
-        
-* #include expandnomdeno
-        
-        #do j=1,1
-                #call redBN1n32s (p1,p2,x3,x4,p5,x6)
-        #enddo
-        
-        #call redBN1n32 (p1,p2,x3,x4,p5,x6)
-        .sort
-        
-        #call symBN1(p1,p2,x3,x4,p5,x6)
-        .sort
-        
-* now treat the integrals BN1(0,0,2,2,1,1), BN1(0,0,2,2,1,2)
-* and BN1(0,0,2,1,1,1) separate:
-        
-* BN1(0,0,2,2,1,1) = -1/3/M^2*BN1(0,0,2,1,0,2);
-        
-        if( count(intbn1,1) );
-        if ( (count(p1.p1,1)==0) && (count(p2.p2,1)==0) && (count(x3,1)==2) && 
-        (count(x4,1)==2) && (count(p5.p5,1)==-1) && (count(x6,1)==1) )
-        id x3^2*x4^2/p5.p5*x6 = -1/3/M^2 * x3^2*x4*x6^2;
-        endif;
-        .sort
-        
-*   BN(0,0,2,2,1,2) =
-*       + 7/6*BN1(0,0,2,1,0,2)*n*M^-4 - 38/9*BN1(0,0,2,1,0,2)*M^-4 
-*       + 19/3*BN1(0,0,2,1,1,1)*n*M^-4 - BN1(0,0,2,1,1,1)*n^2*M^-4 
-*       - 10*BN1(0,0,2,1,1,1)*M^-4 + 4/3*BN1(0,0,3,1,0,2)*M^-2;
-        
-        if( count(intbn1,1) );
-        if ( (count(p1.p1,1)==0) && (count(p2.p2,1)==0) && (count(x3,1)==2) && 
-        (count(x4,1)==2) && (count(p5.p5,1)==-1) && (count(x6,1)==2) )
-        id x3^2*x4^2/p5.p5*x6^2 =
-        + 7/6* x3^2*x4*x6^2 *num(d)*M^-4      - 38/9* x3^2*x4*x6^2 *M^-4 
-        + 19/3* x3^2*x4/p5.p5*x6 *num(d)*M^-4 - x3^2*x4/p5.p5*x6 *num(d^2)*M^-4 
-        - 10* x3^2*x4/p5.p5*x6 *M^-4     + 4/3* x3^3*x4*x6^2 *M^-2
-        ;
-        endif;
-        .sort
-        
-*   BN(0,0,2,1,1,1) =
-*      -1/3/M^2*(3/2*n-4)*BN1(0,0,1,1,1,1);
-        
-        if( count(intbn1,1) );
-        if ( (count(p1.p1,1)==0) && (count(p2.p2,1)==0) && (count(x3,1)==2) && 
-        (count(x4,1)==1) && (count(p5.p5,1)==-1) && (count(x6,1)==1) )
-        id x3^2*x4/p5.p5*x6 =
-        -1/3/M^2*(3/2*nom(4,-2)-4)* x3*x4/p5.p5*x6
-        ;
-        endif;
-        
-*         id n = num(4-2*ep);
-*         id nom(4,-2)=num(4-2*ep);
-        #call symBN1(p1,p2,x3,x4,p5,x6)
-        .sort
-        
-#endprocedure        
-
-
-
-
-
-#procedure topbn1
-*
-* this is topbn1
-*
-        #-
-        #message this is topbn1
-        
-        #message numerator
-        
-        if( count(intbn1,1) );        
-        id  p1.p2 = 1/2 * ( 1/x4 + 1/x3 - 1/x5 - 1/x6 );
-        id  p1.p3 = 1/2 * ( 1/x6 - 1/x3 - p1.p1 );
-        id  p1.p4 = 1/2 * (-1/x5 + 1/x4 + p1.p1 );
-        endif;        
-        #call ACCU(BN1 1)
-        
-        if( count(intbn1,1) );                
-        id  p1.p5 = 1/2 * ( 1/x4 - 1/x5 - p1.p1 );
-        id  p1.p6 = 1/2 * (-1/x3 + 1/x6 + p1.p1 );
-        endif;        
-        #call ACCU(BN1 2)
-        
-        if( count(intbn1,1) );                
-        id  p2.p3 = 1/2 * ( 1/x5 - 1/x3 - p2.p2 );
-        id  p2.p4 = 1/2 * (-1/x6 + 1/x4 + p2.p2 );
-        endif;        
-        #call ACCU(BN1 3)
-        
-        if( count(intbn1,1) );                
-        id  p2.p5 = 1/2 * (-1/x3 + 1/x5 + p2.p2 );
-        id  p2.p6 = 1/2 * ( 1/x4 - 1/x6 - p2.p2 );
-        endif;        
-        #call ACCU(BN1 4)
-        
-        if( count(intbn1,1) );        
-        id  p3.p4 = 1/2 * ( 1/x5 + 1/x6 - p2.p2 - p1.p1 - 2*M^2);
-        id  p3.p5 = 1/2 * ( 1/x3 + 1/x5 - p2.p2 - 2*M^2);
-        endif;        
-        #call ACCU(BN1 5)
-        
-        if( count(intbn1,1) );        
-        id  p3.p6 = 1/2 * ( 1/x3 + 1/x6 - p1.p1 - 2*M^2);
-        id  p4.p5 = 1/2 * ( 1/x4 + 1/x5 - p1.p1 - 2*M^2);
-        endif;        
-        #call ACCU(BN1 6)
-        
-        if( count(intbn1,1) );        
-        id  p4.p6 = 1/2 * ( 1/x4 + 1/x6 - p2.p2 - 2*M^2);
-        id  p5.p6 = 1/2 * ( 1/x3 + 1/x4 - p2.p2 - p1.p1 - 2*M^2);
-        endif;        
-        #call ACCU(BN1 7)
-        
-*
-* Warning!
-*
-        if( count(intbn1,1) );
-        id  1/x5 = M^2 + p5.p5;
-        
-        id  p3.p3 = 1/x3 - M^2;
-        endif;
-        
-        #call ACCU(BN1 6)
-        if( count(intbn1,1) );        
-        id  p4.p4 = 1/x4 - M^2;
-        id  p6.p6 = 1/x6 - M^2;
-        endif;
-        
-        #call ACCU(BN1 7)
-        
-        #call symBN1(p1,p2,x3,x4,p5,x6)
-        .sort
-        
-        if( count(intbn1,1) );        
-        id x3^n3?neg_=(p3.p3+M^2)^-n3;
-        id x4^n4?neg_=(p4.p4+M^2)^-n4;
-        id x6^n6?neg_=(p6.p6+M^2)^-n6;
-        
-        
-        if ( (count(x3,1)<=0) && (count(p1.p1,1)>=0) ) discard;
-        if ( (count(x4,1)<=0) && (count(p2.p2,1)>=0) ) discard;
-        if ( (count(x3,1)<=0) && (count(x6,1)<=0) ) discard;
-        if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
-        if ( (count(x4,1)<=0) && (count(p5.p5,1)>=0) ) discard;
-        if ( (count(x3,1)<=0) && (count(p5.p5,1)>=0) ) discard;
-        if ( (count(x3,1)<=0) && (count(x4,1)<=0) && 
-        ( (count(p1.p1,1)>=0) || (count(p2.p2,1)>=0) || (count(p5.p5,1)>=0) )
-        ) discard;
-        if ( (count(p1.p1,1)>=0) && (count(p2.p2,1)>=0) && (count(p5.p5,1)<0) &&
-        ( (count(x3,1)<=0)    || (count(x4,1)<=0) || 
-        (count(x6,1)<=0) )
-        ) discard;
-        endif;        
-        .sort
-        
-        #message do recursion
-        
-        #call reduceBN1
-        
-        if( count(intbn1,1) );        
-        if ( (count(x3,1)<=0) && (count(p1.p1,1)>=0) ) discard;
-        if ( (count(x4,1)<=0) && (count(p2.p2,1)>=0) ) discard;
-        if ( (count(x3,1)<=0) && (count(x6,1)<=0) ) discard;
-        if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
-        if ( (count(x4,1)<=0) && (count(p5.p5,1)>=0) ) discard;
-        if ( (count(x3,1)<=0) && (count(p5.p5,1)>=0) ) discard;
-        if ( (count(x3,1)<=0) && (count(x4,1)<=0) && 
-        ( (count(p1.p1,1)>=0) || (count(p2.p2,1)>=0) || (count(p5.p5,1)>=0) )
-        ) discard;
-        if ( (count(p1.p1,1)>=0) && (count(p2.p2,1)>=0) && (count(p5.p5,1)<0) &&
-        ( (count(x3,1)<=0)    || (count(x4,1)<=0) || 
-        (count(x6,1)<=0) )
-        ) discard;
-        
-        if (count(x6,1)==0);
-        id p6=p1+p3;
-        id p1=-p1;
-        multiply replace_(p5,p4,p4,p6,p3,p5,x3,x5,x4,x6);
-        multiply intbm1/intbn1;
-        elseif (count(x3,1)==0);
-        id p3=p5-p2;
-        id p1=-p1;
-        multiply replace_(p5,p4,p4,p6,p6,p5,p2,p3,x4,x6,x6,x5);
-        multiply intbm1/intbn1;
-        elseif (count(x4,1)==0);
-        id p4=p6-p2;
-        multiply replace_(p5,p4,p3,p5,p1,p3,x3,x5);
-        multiply intbm1/intbn1;
-        elseif (count(p5.p5,1)>=0);
-        id p5=p4-p1;
-        multiply replace_(p3,p5,p1,p3,p2,p1,x3,x5);
-        multiply intbm/intbn1;
-        elseif ( (count(x3,1)!=0) && (count(x4,1)!=0) && (count(x6,1)!=0) );
-        id 1/p1.p1^n1? /p2.p2^n2? * x3^n3? * x4^n4? /p5.p5^n5? * x6^n6? =
-        BN1(n1,n2,n3,n4,n5,n6);        
-        endif;
-* topBN1        
-        endif;        
-        .sort
-
-* insert the expansion for BN1(0,0,1,1,1,1) and BN1(1,1,1,1,1,1).
-
-        if(count(intbn1,1));        
-        id BN1(0,0,1,1,1,1) = +  M^4*miBN1x00*int0/intbn1;
-        
-        id BN1(1,1,1,1,1,1) = + miBN1x11*int0/intbn1;
-        endif;
-        .sort
-        
-#call ACCU();
-
-#message - done
-        
-#endprocedure        
-
-
-
-
 
 #procedure dorec3l
 *
@@ -1920,9 +778,7 @@ endif;
                 #message Recursion of type `type'
                 
                 #call top`type'
-                Print+s;        
                 .sort        
-                
         #enddo
         
         #do type = {bn|bn1|bn2|bn3|bm|bm1|bm2}
@@ -1932,7 +788,6 @@ endif;
                 
                 #call top`type'
                 #call bnm2m(`type')
-                Print+s;        
                 .sort        
                 
         #enddo
@@ -2017,7 +872,6 @@ endif;
 
         #message numerator
 
-* AFP        
         if ( count(intd6,1) );
         id p1.p1 = 1/s1m - M^2;
         id p2.p2 = 1/s2m - M^2;
@@ -2058,9 +912,6 @@ endif;
         #call mltadD6(s1m,s2m,s3m,s4m,s5m,s6m)
         
         #call ACCU(D6)
-
-* #include matad.info # time
-* #include matad.info # print
         
 ************************************************************
         
@@ -2103,6 +954,7 @@ endif;
         multiply replace_(p2,p1,p3,p4,p4,p3,p5,p2,p6,p5,
 	s2m,s1m,s3m,s4m,s4m,s3m,s5m,s2m,s6m,s5m);
         multiply, intd5/intd6;
+
         elseif ( (count(s2m,1)<=0) );
         id 1/s2m=p2.p2+M^2; 
         id p2=p1+p3;
@@ -2111,6 +963,7 @@ endif;
         multiply replace_(p1,p3,p3,p5,p4,p1,p5,p4,p6,p2,
 	s1m,s3m,s3m,s5m,s4m,s1m,s5m,s4m,s6m,s2m);
         multiply, intd5/intd6;
+
         elseif ( (count(s3m,1)<=0) );
         id 1/s3m=p3.p3+M^2; 
         id p3=p6-p5;
@@ -2121,6 +974,7 @@ endif;
         multiply replace_(p2,p4,p4,p2,p6,p3,
         s2m,s4m,s4m,s2m,s6m,s3m);
         multiply, intd5/intd6;
+
         elseif ( (count(s4m,1)<=0) );
         id 1/s4m=p4.p4+M^2; 
         id p4=p2+p5;
@@ -2129,6 +983,7 @@ endif;
         multiply replace_(p1,p3,p2,p1,p3,p2,p5,p4,p6,p5,
         s1m,s3m,s2m,s1m,s3m,s2m,s5m,s4m,s6m,s5m);
         multiply, intd5/intd6;
+
         elseif ( (count(s5m,1)<=0) );
         id 1/s5m=p5.p5+M^2; 
         id p5=p6-p3;
@@ -2137,24 +992,24 @@ endif;
         multiply replace_(p1,p2,p2,p3,p3,p1,p4,p5,p6,p4,
         s1m,s2m,s2m,s3m,s3m,s1m,s4m,s5m,s6m,s4m);
         multiply, intd5/intd6;
+
         elseif ( (count(s6m,1)<=0) );
         id 1/s6m=p6.p6+M^2; 
         id p6=p4-p1;
         multiply, intd5/intd6;
+
         elseif ( (count(s1m,1)==1) && (count(s2m,1)==1) && (count(s3m,1)==1) && 
         (count(s4m,1)==1) && (count(s5m,1)==1) && (count(s6m,1)==1) );
         id s1m*s2m*s3m*s4m*s5m*s6m = miD6;
         Multiply int0/intd6;
+
         else;
-        multiply 1/(1-1);
+        exit "D6: Unknown simpler topology";
         endif;
         endif;
         
-* #include expandnomdeno
-
         #message - done
-        Print+s;
-        .sort        
+
 #endprocedure        
 
 
@@ -2408,8 +1263,6 @@ endif;
 
         #call ACCU(D5)
 
-* #include matad.info # time
-* #include matad.info # print
 
 ************************************************************
 
@@ -2465,8 +1318,6 @@ endif;
 
         #call mltadD5(s1m,s2m,s3m,s4m,s5m,p6)
         
-* #include expandnomdeno
-        
         #call ACCU(D5)
         
         #do i=1,1
@@ -2491,23 +1342,18 @@ endif;
         
         #call mltadD5(s1m,s2m,s3m,s4m,s5m,p6)
         
-* #include expandnomdeno
+        #call Conv2exact        
         
         #do i=1,1
                 
                 #call redD5n1345(s1m,s2m,s3m,s4m,s5m,p6)
-                .sort
-                
-*                 id n = num(4-2*ep);
-*         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
+
                 #call ACCU(D5)
                 
         #enddo
         
         #call mltadD5(s1m,s2m,s3m,s4m,s5m,p6)
         
-*         id n = num(4-2*ep);
-* repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
         #call ACCU(D5)
         
         if ( count(intd5,1) );        
@@ -2605,11 +1451,9 @@ endif;
         Multiply int0/intd5;
 
         else;
-*         multiply 1/(1-1);
-        exit "Unknown simpler topology";        
+        exit "D5: Unknown simpler topology";
         endif;
         endif;
-*#include expandnomdeno
         
         #message - done
 #endprocedure
@@ -3149,7 +1993,7 @@ endif;
         
         #call mltadD4(s1m,s2m,p3,s4m,p5,s6m)
 
-* #include expandnomdeno
+        #call Conv2exact
 
         #do i=1,1
                 
@@ -3172,7 +2016,7 @@ endif;
         
         #call mltadD4(s1m,s2m,p3,s4m,p5,s6m)
         
-* #include expandnomdeno
+        #call Conv2exact
         
         #do i=1,1
                 
@@ -3249,8 +2093,7 @@ endif;
         Multiply int0/intd4;
 
         else;
-*         multiply 1/(1-1);
-        exit "Unknown simpler topology";
+        exit "D4: Unknown simpler topology";
         endif;
         endif;
         #call ACCU(D4)
@@ -3503,9 +2346,6 @@ endif;
 
         #call ACCU(DM)
 
-* #include matad.info # time
-* #include matad.info # print
-
 ************************************************************
 
 * do recursion
@@ -3534,10 +2374,7 @@ endif;
         #enddo
 
         #call mltadDM(s1m,s2m,s3m,p4,p5,p6)
-* #include expandnomdeno
 
-*         id n = num(4-2*ep);
-*         id acc(x1?)*acc(x2?) = acc(x1*x2);
         #call ACCU(DM)
 
 * massless index >1
@@ -3549,8 +2386,6 @@ endif;
 
         #call mltadDM(s1m,s2m,s3m,p4,p5,p6)
 
-*         id n = num(4-2*ep);
-*         id acc(x1?)*acc(x2?) = acc(x1*x2);
         #call ACCU(DM)
 
         #do i=1,1
@@ -3560,8 +2395,6 @@ endif;
 
         #call mltadDM(s1m,s2m,s3m,p4,p5,p6)
 
-*         id n = num(4-2*ep);
-*         id acc(x1?)*acc(x2?) = acc(x1*x2);
         #call ACCU(DM)
 
 ************************************************************
@@ -3620,8 +2453,7 @@ endif;
         id s1m*s2m*s3m/p4.p4/p5.p5/p6.p6 = miDM*int0/intdm;
 
         else;
-*         multiply 1/(1-1);
-        exit "Unknown simpler topology";
+        exit "DM: Unknown simpler topology";
         endif;
         endif;
         #call ACCU(DM)
@@ -3790,8 +2622,6 @@ endif;
 
         #call ACCU(DN)
 
-* #include matad.info # time
-* #include matad.info # print
 
 ************************************************************
 
@@ -3808,10 +2638,6 @@ endif;
 
         #call mltadDN(s1m,s2m,p3,p4,p5,p6)
 
-* #include expandnomdeno
-
-*         id n=num(4-2*ep);
-*         id acc(x1?)*acc(x2?)=acc(x1*x2);
         #call ACCU(DN)
 
         #do i=1,1
@@ -3836,8 +2662,6 @@ endif;
         
         #call mltadDN(s1m,s2m,p3,p4,p5,p6)
         
-*         id n=num(4-2*ep);
-* id acc(x1?)*acc(x2?)=acc(x1*x2);
         #call ACCU(DN)
         
 ************************************************************
@@ -3874,8 +2698,7 @@ endif;
         id s1m*s2m/p3.p3/p4.p4/p5.p5/p6.p6 = miDN*int0/intdn;
 
         else;
-*         multiply 1/(1-1);
-        exit "Unknown simpler topology";
+        exit "DN: Unknown simpler topology";
         endif;
         endif;
         #call ACCU(DN)
@@ -3968,8 +2791,6 @@ endif;
         endif;        
         .sort
 
-* #include matad.info # time
-* #include matad.info # print
 
 ************************************************************
 
@@ -4003,8 +2824,7 @@ endif;
                 
         #enddo
 
-* #include expandnomdeno
-
+        .sort
 ************************************************************
 
 * identify simple integrals
@@ -4016,6 +2836,7 @@ endif;
         id p1=-p1;
         multiply replace_(p1,p3,p2,p1,p3,p6,s1m,s3m,s3m,s6m);
         multiply, intbn1/inte4;
+
         elseif ( (count(s1m,1) >0) && (count(s2m,1) >0) && (count(s3m,1) >0) && 
         (count(s4m,1) >0) && (count(p5.p5,1)>=0) );
         id p5=p4-p2;
@@ -4024,12 +2845,14 @@ endif;
         id p4=-p4;
         multiply replace_(p1,p5,p3,p1,s1m,s5m,s3m,s1m);
         multiply, intm5/inte4;
+
         elseif ( (count(s1m,1)<=0) );
         id 1/s1m=p1.p1+M^2;
         id p1=p2-p3;
         id p5=-p5;
         multiply replace_(p2,p4,p3,p5,p4,p6,p5,p1,s2m,s4m,s3m,s5m,s4m,s6m);
         multiply, intbm/inte4;
+
         elseif ( (count(s3m,1)<=0) );
         id 1/s3m=p3.p3+M^2;
         id p3=p2-p1;
@@ -4037,8 +2860,9 @@ endif;
         id p5=-p5;
         multiply replace_(p1,p5,p2,p4,p4,p6,p5,p1,s1m,s5m,s2m,s4m,s4m,s6m);
         multiply, intbm/inte4;
+
         else;
-        multiply 1/(1-1);
+        exit "E4: Unknown simpler topology";
         endif;
         endif;
         #call ACCU(topE4)
@@ -4230,7 +3054,6 @@ endif;
 
         #do i=1,1
                 #call redE3n2(s1m,s2m,s3m,p4,p5)
-*                 id n = num(4-2*ep);
                 #call ACCU(E3)
                 .sort
         #enddo
@@ -4239,26 +3062,22 @@ endif;
 
         #do i=1,1
                 #call redE3n45(s1m,s2m,s3m,p4,p5)
-*                 id n = num(4-2*ep);
                 #call ACCU(E3)
                 .sort
         #enddo
 
         #call mltadE3(s1m,s2m,s3m,p5,p5)
 
-*         id n = num(4-2*ep);
         #call ACCU(E3)
 
         #do i=1,1
                 #call redE3n13(s1m,s2m,s3m,p4,p5)
-*                 id n = num(4-2*ep);
                 #call ACCU(E3)
                 .sort
         #enddo
 
         #call mltadE3(s1m,s2m,s3m,p5,p5)
 
-*         id n = num(4-2*ep);
         #call ACCU(E3)
         .sort
 
@@ -4619,13 +3438,8 @@ endif;
         endif;
         .sort
         
-* #include expandnomdeno
-        
         #message numerator decomposition done (BN)
 
-* #include matad.info # time
-* #include matad.info # print
-        
 #endprocedure
 
 
@@ -4718,8 +3532,6 @@ endif;
 *
 * sort: n2 < n1
 *
-***if (count(`p1'.`p1',1) > count(`p2'.`p2',1)) 
-***                 multiply replace_(`x3',`x4',`x4',`x3',`p1',`p2',`p2',`p1');
                 
                 if ( (count(`p2'.`p2',1) < 0)
                 && (count(`x3',1) > 0)   &&  (count(`x4',1) >= 1)  
@@ -4867,40 +3679,6 @@ endif;
         
 #endprocedure
 
-#procedure redBNn3456exp (p1,p2,x3,x4,x5,x6)
-
-* expand in ep
-        
-        #do i=1,1
-                
-                if ( count(intbn,1) );
-                if (   (count(`p1'.`p1',1) == 0) && (count(`p2'.`p2',1) == 0)
-                && (count(`x3',1) >= 3)      && (count(`x4',1) >= 1)  
-                && (count(`x5',1) >= 1)      && (count(`x6',1) >= 1) );  
-                
-                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
-                * `x3'^n3? * `x4'^n4? * `x5'^n5? * `x6'^n6?
-                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
-                *`x3'^n3 * `x4'^n4  * `x5'^n5 * `x6'^n6
-                *(
-                num( -2*4 + 4*(n3-1)+ 4*(2-d/2) )/4/M^2/(n3-1) /x3
-                -1/4/M^2/(n3-2)/(n3-1) * dala/x3^2
-                )
-                ;
-                
-                redefine i "0";
-                
-                endif;
-* topbn        
-                endif;
-                
-*         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
-                #call ACCU(BNn3456)
-                #call Conv2exact
-        #enddo
-        
-#endprocedure
-
 #procedure redBNn5 (p1,p2,x3,x4,x5,x6)
 
         #do i=1,1
@@ -5037,11 +3815,12 @@ endif;
                 
                 endif;
                 endif;                
-                .sort
+
                 #call Conv2exact
+                .sort
+
         #enddo
         
-* #include expandnomdeno
         
         #do i=1,1
                 
@@ -5083,11 +3862,10 @@ endif;
                 
                 endif;
                 endif;        
-                .sort
+
                 #call Conv2exact
+                .sort
         #enddo
-        
-* #include expandnomdeno
         
         #do i=1,1
                 
@@ -5130,11 +3908,11 @@ endif;
                 
                 endif;
                 endif;        
-                .sort
+
                 #call Conv2exact
+                .sort
         #enddo
         
-* #include expandnomdeno
         
         #do i=1,1
                 if ( count(intbn,1) );
@@ -5175,11 +3953,9 @@ endif;
                 
                 endif;
                 endif;        
-                .sort
                 #call Conv2exact
+                .sort
         #enddo
-        
-* #include expandnomdeno
         
 #endprocedure
 
@@ -5262,8 +4038,6 @@ endif;
                 if ( (count(`x4',1)<=0)&&(count(`x6',1)<=0) ) discard;
                 endif;
 
-                #call Conv2exact                
-                
                 #call ACCU(n6)
                 
         #enddo
@@ -6848,14 +5622,12 @@ id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat( -
         if ( ( (count(x3,1)==count(x4,1)) || (count(x5,1)==count(x6,1)) )
         && (count(p1.p1,1) > count(p2.p2,1)) )
         multiply replace_(p1,p2,p2,p1);
-        endif;        
+        endif;
+
+        #call Conv2exact        
         .sort
         
-* #include expandnomdeno
-        
-* #include matad.info # time
-* #include matad.info # print
-        
+
 * n1>0:
         
         if ( count(intbn,1) );        
@@ -6869,10 +5641,8 @@ id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat( -
         
         #call symmetryBN
         
-*      #include expandnomdeno
-
-* #include matad.info # time
-* #include matad.info # print
+        #call Conv2exact
+        .sort
 
 * n2>0:
         if ( count(intbn,1) );
@@ -6882,7 +5652,7 @@ id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat( -
         #call redBNn236(p1,p2,x3,x4,x5,x6)
         endif;
         endif;        
-.sort
+        .sort
 
 * n1,n2 < 0
         
@@ -6892,12 +5662,9 @@ id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat( -
         && (count(p1.p1,1) > count(p2.p2,1)) )
         multiply replace_(p1,p2,p2,p1);
         endif;        
+
+        #call Conv2exact
         .sort
-
-* #include expandnomdeno
-
-* #include matad.info # time
-* #include matad.info # print
 
 * n1<0:
 
@@ -6906,7 +5673,6 @@ id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat( -
         
         #call symmetryBN
         
-* #include expandnomdeno
         
 ************************************************************
         
@@ -6924,9 +5690,10 @@ id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat( -
         && (count(p1.p1,1) > count(p2.p2,1)) )
         multiply replace_(p1,p2,p2,p1);
         endif;        
+
+        #call Conv2exact
         .sort
         
-* #include expandnomdeno
 
         #call redBNn3456(p1,p2,x3,x4,x5,x6)
         .sort
@@ -6945,8 +5712,10 @@ id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat( -
         multiply replace_(x3,x5,x5,x3);
         endif;
         endif;
-        
-* #include expandnomdeno
+
+        #call Conv2exact
+        .sort        
+
 
         #call redBNn3456(p1,p2,x3,x4,x5,x6)
         .sort
@@ -6966,20 +5735,12 @@ id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat( -
         if ( ( (count(x3,1)==count(x4,1)) || (count(x5,1)==count(x6,1)) )
         && (count(p1.p1,1) > count(p2.p2,1)) )
         multiply replace_(p1,p2,p2,p1);
-        endif;        
+        endif;
+        #call Conv2exact        
         .sort
         
-* #include expandnomdeno
-
-* #include matad.info # time
-* #include matad.info # print
-
-        .sort
-
 ************************************************************
 
-* include table "BNdal.tbl"
-        
         #message Use table for BN
 
 
@@ -6988,41 +5749,18 @@ id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat( -
         if ( count(intbn,1) );   
         
         if ( count(dala,1) > 11) exit "ERROR: Table is too small for dala > 11 in BN reduction"; 
-*         if (count(dala,1) > 11) multiply 1/(1-1); 
 
         #call BNdExact
-        
-* Replace temporarily x6 by s6m, in order not to touch
-* terms, which are not listed in the previous table.
 
-        if ( (count(dala,1)!=0) ) id x6=s6m;
         endif;        
-
         .sort
 
         if ( count(intbn,1) );                
         #call BNd0Exact
-
-        id s6m^n1? = x6^n1;
+        
         endif;        
         .sort
-
-
-*         if (count(x3,1,x4,1,x5,1,x6,1)>0) multiply 1/(1-1);
-
-*         Print+s;
-*         .end        
-
         
-*         if ( count(intbn,1) );        
-*         if (count(x3,1,x4,1,x5,1,x6,1)>0) multiply 1/(1-1);
-*         endif;        
-
-* `diabnbn' has to be zero, otherwise 
-*  an entry is missing in the table
-
-.sort
-
 #endprocedure
 
 
@@ -7031,7 +5769,7 @@ id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat( -
 *
 *
 * Old routine to generate tables and for cases
-* which are not not tabulated 
+* which are not tabulated 
 *
 * 
 #procedure reduceBNnotab
@@ -7061,20 +5799,6 @@ id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat( -
         #message 3
         .sort
         
-        
-*         #ifndef 'RECMAX'
-*                 #define RECMAX "5"
-*         #endif
-*         #ifndef 'N6MAX'
-*                 #define N6MAX "10"
-*         #endif
-*         #ifndef 'N6MIN'
-*                 #define N6MIN "0"
-*         #endif
-*         #do i = 'N6MIN','N6MAX'
-*                 #message n6 = 'i'
-                
-        
         #CALL redBNn12{p1|p2|x3|x4|x5|x6}
         #call symBN{p1|p2|x3|x4|x5|x6}
         #call symmetryBN
@@ -7103,7 +5827,7 @@ id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat( -
         
                 
         #call ACCU{BN}
-*                 if (count(acc,1)!=0) id accu(x?)=x;
+
         if( count(intbn,1));
         if ( (count(x3,1)<=0)&&(count(x5,1)<=0) ) discard;
         if ( (count(x3,1)<=0)&&(count(x6,1)<=0) ) discard;
@@ -7115,15 +5839,8 @@ id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat( -
                 
         
         #call ACCU{BN}
-*                 if (count(acc,1)!=0) id accun(x?)=x;
+
         #message 6
-        
-        
-*         #enddo
-
-*         Print+s;
-*         .end        
-
         
         
         .sort
@@ -7134,7 +5851,6 @@ id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat( -
         
         
         #call ACCU{BN}
-*         if (count(acc,1)!=0) id accun(x?)=x;
         
         #call ACCU(123)
         
@@ -7242,7 +5958,7 @@ id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat( -
 
         #message do recursion
 
-* Modified: applyed only to intbn        
+* Modified: applied only to intbn        
         #ifdef `REDBNTAB'
                 #call reduceBNBN
                 #else                
@@ -7302,15 +6018,1067 @@ id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat( -
         endif;
         .sort
 
-        
-*        id inttbl = 1;
-        .sort
-
         #message - done
 
 
 #endprocedure        
 
+
+#procedure symBN1 (p1,p2,x3,x4,p5,x6)
+        if( count(intbn1,1));
+        if (count(`x3',1) > count(`x4',1))
+        multiply replace_(`x3',`x4',`x4',`x3',`p1',`p2',`p2',`p1');
+        if ( (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) );
+        if (count(`x3',1) < count(`x4',1))
+        multiply replace_(`x3',`x4',`x4',`x3');
+        if (count(`x3',1) < count(`x6',1))
+        multiply replace_(`x3',`x6',`x6',`x3');
+        if (count(`x4',1) < count(`x6',1))
+        multiply replace_(`x4',`x6',`x6',`x4');
+        endif;
+        endif;
+#endprocedure
+
+
+
+
+
+#procedure redBN1n12to0 (p1,p2,x3,x4,p5,x6)
+
+* reduces n1 and n2 to zero, if:
+* a. n1<=0, n2>0
+* b. n1<=0, n2<0
+
+* a.
+*
+* reduces n2 to zero if n1<=0 (n3,n4>=1, n5,n6=1)
+* result: BN1(n1,n2,n3,n4,n5,n6) with n1<=0, n2=0
+*         or BM's.
+
+* sort: n2>=n1
+
+        if( count(intbn1,1) );        
+        if ( ( count(`p2'.`p2',1) > count(`p1'.`p1',1) ) &&
+        (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)==1) &&
+        (count(`p5'.`p5',1)<=-1) )
+        multiply replace_(`x3',`x4',`x4',`x3',`p1',`p2',`p2',`p1');
+        endif;
+        
+        #call redBN1n6 (`p1',`p2',`x3',`x4',`p5',`x6')
+        
+        #do i=1,10
+                
+                if( count(intbn1,1) );        
+                if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)<=-1) &&
+                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)==1) &&
+                (count(`p5'.`p5',1)<=-1) );
+                
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)/( - 2*n5 - n1 + 2*n2 + n4 )
+                
+                *(
+                + `x4'*`x6'^-1 * (  - n4 )
+                
+                + `p1'.`p1'^-1*`p5'.`p5' * (  - 2*n1 )
+                
+                + `p1'.`p1'^-1*`x3'^-1 * ( n1 )
+                
+                + `p1'.`p1'^-1*`x4'^-1 * ( 2*n1 )
+                
+                + `p1'.`p1'^-1*`x6'^-1 * (  - n1 )
+                
+                - `p1'.`p1'^-1 * ( 2*n1*M^2 )
+                
+                + `p2'.`p2'*`x3' * ( 2*n3 )
+                
+                + `p2'.`p2'*`x4' * ( n4 )
+                
+                + `p5'.`p5'*`x3' * (  - 2*n3 )
+                
+                );
+                
+                redefine i "0";
+                
+                endif;
+                endif;
+                #call ACCU(BN1n12to0)
+                
+        #enddo
+        
+
+* b.
+*
+* reduces n2 to zero if n1<=0,n2<0 (n3,n4,n6>=1, n5=1)
+* result: BN1(n1,n2,n3,n4,n5,n6) with n1<=0, n2=0
+*         or BM's.
+
+        #do i=1,1
+
+* sort: n2>=n1
+                if( count(intbn1,1) );
+                if ( ( count(`p2'.`p2',1) < count(`p1'.`p1',1) ) &&
+                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)<=-1) )
+                multiply replace_(`x3',`x4',`x4',`x3',`p1',`p2',`p2',`p1');
+
+                if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)>0) &&
+                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)<=-1) );
+
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)*deno( + 3/2*4 - n1 - n2 - n3 - n4 - n5 - n6,-3)
+                *(
+                - `p1'.`p1'^-1*`p2'.`p2'^-1*`x3'^-1 * ( n1*M^2 )
+
+                - `p1'.`p1'^-1*`p2'.`p2'^-1*`x6'^-1 * (  - n1*M^2 )
+
+                - `p2'.`p2'^-1*`p5'.`p5'*`x3' * (  - n3*M^2 )
+
+                + `p2'.`p2'^-1*`x3' * ( 3*n3*M^4 )
+
+                - `p2'.`p2'^-1*`x4'^-1*`x6' * (  - n6*M^2 )
+
+                - `p2'.`p2'^-1*`x4'*`x6'^-1 * (  - n4*M^2 )
+
+                - `p2'.`p2'^-1 *(- 3*num(d)*M^2 + n1*M^2 + 4*n2*M^2 + 3*n3*M^2 + n4*M^2 + 2*
+                n5*M^2 + n6*M^2 + 4*M^2 )
+
+                );
+
+                redefine i "0";
+
+                endif;
+                endif;
+                
+                .sort
+        #enddo
+        
+        #call ACCU(BN1n12to0)
+        
+#endprocedure
+
+#procedure redBN1n12to1 (p1,p2,x3,x4,p5,x6)
+
+        #do i=1,1
+                
+* sort: n2>=n1
+                if( count(intbn1,1) );
+                if ( ( count(`p2'.`p2',1) > count(`p1'.`p1',1) ) &&
+                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)<=-1) )
+                multiply replace_(`x3',`x4',`x4',`x3',`p1',`p2',`p2',`p1');
+                
+                if ( (count(`p1'.`p1',1)<=-1) && (count(`p2'.`p2',1)<-1) &&
+                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)<=-1) );
+
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)
+                *(
+                - `x3'^-1 * ( M^-2 )
+
+                - `p1'.`p1'*`p2'.`p2'*`x4' * ( 1/( - 1 + n2)*n4*M^-2 )
+
+                - `p2'.`p2'*`p5'.`p5'*`x4' * (  - 1/( - 1 + n2)*n4*M^-2 )
+
+                + `p2'.`p2'*`x4' * (  - 1/( - 1 + n2)*n4 )
+
+                - `p2'.`p2' * (  - M^-2 + 1/( - 1 + n2)*nom(4,-2)*M^-2 
+                - 1/( - 1 + n2)*n4*M^-2 - 2/( - 1 + n2)*n5*M^-2 )
+
+                - `p5'.`p5' * (  - M^-2 )
+
+                );
+
+                redefine i "0";
+
+                endif;
+                endif;
+                #call ACCU(BN1)
+                
+        #enddo
+        
+#endprocedure
+
+#procedure redBN1n32 (p1,p2,x3,x4,p5,x6)
+
+* reduce n5 to 1 (if n1=n2=0)
+* (take the procedure from redBN1n5.prc)
+
+        #do i=1,1
+                
+                if( count(intbn1,1) );        
+                if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)==0) &&
+                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)<-1) );
+                
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2?
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)*M^2*deno(4*n5 - 4 - n1*n5 + n1 + 2*n5 - 2*n5^2,-2*n5+2)
+                *(
+                + `p1'.`p1'^-1*`p5'.`p5'*`x3'*`x6'^-1 * (  - n1*n3*M^-2 )
+
+                + `p1'.`p1'^-1*`p5'.`p5' * ( n1*n3*M^-2 - n1*n5*M^-2 + n1*M^-2 )
+
+                + `p1'.`p1'^-1*`x4'^-1 * ( n1*n5*M^-2 - n1*M^-2 )
+
+                - `p1'.`p1'^-1 * ( n1*n5 - n1 )
+
+                + `p5'.`p5'*`x3' *(-nom(4,-2)*n3*M^-2+n1*n3*M^-2+2*n3*M^-2+2*n3^2*M^-2 )
+
+                - `p5'.`p5'*`x3'^2 * ( 2*n3 + 2*n3^2 )
+                );
+
+                redefine i "0";
+
+                endif;
+                endif;
+                #call ACCU(BN1n32_0)
+                
+        #enddo
+        
+* reduce n3, n4 and n6 to 2, take care if n6=n3-1!!!
+* n1=n2=0!
+        
+* The condition n6=n3-1 is asked for with the following trick; 
+* it only works if n5=1!
+        
+        #do i=1,1
+                
+                if( count(intbn1,1) );        
+                if ( (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) );
+                if (count(`x3',1) < count(`x4',1))
+                multiply replace_(`x3',`x4',`x4',`x3');
+                if (count(`x3',1) < count(`x6',1))
+                multiply replace_(`x3',`x6',`x6',`x3');
+                if (count(`x4',1) < count(`x6',1))
+                multiply replace_(`x4',`x6',`x6',`x4');
+                endif;
+                
+                if ( ( count(`x3',1) > count(`x6',1,`p5'.`p5',-1) ) &&
+                (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) &&
+                (count(`x3',1)>2) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)==-1) );
+                
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)/(- 6*n3*M^2 + 2*n3^2*M^2 + 4*M^2)
+                *(
+                - `x3'^-2*`x6' * (  - nom(4,-2)*n6 + n3*n6 + 2*n5*n6 - 2*n6 )
+                
+                - `x3'^-1*`x4'^-1*`x6' * (  - n3*n6 + 2*n6 )
+                
+                + `x3'^-1*`x6' * ( n3*n6*M^2 - 2*n6*M^2 )
+                
+                - `x3'^-1*(4-2*nom(4,-2)*n3+4*nom(4,-2)+2*n3*n5+n3*n6-6*n3+2*n3^2 - 4*n5
+                - 2*n6 )
+                
+                - `p5'.`p5'*`x3'^-1*`x6' * ( n3*n6 - 2*n6 )
+                );
+
+                redefine i "0";
+                
+                endif;
+                
+                if ( ( count(`x3',1) == count(`x6',1,`p5'.`p5',-1) ) &&
+                (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) &&
+                (count(`x3',1)>2) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)==-1) );
+                
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)/( (- 6*n3*M^2 + 2*n3^2*M^2 + 4*M^2) + M^2*n6*(n3-2) )
+                *(
+                - `x3'^-2*`x6' * (  - nom(4,-2)*n6 + n3*n6 + 2*n5*n6 - 2*n6 )
+                
+                - `x3'^-1*`x4'^-1*`x6' * (  - n3*n6 + 2*n6 )
+                
+                - `x3'^-1 * ( 4 - 2*nom(4,-2)*n3 + 4*nom(4,-2) 
+                + 2*n3*n5 + n3*n6 - 6*n3 + 2*n3^2 - 4*n5
+                - 2*n6 )
+                
+                - `p5'.`p5'*`x3'^-1*`x6' * ( n3*n6 - 2*n6 )
+                );
+                
+                redefine i "0";
+
+                endif;
+                
+                if ( ( count(`x3',1) == count(`x6',1) ) &&
+                (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) &&
+                (count(`x3',1)>2) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)==-1) );
+                
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)/(M^2 * ( 3 - 9/2*n3 + 3/2*n3^2 ) )
+                *(
+                - 1/`x3'/`x3'*`x6' * (  - nom(4,-2)*n3 + n3^2 )
+                
+                - 1/`x3'/`x4'*`x6' * ( 2*n3 - n3^2 )
+                
+                - 1/`x3'*`p5'.`p5'*`x6' * (  - 2*n3 + n3^2 )
+
+                - 1/`x3' * ( 1 - 3/2*nom(4,-2)*n3 + 3*nom(4,-2) - 11/2*n3 + 5/2*n3^2 )
+                
+                - 1/`x4' * ( 1 - 3/2*n3 + 1/2*n3^2 )
+                
+                - `p5'.`p5' * (  - 1 + 3/2*n3 - 1/2*n3^2 )
+                
+                - 1/`x6' * ( 1 + nom(4,-2)*n3 - 2*nom(4,-2) + 5/2*n3 - 3/2*n3^2 )
+                
+                );
+                                
+                redefine i "0";
+                
+                endif;
+                endif;
+                
+                #call ACCU(BN1n32_0)
+                
+        #enddo
+
+#endprocedure
+
+#procedure redBN1n32s (p1,p2,x3,x4,p5,x6)
+
+* reduce n5 to 1 (if n1=n2=0)
+* (take the procedure from redBN1n5.prc)
+        
+        #do ii=1,1
+                
+                if( count(intbn1,1) );        
+                if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)==0) &&
+                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)<-1) );
+                
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2?
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)*M^2*deno(4*n5 - 4 - n1*n5 + n1 + 2*n5 - 2*n5^2,-2*n5+2)
+                *(
+                + `p1'.`p1'^-1*`p5'.`p5'*`x3'*`x6'^-1 * (  - n1*n3*M^-2 )
+                
+                + `p1'.`p1'^-1*`p5'.`p5' * ( n1*n3*M^-2 - n1*n5*M^-2 + n1*M^-2 )
+                
+                + `p1'.`p1'^-1*`x4'^-1 * ( n1*n5*M^-2 - n1*M^-2 )
+                
+                - `p1'.`p1'^-1 * ( n1*n5 - n1 )
+                
+                + `p5'.`p5'*`x3' *(-nom(4,-2)*n3*M^-2+n1*n3*M^-2+2*n3*M^-2+2*n3^2*M^-2 )
+                
+                - `p5'.`p5'*`x3'^2 * ( 2*n3 + 2*n3^2 )
+                );
+                
+                redefine j "0";
+                redefine ii "0";
+                
+                endif;
+                endif;        
+
+                #call Conv2exact
+                .sort
+                
+        #enddo
+        
+        #call ACCU(BN1n32_1)
+        
+* reduce n3, n4 and n6 to 2, take care if n6=n3-1!!!
+* n1=n2=0!
+        
+* The condition n6=n3-1 is asked for with the following trick; 
+* it only works if n5=1!
+                
+        #do i=1,1
+
+                if( count(intbn1,1) );
+                if ( (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) );
+                if (count(`x3',1) < count(`x4',1))
+                multiply replace_(`x3',`x4',`x4',`x3');
+                if (count(`x3',1) < count(`x6',1))
+                multiply replace_(`x3',`x6',`x6',`x3');
+                if (count(`x4',1) < count(`x6',1))
+                multiply replace_(`x4',`x6',`x6',`x4');
+                endif;
+                endif;
+                #call ACCU(BN1n32_2)
+                
+                if( count(intbn1,1) );        
+                if ( ( count(`x3',1) > count(`x6',1,`p5'.`p5',-1) ) &&
+                (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) &&
+                (count(`x3',1)>2) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)==-1) );
+                
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)/(- 6*n3*M^2 + 2*n3^2*M^2 + 4*M^2)
+                *(
+                - `x3'^-2*`x6' * (  - nom(4,-2)*n6 + n3*n6 + 2*n5*n6 - 2*n6 )
+                
+                - `x3'^-1*`x4'^-1*`x6' * (  - n3*n6 + 2*n6 )
+                
+                + `x3'^-1*`x6' * ( n3*n6*M^2 - 2*n6*M^2 )
+                
+                - `x3'^-1 * ( 4 - 2*nom(4,-2)*n3 + 4*nom(4,-2) + 2*n3*n5 + n3*n6 
+                 - 6*n3 + 2*n3^2 - 4*n5
+                - 2*n6 )
+                
+                - `p5'.`p5'*`x3'^-1*`x6' * ( n3*n6 - 2*n6 )
+                );
+                
+                redefine i "0";
+                redefine j "0";
+                
+                endif;
+                endif;
+                #call ACCU(BN1n32_3)
+                
+                if( count(intbn1,1) );        
+                if ( ( count(`x3',1) == count(`x6',1,`p5'.`p5',-1) ) &&
+                (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) &&
+                (count(`x3',1)>2) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)==-1) );
+                
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)/( (- 6*n3*M^2 + 2*n3^2*M^2 + 4*M^2) + M^2*n6*(n3-2) )
+                *(
+                - `x3'^-2*`x6' * (  - nom(4,-2)*n6 + n3*n6 + 2*n5*n6 - 2*n6 )
+                
+                - `x3'^-1*`x4'^-1*`x6' * (  - n3*n6 + 2*n6 )
+                
+                - `x3'^-1 * ( 4 - 2*nom(4,-2)*n3 + 4*nom(4,-2) 
+                + 2*n3*n5 + n3*n6 - 6*n3 + 2*n3^2 - 4*n5
+                - 2*n6 )
+                
+                - `p5'.`p5'*`x3'^-1*`x6' * ( n3*n6 - 2*n6 )
+                );
+                
+                redefine i "0";
+                redefine j "0";
+                
+                endif;
+                endif;
+                
+                #call ACCU(BN1n32_4)
+                
+                if( count(intbn1,1) );        
+                if ( ( count(`x3',1) == count(`x6',1) ) &&
+                (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)==0) &&
+                (count(`x3',1)>2) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)==-1) );
+                
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)/(M^2 * ( 3 - 9/2*n3 + 3/2*n3^2 ) )
+                *(
+                - 1/`x3'/`x3'*`x6' * (  - nom(4,-2)*n3 + n3^2 )
+                
+                - 1/`x3'/`x4'*`x6' * ( 2*n3 - n3^2 )
+                
+                - 1/`x3'*`p5'.`p5'*`x6' * (  - 2*n3 + n3^2 )
+                
+                - 1/`x3' * ( 1 - 3/2*nom(4,-2)*n3 + 3*nom(4,-2) - 11/2*n3 + 5/2*n3^2 )
+                
+                - 1/`x4' * ( 1 - 3/2*n3 + 1/2*n3^2 )
+                
+                - `p5'.`p5' * (  - 1 + 3/2*n3 - 1/2*n3^2 )
+                
+                - 1/`x6' * ( 1 + nom(4,-2)*n3 - 2*nom(4,-2) + 5/2*n3 - 3/2*n3^2 )
+                
+                );
+                
+                redefine i "0";
+                redefine j "0";
+                
+                endif;
+                endif;
+                
+                #call ACCU(BN1n32_5)
+                
+* added Jul. '98
+                
+                if( count(intbn1,1) );        
+                if ( (count(`p1',1)==0) && (count(`p2',1)==0) );
+                if ((count(`x3',1)<=0) || (count(`x4',1)<=0) || (count(`x6',1)<=0)) discard;
+                if (count(`x3',1) > count(`x4',1)) multiply replace_(`x3',`x4',`x4',`x3');
+                if (count(`x3',1) > count(`x6',1)) multiply replace_(`x3',`x6',`x6',`x3');
+                if (count(`x4',1) > count(`x6',1)) multiply replace_(`x4',`x6',`x6',`x4');
+                endif;
+                endif;
+                
+                #call ACCU(BN1n32_6)
+
+#enddo
+
+#endprocedure
+
+
+
+#procedure redBN1n34 (p1,p2,x3,x4,p5,x6)
+        
+* Use this procedure to reduce n3 and n4 to 1.
+* n1=n2=1, n5=n6=1;
+        
+        #do i=1,1
+                
+                if( count(intbn1,1) );        
+                if ( ( count(`x3',1) < count(`x4',1) ) &&
+                (count(`x3',1)>=1) && (count(`x4',1)>1) && (count(`x6',1)==1) &&
+                (count(`p5'.`p5',1)==-1) ) 
+                multiply replace_(`x3',`x4',`x4',`x3',`p1',`p2',`p2',`p1');
+
+                if ( (count(`p1'.`p1',1)==-1) && (count(`p2'.`p2',1)==-1) &&
+                (count(`x3',1)>1) && (count(`x4',1)>=1) && (count(`x6',1)==1) &&
+                (count(`p5'.`p5',1)==-1) );
+
+
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)/(n3-1)
+                *(
+                + `x3'^-1*`x4'^-1 * (  - 3/2*nom(4,-2)*M^-4 
+                + n1*M^-4 + n2*M^-4 + n3*M^-4 + n4*M^-4
+                + n5*M^-4 + n6*M^-4 - 2*M^-4 )
+
+                - `x3'^-1 * (  - nom(4,-2)*M^-2 + 2*n2*M^-2 
+                + n3*M^-2 + n4*M^-2 + n6*M^-2 - 2*M^-2 )
+
+                - `x4'^-1 * ( n3*M^-2 - M^-2 )
+                
+                - `p2'.`p2'*`x3'^-1*`x4' * (  - n4*M^-2 )
+                
+                + `p2'.`p2'*`x3'^-1 * ( 3/2*nom(4,-2)*M^-4 
+                - n1*M^-4 - n2*M^-4 - n3*M^-4 - n4*M^-4 -
+                n5*M^-4 - n6*M^-4 + 2*M^-4 )
+                
+                - `p5'.`p5' * (  - n3*M^-2 + M^-2 )
+                );
+
+                redefine i "0";
+
+                endif;
+                endif;
+        
+                #call ACCU(BN1)
+                
+        #enddo
+
+#endprocedure
+
+
+#procedure redBN1n5 (p1,p2,x3,x4,p5,x6)
+        
+        #do i=1,1
+                if( count(intbn1,1) );
+                if ( (count(`p1'.`p1',1)<=-1) &&
+                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)<-1) );
+
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)/(1 - n5)
+                *(
+                - `x4'^-1 * (  - n5*M^-2 + M^-2 )
+
+                - `p1'.`p1' * ( n5*M^-2 - M^-2 )
+
+                - `p2'.`p2'^-1*`p5'.`p5'*`x4'^-1 * (  - n2*M^-2 )
+
+                - `p2'.`p2'^-1*`p5'.`p5'*`x6'^-1 * ( n2*M^-2 )
+
+                + `p5'.`p5'*`x4' * (  - 2*n4 )
+
+                - `p5'.`p5' * ( nom(4,-2)*M^-2 - n2*M^-2 - 2*n4*M^-2 - n5*M^-2 + M^-2 )
+                );
+
+                redefine i "0";
+
+                endif;
+
+                if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)<=-1) &&
+                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)<-1) );
+
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)/(1 - n5)
+                *(
+                - `x3'^-1 * (  - n5*M^-2 + M^-2 )
+
+                - `p1'.`p1'^-1*`p5'.`p5'*`x3'^-1 * (  - n1*M^-2 )
+
+                - `p1'.`p1'^-1*`p5'.`p5'*`x6'^-1 * ( n1*M^-2 )
+
+                - `p2'.`p2' * ( n5*M^-2 - M^-2 )
+
+                + `p5'.`p5'*`x3' * (  - 2*n3 )
+
+                - `p5'.`p5' * ( nom(4,-2)*M^-2 - n1*M^-2 - 2*n3*M^-2 - n5*M^-2 + M^-2 )
+                );
+
+                redefine i "0";
+
+                endif;
+* topBN1        
+                endif;
+
+                #call ACCU(BN1)
+                
+        #enddo
+        
+        
+        #do i=1,1
+                
+                if( count(intbn1,1) );        
+                if ( (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)>=0) &&
+                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)<-1) );
+                
+                if (count(`p1'.`p1',1) < count(`p2'.`p2',1))
+                multiply replace_(`x3',`x4',`x4',`x3',`p1',`p2',`p2',`p1');
+                endif;
+                
+                if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)==0) &&
+                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)<-1) );
+                
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)*M^2*deno(4*n5 - 4 - n1*n5 + n1 + 2*n5 - 2*n5^2,-2*n5+2)
+                *(
+                + `p1'.`p1'^-1*`p5'.`p5'*`x3'*`x6'^-1 * (  - n1*n3*M^-2 )
+                
+                + `p1'.`p1'^-1*`p5'.`p5' * ( n1*n3*M^-2 - n1*n5*M^-2 + n1*M^-2 )
+                
+                + `p1'.`p1'^-1*`x4'^-1 * ( n1*n5*M^-2 - n1*M^-2 )
+                
+                - `p1'.`p1'^-1 * ( n1*n5 - n1 )
+                
+                + `p5'.`p5'*`x3' *(-nom(4,-2)*n3*M^-2 
+                + n1*n3*M^-2 + 2*n3*M^-2 + 2*n3^2*M^-2 )
+                
+                - `p5'.`p5'*`x3'^2 * ( 2*n3 + 2*n3^2 )
+                );
+                
+                redefine i "0";
+                
+                endif;
+                endif;
+                
+                #call Conv2exact
+                .sort
+        #enddo
+        
+        if( count(intbn1,1) );
+        repeat;
+                
+                if ( (count(`p1'.`p1',1)<=-1) &&
+                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)<-1) );
+                
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)/(1 - n5)
+                *(
+                - `x4'^-1 * (  - n5*M^-2 + M^-2 )
+                
+                - `p1'.`p1' * ( n5*M^-2 - M^-2 )
+                
+                - `p2'.`p2'^-1*`p5'.`p5'*`x4'^-1 * (  - n2*M^-2 )
+                
+                - `p2'.`p2'^-1*`p5'.`p5'*`x6'^-1 * ( n2*M^-2 )
+                
+                + `p5'.`p5'*`x4' * (  - 2*n4 )
+                
+                - `p5'.`p5' * ( nom(4,-2)*M^-2 - n2*M^-2 - 2*n4*M^-2 - n5*M^-2 + M^-2 )
+                );
+                endif;
+                
+                if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)<=-1) &&
+                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)<-1) );
+                
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)/(1 - n5)
+                *(
+                - `x3'^-1 * (  - n5*M^-2 + M^-2 )
+                
+                - `p1'.`p1'^-1*`p5'.`p5'*`x3'^-1 * (  - n1*M^-2 )
+                
+                - `p1'.`p1'^-1*`p5'.`p5'*`x6'^-1 * ( n1*M^-2 )
+                
+                - `p2'.`p2' * ( n5*M^-2 - M^-2 )
+                
+                + `p5'.`p5'*`x3' * (  - 2*n3 )
+                
+                - `p5'.`p5' * ( nom(4,-2)*M^-2 - n1*M^-2 - 2*n3*M^-2 - n5*M^-2 + M^-2 )
+                );
+                endif;
+                
+        endrepeat;
+        endif;
+        
+
+        #call Conv2exact
+        
+        if( count(intbn1,1) );
+        repeat;
+                
+                if ( (count(`p1'.`p1',1)==0) && (count(`p2'.`p2',1)>=0) &&
+                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)<-1) );
+                
+                if (count(`p1'.`p1',1) < count(`p2'.`p2',1))
+                multiply replace_(`x3',`x4',`x4',`x3',`p1',`p2',`p2',`p1');
+                endif;
+                
+                if ( (count(`p1'.`p1',1)>=0) && (count(`p2'.`p2',1)==0) &&
+                (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>=1) &&
+                (count(`p5'.`p5',1)<-1) );
+                
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^n6
+                *(-1)*M^2*deno(4*n5 - 4 - n1*n5 + n1 + 2*n5 - 2*n5^2,-2*n5+2)
+                *(
+                + `p1'.`p1'^-1*`p5'.`p5'*`x3'*`x6'^-1 * (  - n1*n3*M^-2 )
+                
+                + `p1'.`p1'^-1*`p5'.`p5' * ( n1*n3*M^-2 - n1*n5*M^-2 + n1*M^-2 )
+                
+                + `p1'.`p1'^-1*`x4'^-1 * ( n1*n5*M^-2 - n1*M^-2 )
+                
+                - `p1'.`p1'^-1 * ( n1*n5 - n1 )
+                
+                + `p5'.`p5'*`x3' *(-nom(4,-2)*n3*M^-2 
+                + n1*n3*M^-2 + 2*n3*M^-2 + 2*n3^2*M^-2 )
+                
+                - `p5'.`p5'*`x3'^2 * ( 2*n3 + 2*n3^2 )
+                );
+                endif;
+                
+        endrepeat;
+        endif;
+        
+#endprocedure
+
+#procedure redBN1n6 (p1,p2,x3,x4,p5,x6)
+        
+        if( count(intbn1,1) );        
+        repeat;
+                if ( (count(`x3',1)>=1) && (count(`x4',1)>=1) && (count(`x6',1)>1) &&
+                (count(`p5'.`p5',1)<=-1) );
+                
+                id 1/`p1'.`p1'^n1? *1/`p2'.`p2'^n2? 
+                * `x3'^n3? * `x4'^n4? * 1/`p5'.`p5'^n5? * `x6'^n6?
+                =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
+                *`x3'^n3 * `x4'^n4  * 1/`p5'.`p5'^n5  * `x6'^(n6-1)
+                *1/(n6-1)
+                *(
+                - n3*`x3' - n4*`x4'
+                - 1/M^2*nom(6-n1-n2-n3-n4-n5-(n6-1),-3)
+                );
+                endif;
+        endrepeat;
+        endif;
+        
+#endprocedure
+
+
+
+
+
+#procedure reduceBN1
+        
+        #call redBN1n5(p1,p2,x3,x4,p5,x6)
+        .sort
+
+        
+        #call redBN1n12to1(p1,p2,x3,x4,p5,x6)
+        #call symBN1(p1,p2,x3,x4,p5,x6)
+        .sort
+        
+        #call redBN1n6 (p1,p2,x3,x4,p5,x6)
+        #call symBN1(p1,p2,x3,x4,p5,x6)
+        .sort
+        
+        #call redBN1n34 (p1,p2,x3,x4,p5,x6)
+        #call symBN1(p1,p2,x3,x4,p5,x6)
+        .sort
+        
+        #call redBN1n12to0 (p1,p2,x3,x4,p5,x6)
+        #call symBN1(p1,p2,x3,x4,p5,x6)
+        .sort
+        
+* set massless tadpoles to zero:
+        
+        if( count(intbn1,1) );        
+        if ( (count(x3,1)<=0) && (count(p1.p1,1)>=0) ) discard;
+        if ( (count(x4,1)<=0) && (count(p2.p2,1)>=0) ) discard;
+        if ( (count(x3,1)<=0) && (count(x6,1)<=0) ) discard;
+        if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
+        if ( (count(x4,1)<=0) && (count(p5.p5,1)>=0) ) discard;
+        if ( (count(x3,1)<=0) && (count(p5.p5,1)>=0) ) discard;
+        if ( (count(x3,1)<=0) && (count(x4,1)<=0) &&
+        ( (count(p1.p1,1)>=0) || (count(p2.p2,1)>=0) || (count(p5.p5,1)>=0) )
+        ) discard;
+        if ( (count(p1.p1,1)>=0) && (count(p2.p2,1)>=0) && (count(p5.p5,1)<0) &&
+        ( (count(x3,1)<=0)    || (count(x4,1)<=0) ||
+        (count(x6,1)<=0) )
+        ) discard;
+        endif;        
+        .sort
+        
+
+        #do j=1,1
+                #call redBN1n32s (p1,p2,x3,x4,p5,x6)
+        #enddo
+        
+        #call redBN1n32 (p1,p2,x3,x4,p5,x6)
+        .sort
+        
+        #call symBN1(p1,p2,x3,x4,p5,x6)
+        .sort
+        
+* now treat the integrals BN1(0,0,2,2,1,1), BN1(0,0,2,2,1,2)
+* and BN1(0,0,2,1,1,1) separate:
+        
+* BN1(0,0,2,2,1,1) = -1/3/M^2*BN1(0,0,2,1,0,2);
+        
+        if( count(intbn1,1) );
+        if ( (count(p1.p1,1)==0) && (count(p2.p2,1)==0) && (count(x3,1)==2) && 
+        (count(x4,1)==2) && (count(p5.p5,1)==-1) && (count(x6,1)==1) )
+        id x3^2*x4^2/p5.p5*x6 = -1/3/M^2 * x3^2*x4*x6^2;
+        endif;
+        .sort
+        
+*   BN(0,0,2,2,1,2) =
+*       + 7/6*BN1(0,0,2,1,0,2)*n*M^-4 - 38/9*BN1(0,0,2,1,0,2)*M^-4 
+*       + 19/3*BN1(0,0,2,1,1,1)*n*M^-4 - BN1(0,0,2,1,1,1)*n^2*M^-4 
+*       - 10*BN1(0,0,2,1,1,1)*M^-4 + 4/3*BN1(0,0,3,1,0,2)*M^-2;
+        
+        if( count(intbn1,1) );
+        if ( (count(p1.p1,1)==0) && (count(p2.p2,1)==0) && (count(x3,1)==2) && 
+        (count(x4,1)==2) && (count(p5.p5,1)==-1) && (count(x6,1)==2) )
+        id x3^2*x4^2/p5.p5*x6^2 =
+        + 7/6* x3^2*x4*x6^2 *num(d)*M^-4      - 38/9* x3^2*x4*x6^2 *M^-4 
+        + 19/3* x3^2*x4/p5.p5*x6 *num(d)*M^-4 - x3^2*x4/p5.p5*x6 *num(d^2)*M^-4 
+        - 10* x3^2*x4/p5.p5*x6 *M^-4     + 4/3* x3^3*x4*x6^2 *M^-2
+        ;
+        endif;
+        .sort
+        
+*   BN(0,0,2,1,1,1) =
+*      -1/3/M^2*(3/2*n-4)*BN1(0,0,1,1,1,1);
+        
+        if( count(intbn1,1) );
+        if ( (count(p1.p1,1)==0) && (count(p2.p2,1)==0) && (count(x3,1)==2) && 
+        (count(x4,1)==1) && (count(p5.p5,1)==-1) && (count(x6,1)==1) )
+        id x3^2*x4/p5.p5*x6 =
+        -1/3/M^2*(3/2*nom(4,-2)-4)* x3*x4/p5.p5*x6
+        ;
+        endif;
+        
+        #call symBN1(p1,p2,x3,x4,p5,x6)
+        .sort
+        
+#endprocedure        
+
+
+
+
+
+#procedure topbn1
+*
+* this is topbn1
+*
+        #-
+        #message this is topbn1
+        
+        #message numerator
+        
+        if( count(intbn1,1) );        
+        id  p1.p2 = 1/2 * ( 1/x4 + 1/x3 - 1/x5 - 1/x6 );
+        id  p1.p3 = 1/2 * ( 1/x6 - 1/x3 - p1.p1 );
+        id  p1.p4 = 1/2 * (-1/x5 + 1/x4 + p1.p1 );
+        endif;        
+        #call ACCU(BN1 1)
+        
+        if( count(intbn1,1) );                
+        id  p1.p5 = 1/2 * ( 1/x4 - 1/x5 - p1.p1 );
+        id  p1.p6 = 1/2 * (-1/x3 + 1/x6 + p1.p1 );
+        endif;        
+        #call ACCU(BN1 2)
+        
+        if( count(intbn1,1) );                
+        id  p2.p3 = 1/2 * ( 1/x5 - 1/x3 - p2.p2 );
+        id  p2.p4 = 1/2 * (-1/x6 + 1/x4 + p2.p2 );
+        endif;        
+        #call ACCU(BN1 3)
+        
+        if( count(intbn1,1) );                
+        id  p2.p5 = 1/2 * (-1/x3 + 1/x5 + p2.p2 );
+        id  p2.p6 = 1/2 * ( 1/x4 - 1/x6 - p2.p2 );
+        endif;        
+        #call ACCU(BN1 4)
+        
+        if( count(intbn1,1) );        
+        id  p3.p4 = 1/2 * ( 1/x5 + 1/x6 - p2.p2 - p1.p1 - 2*M^2);
+        id  p3.p5 = 1/2 * ( 1/x3 + 1/x5 - p2.p2 - 2*M^2);
+        endif;        
+        #call ACCU(BN1 5)
+        
+        if( count(intbn1,1) );        
+        id  p3.p6 = 1/2 * ( 1/x3 + 1/x6 - p1.p1 - 2*M^2);
+        id  p4.p5 = 1/2 * ( 1/x4 + 1/x5 - p1.p1 - 2*M^2);
+        endif;        
+        #call ACCU(BN1 6)
+        
+        if( count(intbn1,1) );        
+        id  p4.p6 = 1/2 * ( 1/x4 + 1/x6 - p2.p2 - 2*M^2);
+        id  p5.p6 = 1/2 * ( 1/x3 + 1/x4 - p2.p2 - p1.p1 - 2*M^2);
+        endif;        
+        #call ACCU(BN1 7)
+        
+*
+* Warning!
+*
+        if( count(intbn1,1) );
+        id  1/x5 = M^2 + p5.p5;
+        
+        id  p3.p3 = 1/x3 - M^2;
+        endif;
+        
+        #call ACCU(BN1 6)
+        if( count(intbn1,1) );        
+        id  p4.p4 = 1/x4 - M^2;
+        id  p6.p6 = 1/x6 - M^2;
+        endif;
+        
+        #call ACCU(BN1 7)
+        
+        #call symBN1(p1,p2,x3,x4,p5,x6)
+        .sort
+        
+        if( count(intbn1,1) );        
+        id x3^n3?neg_=(p3.p3+M^2)^-n3;
+        id x4^n4?neg_=(p4.p4+M^2)^-n4;
+        id x6^n6?neg_=(p6.p6+M^2)^-n6;
+        
+        
+        if ( (count(x3,1)<=0) && (count(p1.p1,1)>=0) ) discard;
+        if ( (count(x4,1)<=0) && (count(p2.p2,1)>=0) ) discard;
+        if ( (count(x3,1)<=0) && (count(x6,1)<=0) ) discard;
+        if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
+        if ( (count(x4,1)<=0) && (count(p5.p5,1)>=0) ) discard;
+        if ( (count(x3,1)<=0) && (count(p5.p5,1)>=0) ) discard;
+        if ( (count(x3,1)<=0) && (count(x4,1)<=0) && 
+        ( (count(p1.p1,1)>=0) || (count(p2.p2,1)>=0) || (count(p5.p5,1)>=0) )
+        ) discard;
+        if ( (count(p1.p1,1)>=0) && (count(p2.p2,1)>=0) && (count(p5.p5,1)<0) &&
+        ( (count(x3,1)<=0)    || (count(x4,1)<=0) || 
+        (count(x6,1)<=0) )
+        ) discard;
+        endif;        
+        .sort
+        
+        #message do recursion
+        
+        #call reduceBN1
+        
+        if( count(intbn1,1) );        
+        if ( (count(x3,1)<=0) && (count(p1.p1,1)>=0) ) discard;
+        if ( (count(x4,1)<=0) && (count(p2.p2,1)>=0) ) discard;
+        if ( (count(x3,1)<=0) && (count(x6,1)<=0) ) discard;
+        if ( (count(x4,1)<=0) && (count(x6,1)<=0) ) discard;
+        if ( (count(x4,1)<=0) && (count(p5.p5,1)>=0) ) discard;
+        if ( (count(x3,1)<=0) && (count(p5.p5,1)>=0) ) discard;
+        if ( (count(x3,1)<=0) && (count(x4,1)<=0) && 
+        ( (count(p1.p1,1)>=0) || (count(p2.p2,1)>=0) || (count(p5.p5,1)>=0) )
+        ) discard;
+        if ( (count(p1.p1,1)>=0) && (count(p2.p2,1)>=0) && (count(p5.p5,1)<0) &&
+        ( (count(x3,1)<=0)    || (count(x4,1)<=0) || 
+        (count(x6,1)<=0) )
+        ) discard;
+        
+        if (count(x6,1)==0);
+        id p6=p1+p3;
+        id p1=-p1;
+        multiply replace_(p5,p4,p4,p6,p3,p5,x3,x5,x4,x6);
+        multiply intbm1/intbn1;
+        elseif (count(x3,1)==0);
+        id p3=p5-p2;
+        id p1=-p1;
+        multiply replace_(p5,p4,p4,p6,p6,p5,p2,p3,x4,x6,x6,x5);
+        multiply intbm1/intbn1;
+        elseif (count(x4,1)==0);
+        id p4=p6-p2;
+        multiply replace_(p5,p4,p3,p5,p1,p3,x3,x5);
+        multiply intbm1/intbn1;
+        elseif (count(p5.p5,1)>=0);
+        id p5=p4-p1;
+        multiply replace_(p3,p5,p1,p3,p2,p1,x3,x5);
+        multiply intbm/intbn1;
+        elseif ( (count(x3,1)!=0) && (count(x4,1)!=0) && (count(x6,1)!=0) );
+        id 1/p1.p1^n1? /p2.p2^n2? * x3^n3? * x4^n4? /p5.p5^n5? * x6^n6? =
+        BN1(n1,n2,n3,n4,n5,n6);        
+        endif;
+* topBN1        
+        endif;        
+        .sort
+
+* insert the expansion for BN1(0,0,1,1,1,1) and BN1(1,1,1,1,1,1).
+
+        if(count(intbn1,1));        
+        id BN1(0,0,1,1,1,1) = +  M^4*miBN1x00*int0/intbn1;
+        
+        id BN1(1,1,1,1,1,1) = + miBN1x11*int0/intbn1;
+        endif;
+        .sort
+        
+        #call ACCU();
+        
+        #message - done
+        
+#endprocedure        
 
 
 #procedure topbn2
@@ -7594,11 +7362,9 @@ id	xpower = 1;
         if( count(intbn3,1));
         if (count(p3.p3,1)>=0) multiply replace_(p1,p2,p2,p1,p4,p3,p3,p4);
         endif;
-***if (count(p1.p1,1)>=0) multiply replace_(p1,p2,p2,p1,p4,p3,p3,p4);
         .sort
         if( count(intbn3,1));
         if (match(1/p2.p2/p4.p4/p5.p5)>0);
-*         #call triown(p5,p3,p1,p2,p4)
         #call ntriangle(p5,p3,p1,p2,p4)
         endif;
 
@@ -7615,9 +7381,6 @@ id	xpower = 1;
         if ( (count(p2.p2,1)>=0) && (count(p4.p4,1)>=0) ) discard;
         endif;
         .sort
-
-*         Print+s;
-*         .sort:Before match;
 
         if( count(intbn3,1));
         if ( ( match(1/p1.p1/p2.p2/p5.p5*x6) > 0 ) && (count(p4.p4,1)>=0) );
@@ -7642,8 +7405,7 @@ id	xpower = 1;
 * If more massless lines than in the three cases above are >= zero,
 * a massless tadpole appears.
 
-***  discard;
-        multiply 1/(1-1);
+        exit "BN3: Unknown simpler topology";
         endif;
 
         endif;
@@ -7651,8 +7413,6 @@ id	xpower = 1;
 
         #call Conv2exact
 
-*         Print+s;
-*         .end
         #message - done
 #endprocedure
 
@@ -7821,9 +7581,6 @@ id	xpower = 1;
 
         #call symBM(p1,p2,p3,x4,x5,x6)
 
-***#message numerator decomposition done (BM)
-* #include matad.info # time
-* #include matad.info # print
 
 ************************************************************
         
@@ -8087,10 +7844,6 @@ endif;
         if( count(intbm,1));                
         repeat;
                 
-*if (count(`p3'.`p3',1) > count(`p1'.`p1',1)) 
-*                 multiply replace_(`x4',`x5',`x5',`x4',`p1',`p3',`p3',`p1');
-*if (count(`p3'.`p3',1) > count(`p2'.`p2',1)) 
-*                 multiply replace_(`x4',`x6',`x6',`x4',`p2',`p3',`p3',`p2');
                 
                 if ( (count(`p3'.`p3',1) < 0)
                 && (count(`p1'.`p1',1) != 0) &&  (count(`p2'.`p2',1) != 0)
@@ -8306,13 +8059,13 @@ endif;
                 endif;
                 endif;        
                 .sort
-
-#enddo
-
+                
+        #enddo
+        
 #endprocedure
 
 #procedure redBMn6exp (p1,p2,p3,x4,x5,x6)
-
+        
         #do i = 1,1
 
 * Now do the reduction via eq. (M7) resp. (4)
@@ -8338,8 +8091,8 @@ endif;
                
                 #call ACCU{BMn6}
                 
-#enddo
-
+        #enddo
+        
 #endprocedure
 
 
@@ -8408,44 +8161,28 @@ endif;
 * massive lines
 
         #call symmetryBM
-* #include expandnomdeno
 
 * reduce n6 (expand in ep)
         #call redBMn6exp(p1,p2,p3,x4,x5,x6)
         .sort
         
         #call symmetryBM
-* #include expandnomdeno
-
-* #include matad.info # time
-* #include matad.info # print
 
 * now: n4=1 (or one of the massive lines = 0)
 
-* #include expandnomdeno
         #call redBMn6exp(p1,p2,p3,x4,x5,x6)
         .sort
 
         
         #call symmetryBM
-* #include expandnomdeno
-
-* #include matad.info # time
-* #include matad.info # print
-
+        
 * now: n4=n5=1
 
-* #include expandnomdeno
-
         #call redBMn6exp(p1,p2,p3,x4,x5,x6)
         .sort
 
         
         #call symmetryBM
-* #include expandnomdeno
-
-* #include matad.info # time
-* #include matad.info # print
 
 ************************************************************
 
@@ -8457,10 +8194,6 @@ endif;
         .sort
         
         #call symmetryBM
-* #include expandnomdeno
-
-* #include matad.info # time
-* #include matad.info # print
 
         if( count(intbm,1));                        
         if ( (count(x4,1)>0) && (count(x5,1)>0) && (count(x6,1)>0) );
@@ -8490,10 +8223,6 @@ endif;
 
 * now one massless index is =0; here n1=0
 
-* #include expandnomdeno
-
-* #include matad.info # time
-* #include matad.info # print
 
 * Now treat the two other massless lines with simpler
 * rec. relations.
@@ -8536,33 +8265,20 @@ endif;
         endif;        
         .sort
 
-* #include expandnomdeno
-
-* #include matad.info # time
-* #include matad.info # print
-
 
         #call redBMn25(p1,p2,p3,x4,x5,x6)
         .sort
 
         
         #call symmetryBM
-* #include expandnomdeno
-
-* #include matad.info # time
-* #include matad.info # print
 
 * if n1=n2=n3=0 the following rec. rel. is very simple
 
         #CALL redBMn456(p1,p2,p3,x4,x5,x6)
 
         #call symmetryBM
-* #include redcutnomdeno
-* #include expandnomdeno
 
-* #include matad.info # time
-* #include matad.info # print
-
+        #call Conv2exact        
 #endprocedure        
 
 
@@ -8667,15 +8383,11 @@ endif;
 
                 endif;
 
-*                 id n = num(4-2*ep);
-
 * topBM1        
                 endif;
                 #call ACCU{BM1}
                 
         #enddo
-        
-* #include expandnomdeno
         
 #endprocedure
 
@@ -8706,8 +8418,6 @@ endif;
                 
         #enddo
         
-* #include expandnomdeno
-
 #endprocedure
 
 
@@ -8781,8 +8491,6 @@ endif;
                 
         #enddo
         
-* #include expandnomdeno
-        
 #endprocedure
 
 
@@ -8816,8 +8524,6 @@ endif;
                 
         #enddo
         
-* #include expandnomdeno
-        
 #endprocedure
 
 
@@ -8831,7 +8537,6 @@ endif;
 *
         #-
         #message this is topbm1
-        .sort
         
 ************************************************************
         
@@ -9036,12 +8741,11 @@ endif;
         if ( (count(p4.p4,1)>=0) && (count(p2.p2,1)>=0) ) discard;
         if ( (count(p1.p1,1)>=0) && (count(p2.p2,1)>=0) ) discard;
         endif;        
+
+        #call Conv2exact
         .sort
 
-* #include expandnomdeno
-
         #do i=1,1
-***  #message BM1-n3 'i'
                 #call symBM1(p1,p2,p3,p4,x5,x6)
                 #call redBM1n3(p1,p2,p3,p4,x5,x6)
                 if( count(intbm1,1));        
@@ -9075,13 +8779,9 @@ endif;
 
         #call redBM1n35(p1,p2,p3,p4,x5,x6)
 
-* #include expandnomdeno
-
+        
         #call redBM1n36(p1,p2,p3,p4,x5,x6)
 
-* #include expandnomdeno
-        
-        
         if( count(intbm1,1));        
         if ( (match(1/p1.p1/p2.p2*x5*x6)>0) && (count(p4.p4,1)>=0) );
         id p4=p2+p5;
@@ -9097,8 +8797,6 @@ endif;
         endif;
         endif;        
         .sort
-
-* #include expandnomdeno
 
 * treat negative powers of massive denominators:
 
@@ -9199,17 +8897,13 @@ endif;
         Multiply intm2/intbm1;
 
         else;
-        multiply 1/(1-1);
+        exit "BM1: Unknown simpler topology";
         endif;
 * topBM1        
         endif;
         #call ACCU(BM1)
 
         #message - done
-
-*         Print+s;
-*         .end
-
         
 #endprocedure        
 
@@ -9353,7 +9047,6 @@ endif;
         id  p6.p6 = 1/x6 - M^2;
         endif;        
         #call ACCU(BM2 7)
-***.SORT
         
         #message do recursion
 
@@ -9389,8 +9082,6 @@ endif;
         if (count(p5.p5,1)>=0) multiply replace_(p5,p4,p4,p5,p1,p3,p3,p1);
         
         if (match(1/p1.p1/p2.p2/p4.p4)>0);
-***#call triangle(p2,p3,p5,p1,p4)
-*         #call triown(p2,p3,p5,p1,p4)
         #call ntriangle(p2,p3,p5,p1,p4)        
         endif;
         
@@ -9437,22 +9128,22 @@ endif;
 
 #procedure nomgm3(v1,v2,v3,x,y,z,in)
 * Apply only to topo "in"
-if(count(int`in',1)) id  `v3' = -`v1'-`v2';
-
-#call ACCU{nomgm3 1}
-
-if(count(int`in',1)) id  `v1'.`v1' = 1/`x' - M^2;
-
-#call ACCU{nomgm3 2}
-
-if(count(int`in',1)) id  `v2'.`v2' = 1/`y' - M^2;
-
-#call ACCU{nomgm3 3}
-
-if(count(int`in',1)) id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
-
-#call ACCU{nomgm3 4}
-
+        if(count(int`in',1)) id  `v3' = -`v1'-`v2';
+        
+        #call ACCU{nomgm3 1}
+        
+        if(count(int`in',1)) id  `v1'.`v1' = 1/`x' - M^2;
+        
+        #call ACCU{nomgm3 2}
+        
+        if(count(int`in',1)) id  `v2'.`v2' = 1/`y' - M^2;
+        
+        #call ACCU{nomgm3 3}
+        
+        if(count(int`in',1)) id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
+        
+        #call ACCU{nomgm3 4}
+        
 #endprocedure
 
 
@@ -9467,20 +9158,12 @@ if(count(int`in',1)) id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
         #message this is topm1
         
         if( count(intm1,1));                
-*         multiply int1;
         id p1=-p1;
         endif;                
-*         #call one00(p2,p1,p3,e2,e1,e3,int1)
         #call IntOne(p2,p1,p3,m1,MM0)
         .sort
         
         #call ACCU(one)
-        
-* #call simpfin
-* #call ACCU(simp)
-* #include redcut
-        
-* #include expandnomdeno
         
         if( count(intMM0,1));
         id p6=-p6;
@@ -9488,14 +9171,12 @@ if(count(int`in',1)) id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
         #call nomgm3(p5,p6,p3,x5,x6,1/p3.p3,MM0)
         
         .sort
-
-*         #call two110(x5,s5m1,x6,s6m1,1/p3.p3,e3)
+        
         #call TadpoleMM0(x5,x6,p3,MM0,0)
         .sort
 
         #call ACCU(gm3)
-* #include expandnomdeno
-        
+
 #endprocedure        
 
 
@@ -9509,7 +9190,7 @@ if(count(int`in',1)) id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
         #message this is topm2
 *         
 * Procedure m2 modified        
-* IntOne can deal only with numerator containing first momentum        
+* IntOne can deal only with numerator containing momentum at first position
 *         
         if( count(intm2,1));        
 ***         id p1=-p1;
@@ -9531,11 +9212,6 @@ if(count(int`in',1)) id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
         #call TadpoleM0(x6,p6,M0,0)        
         .sort
 
-* Print+s;
-* .end
-        
-* #include expandnomdeno
-        
 #endprocedure        
 
 
@@ -9564,8 +9240,6 @@ if(count(int`in',1)) id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
         #call TadpoleM0(x6,p6,M0,0)        
         .sort
 
-* #include expandnomdeno
-        
 #endprocedure        
 
 
@@ -9577,30 +9251,22 @@ if(count(int`in',1)) id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
 *
         
         #message this is topm4
-* if( count(intm4,1)) multiply intM00*intM0/intm4;
-*         #call one00(p3,p4,p6,e3,e4,e6,int1)
-        
+
 * Numerator p4->p3,p6
         if(count(intm4,1)) id p4=p6-p3;        
         #call IntOne(p3,p4,p6,m4,MxM)
         .sort
         
-* #include expandnomdeno
-        
         #call averts(p5,MxM)
         .sort
-*         #call one10(x5,s5m1,1/p5.p5,e5)
         #call TadpoleM0(x5,p5,MxM,M0)        
         .sort
         
         #call averts(p6,M0)
         .sort
         
-*         #call one10(x6,p6)
         #call TadpoleM0(x6,p6,M0,0)        
         .sort
-        
-* #include expandnomdeno
         
 #endprocedure        
 
@@ -9620,13 +9286,8 @@ if(count(int`in',1)) id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
         if( count(intm5,1)) multiply replace_(x1,s1m,x2,s2m,x3,s3m,x4,s4m,x5,s5m,x6,s6m);
 
         #call averts(p4,m5)
-*         #call one10(s4m,s4m1,1/p4.p4,yy1)
         #call TadpoleM0(s4m,p4,m5,MMM)
         .sort
-
-* #call simpfin
-* #include redcut
-* #include expandnomdeno
 
 * treat numerator of 2-loop integral
 
@@ -9658,7 +9319,6 @@ if(count(int`in',1)) id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
         
         #do i=1,5
                 
-***#message 'i'
                 if( count(intMMM,1));        
                 if ( (count(s1m,1)!=0) && (count(s2m,1)!=0) && (count(s5m,1)!=0) ); 
                 multiply replace_(test5,s1m,test6,s2m);
@@ -9675,9 +9335,9 @@ if(count(int`in',1)) id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
                 if ( count(s2m,1) < count(s5m,1) ) multiply replace_(s2m,s5m,s5m,s2m);
                 endif;
                 endif;        
+
+                #call Conv2exact
                 .sort
-                
-* #include expandnomdeno
                 
         #enddo
 
@@ -9730,15 +9390,12 @@ if(count(int`in',1)) id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
         multiply 1/(1-1);
         endif;
         endif;
-* MM0  
-*   #call two110(s1m,s1m1,s2m,s2m1,1/p5.p5,e5)
+*       MM0  
+
         #call TadpoleMM0(s1m,s2m,p5,MM0,0)
-* M00
-*    multiply int1;
-*   #call one00(p2,p5,p1,e2,e5,e1,int1)
+*       M00
         #call IntOne(p2,p5,p1,M00,M0)  
         #call averts(p1,M0)
-*   #call one10(s1m,s1m1,1/p1.p1,e1)
         #call TadpoleM0(s1m,p1,M0,0)
         .sort
 
@@ -9776,8 +9433,6 @@ if(count(int`in',1)) id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
         id x3*x4*x5*x6 =M^4*miBN*int0/intn1;
         
         endif;
-        
-        .sort 
         
         #call ACCU()
         
@@ -10313,8 +9968,6 @@ if(count(int`in',1)) id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
 
 #procedure subSimple
 
-
-
         id gm3norm(x1?,x2?,x3?) = 
         Gam(-1,2+x1+x2+x3)*
         Gam(0,1+x1+x3)*
@@ -10469,7 +10122,7 @@ multiply, ep^('x');
 #endprocedure
 
 
-*--#[ expansion :
+*--#[ exp4d :
 *
 #procedure exp4d(maxeppow)
 * Expansion near d=4-2*ep      
@@ -10516,7 +10169,7 @@ multiply, ep^('x');
         S ep;        
 #endprocedure
 *
-*--#] expansion : 
+*--#] exp4d : 
 
 
 
