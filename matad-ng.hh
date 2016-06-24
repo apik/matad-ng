@@ -1947,9 +1947,6 @@ endif;
 
         #call ACCU(D4)
 
-* #include matad.info # time
-* #include matad.info # print
-
 ************************************************************
 *
 * do recursion
@@ -3034,8 +3031,6 @@ endif;
 
         #call mltadE3(s1m,s2m,s3m,p5,p5)
 
-* #include matad.info # time
-* #include matad.info # print
 
 ************************************************************
 
@@ -9952,6 +9947,11 @@ endif;
         #message "     pikelner[at]theor.jinr.ru, Andrey Pikelner      "
         #message "                                                     "
         #message MATAD called for `LOOPS'-loop integral
+
+        .sort
+*       Switch on rational arithmetics        
+        PolyRatFun rat;        
+
 
         #call tad`LOOPS'l
         
