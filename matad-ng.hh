@@ -1,77 +1,72 @@
-S n,ep;
-dimension n;
-
-* By default we use reduction with tables for BN topology
-
-#ifndef `REDBNTAB'
-        #define REDBNTAB
-#endif
-
-V q, Q;
-
-S M,m;
-
-V P,p,p1,...,p19;
-S e1,...,e19;
-V k,l,v,v1,v2,v3,v4,v5;
-S s1m,s2m,s3m,s4m,s5m,s6m,s7m,s8m,s9m,s10m,s11m,s12m,s13m,s14m,s15m,s16m,s17m,s18m,s19m;
-
-
-I i1,...,i9,j1,...,j9;
-I MU,NU,al,be,ro,si,tau,mu,nu,la,ka;
-
-
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* MINCER exact routines IntOne,DoG,expansion
+* 
+* 
+* 
+* 
+* 
+* 
+* 
+* 
 
 
-S vmat,vmab,vt,at,vb,ab,ppbt,pmtb,ctt,Htt,ve,ax,sc,ps,nf,nl,nh;
-S L,X,exp,[sqrt2],[sqrt(x)],[x],s,g5,g6,g7,ExpZ2;
-S x1,...,x9, z2,...,z9,z10;
-S xi,x,y,y1,z;
-CF ScalProd,ScalProd1,ScalProdM,ScalProdM1,Vec,Den,Den1,Den2;
-CF DWt,DWl,VZWW,VZpp,VZWp;
-CF Vgh,V3g,Vggs,Dg,Dgh,Dsig;
-CF acc,accun,accm;
+* By default we use reduction with tables for BN topology 
+#define REDBNTAB
 
-T FQ,del,dal;
+* S  n,ep;
+S d;
+dimension d;
 
-*
-* used in MINCER
-*
+S  M;
+V  P,p1,...,p6;
+S  s1m,s2m,s3m,s4m,s5m,s6m;
+I  i1,i2;
 
-S int1,int2,int3,eq,exp10,exp11,exp20,G311,F321,MSBtoG,y2,y5,j;
-S N1,N2,N3,A,B,k1,...,k4;
-CF G,poch,po,poinv,ftri;
+S x1,...,x6;
+S x,y,z,[sqrt(x)],[x],s;
+
+CF G,poch,po,poinv;
+S k1,...,k6;
+S n,n1,...,n6;
+T del;
 
 *
 * used in MATAD
 *
-S dala,diff,test5,test6;
-S k5,k6;
-S n1,...,n6;
-S yy,yy1;
-S [p1^2],[M^2+p1^2];
-S ggam;
-S Mtep;
 S S2,OepS2,Oep2S2,T1ep,T1ep2,B4,D3,OepD3,D4,D4ep,D5,D5ep,D6,D6ep,DM,DMep;
 S DN,DNep,E3,E3ep;
 S intm1,...,intm5,intn1,intt1;
 S intbm,intbmbm,intbm1,intbm2,intbn,intbnbn,intbn1,intbn2,intbn3;
 S intd4,intd5,intd6,intdm,intdn,inte3,inte4;
-S inttbl;
-S agam,bgam,cgam,dgam,egam,fgam,ggam,hgam;
+
+* partfrac
+S  diff,[p1^2],[M^2+p1^2];
+
+S  dala,test5,test6;
+
+S  agam,bgam,cgam,dgam,egam,fgam,ggam,hgam;
 CF gm2,gm2norm,gm3,gm3norm;
-CF nom,deno,Gam,GGam,iGam,iGGam;
+CF nom,deno,Gam,iGam;
 CF BN1;
 
-* AFP
 * Exact version
-Symbols ep,epp,epp1,epp2,epp3,epp4,epp5,epp6,epp7,epp8,epQ;
-CTensor ftensor,dd;
-Symbols isum1,isum2,isum3,xpower,n0,n8;
+S  ep,epp,epp1,...,epp6;
+CT ftensor,dd;
+S  isum1,isum2,isum3,xpower,n0,n8;
 
-CFunctions rat,acc,den,dena,num,ftriangle;
-CFunctions Pochhammer,PochhammerINV,GschemeConstants;
-* CFunctions del,ftriangle,hfac;
+CF rat,acc,den,dena,num,ftriangle;
+CF Pochhammer,PochhammerINV,GschemeConstants;
 
 * two-loop factorized topologies (1-loop)x(1-loop)
 S intMxM;
@@ -126,7 +121,7 @@ PolyRatFun rat;
 
 
 
-#procedure ToAuxTopo
+#procedure FromAuxTopo
 
 *
 *
@@ -167,133 +162,133 @@ PolyRatFun rat;
 * 
 *         
 
-id tad3l([000000],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
+        id tad3l([000000],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
 
-id tad3l([00000M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
+        id tad3l([00000M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
 
-id tad3l([0000M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
+        id tad3l([0000M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
 
-id tad3l([0000MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4*s5m^n5*s6m^n6;
+        id tad3l([0000MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4*s5m^n5*s6m^n6;
 
-id tad3l([000M00],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
+        id tad3l([000M00],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
 
-id tad3l([000M0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3*s4m^n4/p5.p5^n5*s6m^n6;
+        id tad3l([000M0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3*s4m^n4/p5.p5^n5*s6m^n6;
 
-id tad3l([000MM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3*s4m^n4*s5m^n5/p6.p6^n6;
+        id tad3l([000MM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3*s4m^n4*s5m^n5/p6.p6^n6;
 
-id tad3l([000MMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3*s4m^n4*s5m^n5*s6m^n6;
+        id tad3l([000MMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2/p3.p3^n3*s4m^n4*s5m^n5*s6m^n6;
 
-id tad3l([00M000],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
+        id tad3l([00M000],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
 
-id tad3l([00M00M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
+        id tad3l([00M00M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
 
-id tad3l([00M0M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
+        id tad3l([00M0M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
 
-id tad3l([00M0MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3/p4.p4^n4*s5m^n5*s6m^n6;
+        id tad3l([00M0MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3/p4.p4^n4*s5m^n5*s6m^n6;
 
-id tad3l([00MM00],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
+        id tad3l([00MM00],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
 
-id tad3l([00MM0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3*s4m^n4/p5.p5^n5*s6m^n6;
+        id tad3l([00MM0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3*s4m^n4/p5.p5^n5*s6m^n6;
 
-id tad3l([00MMM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3*s4m^n4*s5m^n5/p6.p6^n6;
+        id tad3l([00MMM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3*s4m^n4*s5m^n5/p6.p6^n6;
 
-id tad3l([00MMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3*s4m^n4*s5m^n5*s6m^n6;
+        id tad3l([00MMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1/p2.p2^n2*s3m^n3*s4m^n4*s5m^n5*s6m^n6;
 
-id tad3l([0M0000],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
+        id tad3l([0M0000],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
 
-id tad3l([0M000M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
+        id tad3l([0M000M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
 
-id tad3l([0M00M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
+        id tad3l([0M00M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
 
-id tad3l([0M00MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3/p4.p4^n4*s5m^n5*s6m^n6;
+        id tad3l([0M00MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3/p4.p4^n4*s5m^n5*s6m^n6;
 
-id tad3l([0M0M00],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
+        id tad3l([0M0M00],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
 
-id tad3l([0M0M0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3*s4m^n4/p5.p5^n5*s6m^n6;
+        id tad3l([0M0M0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3*s4m^n4/p5.p5^n5*s6m^n6;
 
-id tad3l([0M0MM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3*s4m^n4*s5m^n5/p6.p6^n6;
+        id tad3l([0M0MM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3*s4m^n4*s5m^n5/p6.p6^n6;
 
-id tad3l([0M0MMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3*s4m^n4*s5m^n5*s6m^n6;
+        id tad3l([0M0MMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2/p3.p3^n3*s4m^n4*s5m^n5*s6m^n6;
 
-id tad3l([0MM000],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
+        id tad3l([0MM000],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
 
-id tad3l([0MM00M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
+        id tad3l([0MM00M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
 
-id tad3l([0MM0M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
+        id tad3l([0MM0M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
 
-id tad3l([0MM0MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3/p4.p4^n4*s5m^n5*s6m^n6;
+        id tad3l([0MM0MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3/p4.p4^n4*s5m^n5*s6m^n6;
 
-id tad3l([0MMM00],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
+        id tad3l([0MMM00],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
 
-id tad3l([0MMM0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3*s4m^n4/p5.p5^n5*s6m^n6;
+        id tad3l([0MMM0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3*s4m^n4/p5.p5^n5*s6m^n6;
 
-id tad3l([0MMMM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n5/p6.p6^n6;
+        id tad3l([0MMMM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n5/p6.p6^n6;
 
-id tad3l([0MMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n5*s6m^n6;
+        id tad3l([0MMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1/p1.p1^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n5*s6m^n6;
 
-id tad3l([M00000],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
+        id tad3l([M00000],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
 
-id tad3l([M0000M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
+        id tad3l([M0000M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
 
-id tad3l([M000M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
+        id tad3l([M000M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
 
-id tad3l([M000MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4*s5m^n5*s6m^n6;
+        id tad3l([M000MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3/p4.p4^n4*s5m^n5*s6m^n6;
 
-id tad3l([M00M00],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
+        id tad3l([M00M00],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
 
-id tad3l([M00M0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3*s4m^n4/p5.p5^n5*s6m^n6;
+        id tad3l([M00M0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3*s4m^n4/p5.p5^n5*s6m^n6;
 
-id tad3l([M00MM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3*s4m^n4*s5m^n5/p6.p6^n6;
+        id tad3l([M00MM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3*s4m^n4*s5m^n5/p6.p6^n6;
 
-id tad3l([M00MMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3*s4m^n4*s5m^n5*s6m^n6;
+        id tad3l([M00MMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2/p3.p3^n3*s4m^n4*s5m^n5*s6m^n6;
 
-id tad3l([M0M000],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
+        id tad3l([M0M000],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
 
-id tad3l([M0M00M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
+        id tad3l([M0M00M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
 
-id tad3l([M0M0M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
+        id tad3l([M0M0M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
 
-id tad3l([M0M0MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3/p4.p4^n4*s5m^n5*s6m^n6;
+        id tad3l([M0M0MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3/p4.p4^n4*s5m^n5*s6m^n6;
 
-id tad3l([M0MM00],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
+        id tad3l([M0MM00],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
 
-id tad3l([M0MM0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3*s4m^n4/p5.p5^n5*s6m^n6;
+        id tad3l([M0MM0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3*s4m^n4/p5.p5^n5*s6m^n6;
 
-id tad3l([M0MMM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3*s4m^n4*s5m^n5/p6.p6^n6;
+        id tad3l([M0MMM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3*s4m^n4*s5m^n5/p6.p6^n6;
 
-id tad3l([M0MMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3*s4m^n4*s5m^n5*s6m^n6;
+        id tad3l([M0MMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1/p2.p2^n2*s3m^n3*s4m^n4*s5m^n5*s6m^n6;
 
-id tad3l([MM0000],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
+        id tad3l([MM0000],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
 
-id tad3l([MM000M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
+        id tad3l([MM000M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
 
-id tad3l([MM00M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
+        id tad3l([MM00M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
 
-id tad3l([MM00MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3/p4.p4^n4*s5m^n5*s6m^n6;
+        id tad3l([MM00MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3/p4.p4^n4*s5m^n5*s6m^n6;
 
-id tad3l([MM0M00],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
+        id tad3l([MM0M00],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
 
-id tad3l([MM0M0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3*s4m^n4/p5.p5^n5*s6m^n6;
+        id tad3l([MM0M0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3*s4m^n4/p5.p5^n5*s6m^n6;
 
-id tad3l([MM0MM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3*s4m^n4*s5m^n5/p6.p6^n6;
+        id tad3l([MM0MM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3*s4m^n4*s5m^n5/p6.p6^n6;
 
-id tad3l([MM0MMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3*s4m^n4*s5m^n5*s6m^n6;
+        id tad3l([MM0MMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2/p3.p3^n3*s4m^n4*s5m^n5*s6m^n6;
 
-id tad3l([MMM000],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
+        id tad3l([MMM000],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3/p4.p4^n4/p5.p5^n5/p6.p6^n6;
 
-id tad3l([MMM00M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
+        id tad3l([MMM00M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3/p4.p4^n4/p5.p5^n5*s6m^n6;
 
-id tad3l([MMM0M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
+        id tad3l([MMM0M0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3/p4.p4^n4*s5m^n5/p6.p6^n6;
 
-id tad3l([MMM0MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3/p4.p4^n4*s5m^n5*s6m^n6;
+        id tad3l([MMM0MM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3/p4.p4^n4*s5m^n5*s6m^n6;
 
-id tad3l([MMMM00],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
+        id tad3l([MMMM00],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4/p5.p5^n5/p6.p6^n6;
 
-id tad3l([MMMM0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4/p5.p5^n5*s6m^n6;
+        id tad3l([MMMM0M],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4/p5.p5^n5*s6m^n6;
 
-id tad3l([MMMMM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n5/p6.p6^n6;
+        id tad3l([MMMMM0],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n5/p6.p6^n6;
 
-id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n5*s6m^n6;
+        id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n5*s6m^n6;
 
 #endprocedure
 
@@ -306,32 +301,20 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
         id po(x1?pos_,0) = fac_(x1-1);
         id poinv(x1?pos_,0) = 1/(fac_(x1-1));
         
-        id po(n?,x?)                = Pochhammer(n,x*ep)*den(x*ep);
-        id poinv(n?,x?)             = PochhammerINV(n,x*ep)*num(x*ep);
+        id po(n?,x?)                = Pochhammer(n,x*(2-d/2))*den(x*(2-d/2));
+        id poinv(n?,x?)             = PochhammerINV(n,x*(2-d/2))*num(x*(2-d/2));
         
-        id nom(x1?,x2?)             = num(x1+x2*ep);
-        id deno(x1?,x2?)            = den(x1+x2*ep);
+        id nom(x1?,x2?)             = num(x1+x2*(2-d/2));
+        id deno(x1?,x2?)            = den(x1+x2*(2-d/2));
 
-        id nom(x?,y?,z?)            = x + y*num(ep)*num(1+ep*z/y);
+        id nom(x?,y?,z?)            = x + y*num((2-d/2))*num(1+(2-d/2)*z/y);
 
+        id	num(x?)*den(x?) = 1;
+        id	den(x?number_) = 1/x;
+        id	num(x?number_) = x;
         id num(x?)                  = rat(x,1);
         id den(x?)                  = rat(1,x);        
-        
-*         id nom(x?,y?,z?)            = num(x+y*ep+z*ep^2);    
-
-
-
-* id deno(x?,y?) * nom(x?,y?) = 1;
-* id deno(0,y?)               = 1/y/ep;
-* id nom(x?,y?,z?)            = x + y*nom(0,1)*nom(1,z/y);
-
-* repeat id 1/ep * nom(0,x?) = x;
-
-* id nom(0,y?)         = nom(0,1)*y;
-* id deno(x?!{0,1},y?) = deno(1,y/x)/x;
-* id nom(x?!{0,1},y?)  = x*nom(1,y/x);
-* .sort
-        
+                
 #endprocedure
 
 
@@ -339,23 +322,23 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
 #procedure averts(P,in)
 
         if( count(int`in',1));        
-        totensor,nosquare,`P',FQ;
+        totensor,nosquare,`P',ftensor;
 
-        id FQ(?a) = [sqrt(x)]^nargs_(?a)*FQ(?a);
+        id ftensor(?a) = [sqrt(x)]^nargs_(?a)*ftensor(?a);
         id [sqrt(x)]^n?odd_ = 0;
         id,many, [sqrt(x)]*[sqrt(x)] = [x];
 
-        id FQ(?a) = dd_(?a);
+        id ftensor(?a) = dd_(?a);
         endif;        
         .sort
 
         if( count(int`in',1));        
         if ( count([x],1) != 0 );
-        id [x]^s? =  num(1-ep)*poinv(s+2,-1)*`P'.`P'^(s)/2^s;
+        id [x]^s? =  num(1-(2-d/2))*poinv(s+2,-1)*`P'.`P'^(s)/2^s;
         endif;
         endif;        
-        .sort
         #call Conv2exact
+        .sort
 #endprocedure
 
 #procedure ACCU(TEXT)
@@ -369,8 +352,8 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
 *         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
 *         .sort(PolyFun = acc):`TEXT';
 
-        id      nom(x1?,x2?) = num(x1+x2*ep);
-        id      deno(x1?,x2?)= den(x1+x2*ep);
+        id      nom(x1?,x2?) = num(x1+x2*(2-d/2));
+        id      deno(x1?,x2?)= den(x1+x2*(2-d/2));
 
         id	num(x?)*den(x?) = 1;
         id	den(x?number_) = 1/x;
@@ -391,11 +374,10 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
         #call averts(p1,M0)
         #call ACCU{}
         
-*         #call one10(s1m|s1m1|1/p1.p1|yy1)
         #call TadpoleM0(s1m,p1,M0,0)        
         .sort
-
-        #call Conv2exact()
+        
+        #call Conv2exact
         #call DoG
         #call subSimple
         #call GammaArgToOne
@@ -423,7 +405,7 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
 
 * Exact version
 #procedure TadpoleMM0(x,y,z,in,out)
-
+        
 * 1/(p1.p1 + M^2) is "x" and 1/(p1.p1 + M^2)^ep  is "epx";
 * 1/(p2.p2 + M^2) is "y" and 1/(p2.p2 + M^2)^ep  is "epy";
 * 1/(p3.p3) is "z" and 1/p3.p3^ep  is "epz";
@@ -456,12 +438,12 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
         endif;
         
 * 
-.sort:TadpoleMM0-`in'-1;        
+        .sort:TadpoleMM0-`in'-1;        
 *
         #call Conv2exact
         #call DoG
 *         
-.sort:TadpoleMM0-`in'-2;        
+        .sort:TadpoleMM0-`in'-2;        
 *         
 #endprocedure
 
@@ -482,12 +464,19 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
         po(k1 + k3 - 2, k2 + k4 + 1)*
         poinv(k1     ,k2)*
         M^(4 - 2*k1 - 2*k3)*
-*                  Exp3(1 + k2 + k4)*
         gm2norm(k2,k4)
         ;   
         
         Multiply int`out'/int`in';        
         endif;        
+* 
+        .sort:TadpoleM0-`in'-1;        
+*
+        #call Conv2exact
+        #call DoG
+*         
+        .sort:TadpoleM0-`in'-2;        
+*         
 #endprocedure
 
 *--#[ DoG :
@@ -500,12 +489,12 @@ id tad3l([MMMMMM],n1?,n2?,n3?,n4?,n5?,n6?) = 1*s1m^n1*s2m^n2*s3m^n3*s4m^n4*s5m^n
 *#$vc = 0;
 *Print +f "<1> %t";
 id	G(n1?,x1?,n2?,x2?,n3?,n4?) = GschemeConstants(x1,x2)/(1+x1+x2)*
-			Pochhammer(n1+n2-n4-2,ep+x1*ep+x2*ep)*
-			Pochhammer(1-n1+n3-n4,1-ep-x1*ep)*
-			Pochhammer(1-n2+n4,1-ep-x2*ep)*
-			PochhammerINV(n1-1,1+x1*ep)*
-			PochhammerINV(n2-1,1+x2*ep)*
-			PochhammerINV(2-n1-n2+n3,2-2*ep-x1*ep-x2*ep);
+	Pochhammer(n1+n2-n4-2,(1+x1+x2)*(2-d/2))*
+	Pochhammer(1-n1+n3-n4,1-(1+x1)*(2-d/2))*
+	Pochhammer(1-n2+n4,1-(1+x2)*(2-d/2))*
+	PochhammerINV(n1-1,1+x1*(2-d/2))*
+	PochhammerINV(n2-1,1+x2*(2-d/2))*
+	PochhammerINV(2-n1-n2+n3,2-(2+x1+x2)*(2-d/2));
 *Print +f "<2> %t";
 repeat id Pochhammer(n?pos_,x?) = Pochhammer(n-1,x)*num(n-1+x);
 repeat id Pochhammer(n?neg_,x?) = Pochhammer(n+1,x)*den(n+x);
@@ -516,7 +505,7 @@ id	GschemeConstants(0,n?pos_) = GschemeConstants(n,0);
 *			= GschemeConstants(1,1)*(2*D-6)/(3*D-10)
 *			= GschemeConstants(1,1)*(1-2*ep)/(1-3*ep)
 id	GschemeConstants(1,1)*GschemeConstants(0,0) =
-			GschemeConstants(1,0)*GschemeConstants(2,0)*rat(1-3*ep,1-2*ep);
+			GschemeConstants(1,0)*GschemeConstants(2,0)*rat(1-3*(2-d/2),1-2*(2-d/2));
 id	Pochhammer(0,x?) = 1;
 id	PochhammerINV(0,x?) = 1;
 id	num(x?)*den(x?) = 1;
@@ -594,9 +583,9 @@ endif;
         #call partfrac{p1|s1m}
         #call partfrac{p2|s2m}
         #call partfrac{p3|s3m}
-
+        
         if (count(s1m,1,s2m,1,s3m,1) == 0) discard;
-
+        
 * map 010 -> 100
         if ( (count(s1m,1) == 0) && (count(s2m,1) != 0) && (count(s3m,1) == 0) );
         id p1 = -p1;
@@ -671,7 +660,7 @@ endif;
                 if ( (count(s1m,1)>1) && (count(s2m,1)>=1) && (count(s3m,1)>=1) );
                 id s1m^n1?*s2m^n2?*s3m^n5? = 
                 s1m^n1*s2m^n2*s3m^n5 * (-1) * 1/3/(n1-1)/M^2 * (
-                num(4+3-3*n1 -2*ep)/s1m
+                nom(4+3-3*n1, -2)/s1m
                 + 2*n2*s2m/s1m*(1/s3m-1/s1m)
                 - (n1-1)*(1/s3m-1/s2m)
                 );
@@ -708,10 +697,7 @@ endif;
 
         id 1/s3m = p3.p3 + M^2;
 
-* #include matad.info # time
-
         #call ACCU{T1}
-* #include matad.info # time
 
         if ( (count(s1m,1)!=0) && (count(s2m,1)!=0) && (count(s3m,1)==0) ); 
         multiply replace_(test5,s1m,test6,s2m);
@@ -753,9 +739,6 @@ endif;
 * Identify M1, M2, ... in the output of BN/BM
 *
         if (count(int`TYPE',1) );
-*         if (count(intm1,1,intm2,1,intm3,1,intm4,1,intt1,1,intn1,1,
-*         intbm,1,intbm1,1,intbm2,1)==0);
-
 
         if (count(intm1,1,intm2,1,intm3,1,intm4,1,intt1,1,intn1,1,
         intbm1,1,intbm2,1)==0);
@@ -782,11 +765,6 @@ endif;
 * BN BM
         endif;
 
-*         #if `TYPE'==bn3
-*                 Print+s;
-*                 .end
-                
-*         #endif                
 #endprocedure        
 
 
@@ -877,7 +855,6 @@ endif;
                 
         #enddo
         
-* #include expandnomdeno
 
 * b.
 *
@@ -916,7 +893,7 @@ endif;
 
                 - `p2'.`p2'^-1*`x4'*`x6'^-1 * (  - n4*M^2 )
 
-                - `p2'.`p2'^-1 *(- 3*n*M^2 + n1*M^2 + 4*n2*M^2 + 3*n3*M^2 + n4*M^2 + 2*
+                - `p2'.`p2'^-1 *(- 3*num(d)*M^2 + n1*M^2 + 4*n2*M^2 + 3*n3*M^2 + n4*M^2 + 2*
                 n5*M^2 + n6*M^2 + 4*M^2 )
 
                 );
@@ -926,10 +903,7 @@ endif;
                 endif;
                 endif;
                 
-                id n=num(4-2*ep);
-*                 id acc(x?)*acc(y?)=acc(x*y);
-                
-*   #include expandnomdeno
+*                 id n=num(4-2*ep);
                 .sort
         #enddo
         
@@ -1155,7 +1129,7 @@ endif;
                 endif;
                 endif;
                 
-                id nom(4,-2)=num(4-2*ep);
+*                 id nom(4,-2)=num(4-2*ep);
 *   id acc(x?)*acc(y?)=acc(x*y);
                 #call ACCU(BN1n32_0)
                 
@@ -1476,7 +1450,7 @@ endif;
                 endif;
 * topBN1        
                 endif;
-                id nom(4,-2) = num(4-2*ep);
+*                 id nom(4,-2) = num(4-2*ep);
 
                 #call ACCU(BN1)
 
@@ -1733,8 +1707,8 @@ endif;
         if ( (count(p1.p1,1)==0) && (count(p2.p2,1)==0) && (count(x3,1)==2) && 
         (count(x4,1)==2) && (count(p5.p5,1)==-1) && (count(x6,1)==2) )
         id x3^2*x4^2/p5.p5*x6^2 =
-        + 7/6* x3^2*x4*x6^2 *n*M^-4      - 38/9* x3^2*x4*x6^2 *M^-4 
-        + 19/3* x3^2*x4/p5.p5*x6 *n*M^-4 - x3^2*x4/p5.p5*x6 *n^2*M^-4 
+        + 7/6* x3^2*x4*x6^2 *num(d)*M^-4      - 38/9* x3^2*x4*x6^2 *M^-4 
+        + 19/3* x3^2*x4/p5.p5*x6 *num(d)*M^-4 - x3^2*x4/p5.p5*x6 *num(d^2)*M^-4 
         - 10* x3^2*x4/p5.p5*x6 *M^-4     + 4/3* x3^3*x4*x6^2 *M^-2
         ;
         endif;
@@ -1751,8 +1725,8 @@ endif;
         ;
         endif;
         
-        id n = num(4-2*ep);
-        id nom(4,-2)=num(4-2*ep);
+*         id n = num(4-2*ep);
+*         id nom(4,-2)=num(4-2*ep);
         #call symBN1(p1,p2,x3,x4,p5,x6)
         .sort
         
@@ -1954,7 +1928,7 @@ endif;
         #do type = {bn|bn1|bn2|bn3|bm|bm1|bm2}
         
                 #message Recursion of type `type'
-                multiply replace_(s1m,x1,s2m,x2,s3m,x3,s4m,x4,s5m,x5,s6m,x6,s7m,x7,s8m,x8);
+                multiply replace_(s1m,x1,s2m,x2,s3m,x3,s4m,x4,s5m,x5,s6m,x6);
                 
                 #call top`type'
                 #call bnm2m(`type')
@@ -1965,7 +1939,7 @@ endif;
         
         #do type = {m1|m2|m3|m4|m5|t1|n1}
                 #message Recursion of type `type'
-                multiply replace_(s1m,x1,s2m,x2,s3m,x3,s4m,x4,s5m,x5,s6m,x6,s7m,x7,s8m,x8);
+                multiply replace_(s1m,x1,s2m,x2,s3m,x3,s4m,x4,s5m,x5,s6m,x6);
                 
                 #call top`type'
         #enddo
@@ -2001,7 +1975,7 @@ endif;
         id `s1m'^n1?*`s2m'^n2?*`s3m'^n3?*`s4m'^n4?*`s5m'^n5?*`s6m'^n6? =
         `s1m'^n1*`s2m'^n2*`s3m'^n3*`s4m'^n4*`s5m'^n5*`s6m'^n6 * 
         (-1)/4/(n5-1)/M^2/`s5m' * (
-        n-4*(n5-1)
+        num(d)-4*(n5-1)
         -3*( n3*`s3m'*(1/`s5m'-1/`s6m') + n2*`s2m'*(1/`s5m'-1/`s4m') )
         +n2*`s2m'*(1/`s3m'-1/`s1m') 
         +n3*`s3m'*(1/`s2m'-1/`s1m') 
@@ -2275,7 +2249,7 @@ endif;
         + 2*`p6'.`p6'^-1*M^2*(n3-1)
         - `p6'.`p6'^-1*(n3-1)*`s3m'^-1
         - `p6'.`p6'^-1*(n3-1)*`s5m'^-1
-        + `p6'.`p6'^-1*`s3m'^-1*n
+        + `p6'.`p6'^-1*`s3m'^-1*num(d)
         );
         
 * 29Oct04: added
@@ -2312,7 +2286,7 @@ endif;
         + n5*`s2m'^-1*`s5m'
         - n6*M^-2*`s2m'^-1
         - M^-2*(n2-1)*`s2m'^-1
-        + 3/2*M^-2*`s2m'^-1*n
+        + 3/2*M^-2*`s2m'^-1*num(d)
         );
         
         redefine i "0";
@@ -2342,7 +2316,7 @@ endif;
         - M^-2*(n1-1)*`s1m'^-1
         - 1/3*M^-2*(n1-1)*`s2m'^-1
         + 1/3*M^-2*(n1-1)*`s3m'^-1
-        + 1/3*M^-2*`s1m'^-1*n
+        + 1/3*M^-2*`s1m'^-1*num(d)
         - 2/3*`p6'.`p6'^-1*n6*M^-2*`s1m'^-2
         + 1/3*`p6'.`p6'^-1*n6*M^-2*`s1m'^-1*`s3m'^-1
         + 2/3*`p6'.`p6'^-1*n6*M^-2*`s1m'^-1*`s4m'^-1
@@ -2524,7 +2498,7 @@ endif;
                 #call redD5n1345(s1m,s2m,s3m,s4m,s5m,p6)
                 .sort
                 
-                id n = num(4-2*ep);
+*                 id n = num(4-2*ep);
 *         repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
                 #call ACCU(D5)
                 
@@ -2532,7 +2506,7 @@ endif;
         
         #call mltadD5(s1m,s2m,s3m,s4m,s5m,p6)
         
-        id n = num(4-2*ep);
+*         id n = num(4-2*ep);
 * repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
         #call ACCU(D5)
         
@@ -2631,7 +2605,8 @@ endif;
         Multiply int0/intd5;
 
         else;
-        multiply 1/(1-1);
+*         multiply 1/(1-1);
+        exit "Unknown simpler topology";        
         endif;
         endif;
 *#include expandnomdeno
@@ -2691,7 +2666,7 @@ endif;
         - 2*`p3'.`p3'^-1*n5*`s6m'^-1
         + `p3'.`p3'^-1*M^2*(n6-1)
         - `p3'.`p3'^-1*(n6-1)*`s6m'^-1
-        + `p3'.`p3'^-1*`s6m'^-1*n
+        + `p3'.`p3'^-1*`s6m'^-1*num(d)
         );
 
         redefine i "0";
@@ -2712,7 +2687,7 @@ endif;
         + 2*`p3'.`p3'^-1*n6*`s1m'^-1
         + `p3'.`p3'^-1*(n1-1)*`s1m'^-1
         - `p3'.`p3'^-1*(n1-1)*`s2m'^-1
-        - 2*`p3'.`p3'^-1*`s1m'^-1*n
+        - 2*`p3'.`p3'^-1*`s1m'^-1*num(d)
         + 2*`p3'.`p3'^-1*`s1m'^-1
         );
 
@@ -2735,7 +2710,7 @@ endif;
         + `p3'.`p3'^-1*n6*`s2m'^-1
         + `p3'.`p3'^-1*M^2*(n2-1)
         - `p3'.`p3'^-1*(n2-1)*`s1m'^-1
-        - 1/2*`p3'.`p3'^-1*`s2m'^-1*n
+        - 1/2*`p3'.`p3'^-1*`s2m'^-1*num(d)
         + `p3'.`p3'^-1*`s2m'^-1
         );
 
@@ -2764,7 +2739,7 @@ endif;
         - `p3'.`p3'^-1*`p5'.`p5'*n4*`s4m'*`s6m'^-1
         + `p3'.`p3'^-1*`p5'.`p5'*n6*M^2*`s6m'
         - `p3'.`p3'^-1*`p5'.`p5'*n6
-        - 1/2*`p3'.`p3'^-1*`p5'.`p5'*n
+        - 1/2*`p3'.`p3'^-1*`p5'.`p5'*num(d)
         + `p3'.`p3'^-1*M^2*(n5-1)
         - `p3'.`p3'^-1*(n5-1)*`s6m'^-1
         );
@@ -2822,7 +2797,7 @@ endif;
         - 2*`p3'.`p3'^-1*n5*`s6m'^-1
         + `p3'.`p3'^-1*M^2*(n6-1)
         - `p3'.`p3'^-1*(n6-1)*`s6m'^-1
-        + `p3'.`p3'^-1*`s6m'^-1*n
+        + `p3'.`p3'^-1*`s6m'^-1*num(d)
         );
 
         elseif ( (match(`s1m'^2*`s2m'*`p3'.`p3'*`s4m'          *`s6m')>0) &&
@@ -2845,7 +2820,7 @@ endif;
         + 2*`p3'.`p3'^-1*n6*`s1m'^-1
         + `p3'.`p3'^-1*(n1-1)*`s1m'^-1
         - `p3'.`p3'^-1*(n1-1)*`s2m'^-1
-        - 2*`p3'.`p3'^-1*`s1m'^-1*n
+        - 2*`p3'.`p3'^-1*`s1m'^-1*num(d)
         + 2*`p3'.`p3'^-1*`s1m'^-1
         );
 
@@ -2866,7 +2841,7 @@ endif;
         + `p3'.`p3'^-1*n6*`s2m'^-1
         + `p3'.`p3'^-1*M^2*(n2-1)
         - `p3'.`p3'^-1*(n2-1)*`s1m'^-1
-        - 1/2*`p3'.`p3'^-1*`s2m'^-1*n
+        - 1/2*`p3'.`p3'^-1*`s2m'^-1*num(d)
         + `p3'.`p3'^-1*`s2m'^-1
         );
 
@@ -2901,7 +2876,7 @@ endif;
         - `p3'.`p3'^-1*`p5'.`p5'*n4*`s4m'*`s6m'^-1
         + `p3'.`p3'^-1*`p5'.`p5'*n6*M^2*`s6m'
         - `p3'.`p3'^-1*`p5'.`p5'*n6
-        - 1/2*`p3'.`p3'^-1*`p5'.`p5'*n
+        - 1/2*`p3'.`p3'^-1*`p5'.`p5'*num(d)
         + `p3'.`p3'^-1*M^2*(n5-1)
         - `p3'.`p3'^-1*(n5-1)*`s6m'^-1
         );
@@ -2958,7 +2933,7 @@ endif;
         + `p3'.`p3'*n2
         + 2*`p3'.`p3'*n5
         + `p3'.`p3'*(n3-1)
-        - `p3'.`p3'*n
+        - `p3'.`p3'*num(d)
         + `p5'.`p5'*(n3-1)
         );
 
@@ -2985,7 +2960,7 @@ endif;
         - 1/2*n3*`s2m'^-1
         - 1/2*n5*`s2m'^-1
         - (n2-1)*`s2m'^-1
-        + 1/2*`s2m'^-1*n
+        + 1/2*`s2m'^-1*num(d)
         + 1/2*`p3'.`p3'^-1*n3*`s1m'^-1*`s2m'^-1
         - 1/2*`p3'.`p3'^-1*n3*`s2m'^-2
         - 1/2*`p5'.`p5'^-1*n5*`s2m'^-2
@@ -3057,7 +3032,7 @@ endif;
         - 1/2*n4*`s6m'^-1
         - n5*`s6m'^-1
         - (n6-1)*`s6m'^-1
-        + `s6m'^-1*n
+        + `s6m'^-1*num(d)
         - 1/2*`p3'.`p3'*n1*`s1m'*`s6m'^-1
         - 1/2*`p5'.`p5'*n4*`s4m'*`s6m'^-1
         );
@@ -3142,171 +3117,145 @@ endif;
 * massless indices <0
 *
         #do i=1,1
-
+                
                 #call redD4n35m(s1m,s2m,p3,s4m,p5,s6m)
                 #call ACCU(D4n35m)
-
-#enddo
-
-#call mltadD4(s1m,s2m,p3,s4m,p5,s6m)
-* #include expandnomdeno
-
-**** As "redD4n35m" has a complicated structure the terms which are
-**** already reduced have to be split from the rest.
-
-***G diad4h1 = diad4;
-***.sort
-***drop diad4;
-***.sort
-***hide diad4h1;
-***.sort
-
-***G diad4h2 = diad4h1;
-***if ( (match(s1m*s2m*s4m*s6m)>0) && 
-***   ( ( (count(p3.p3,1)>0) && (count(p5.p5,1)!=0) ) ||
-***     ( (count(p5.p5,1)>0) && (count(p3.p3,1)!=0) ) ) ) discard;
-***.sort
-***hide diad4h2;
-***.sort
-
-***G diad4h3 = diad4h1 - diad4h2;
-***.sort
-
-#do i=1,1
-
-        #call redD4n35m(s1m,s2m,p3,s4m,p5,s6m)
-        #call ACCU(D4n35m)
-
-#enddo
-
-#call mltadD4(s1m,s2m,p3,s4m,p5,s6m)
-
-* AFP
-* #include expandnomdeno
-
-***G diad4 = diad4h2 + diad4h3;
-***.sort
-
-***unhide diad4h1,diad4h2,diad4h3;
-***.sort
-***drop diad4h1,diad4h2,diad4h3;
-***.sort
-
+                
+        #enddo
+        
+        #call mltadD4(s1m,s2m,p3,s4m,p5,s6m)
+        
+        #do i=1,1
+                
+                #call redD4n35m(s1m,s2m,p3,s4m,p5,s6m)
+                #call ACCU(D4n35m)
+                
+        #enddo
+        
+        #call mltadD4(s1m,s2m,p3,s4m,p5,s6m)
+        
+        
 *
 * massless indices >0
 *
-
-#do i=1,1
-
-        #call redD4n35(s1m,s2m,p3,s4m,p5,s6m)
-        #call redD4n2(s1m,s2m,p3,s4m,p5,s6m)
-        #call ACCU(D4n235)
-
-#enddo
-
-#call mltadD4(s1m,s2m,p3,s4m,p5,s6m)
-
-* #include expandnomdeno
-
-#do i=1,1
-
-        #call redD4n14(s1m,s2m,p3,s4m,p5,s6m)
-        .sort
-
-#enddo
-
-#call mltadD4(s1m,s2m,p3,s4m,p5,s6m)
-
-#call ACCU(D4)
-
-#do i=1,1
-
-        #call redD4n35(s1m,s2m,p3,s4m,p5,s6m)
-        #call redD4n2(s1m,s2m,p3,s4m,p5,s6m)
-        #call ACCU(D4n235)
-
-#enddo
-
-#call mltadD4(s1m,s2m,p3,s4m,p5,s6m)
+        
+        #do i=1,1
+                
+                #call redD4n35(s1m,s2m,p3,s4m,p5,s6m)
+                #call redD4n2(s1m,s2m,p3,s4m,p5,s6m)
+                #call ACCU(D4n235)
+                
+        #enddo
+        
+        #call mltadD4(s1m,s2m,p3,s4m,p5,s6m)
 
 * #include expandnomdeno
 
-#do i=1,1
+        #do i=1,1
+                
+                #call redD4n14(s1m,s2m,p3,s4m,p5,s6m)
+                .sort
+                
+        #enddo
+        
+        #call mltadD4(s1m,s2m,p3,s4m,p5,s6m)
+        
+        #call ACCU(D4)
+        
+        #do i=1,1
+                
+                #call redD4n35(s1m,s2m,p3,s4m,p5,s6m)
+                #call redD4n2(s1m,s2m,p3,s4m,p5,s6m)
+                #call ACCU(D4n235)
+                
+        #enddo
+        
+        #call mltadD4(s1m,s2m,p3,s4m,p5,s6m)
+        
+* #include expandnomdeno
+        
+        #do i=1,1
+                
+                #call redD4n6(s1m,s2m,p3,s4m,p5,s6m)
+                .sort
+                
+        #enddo
 
-        #call redD4n6(s1m,s2m,p3,s4m,p5,s6m)
+        #call mltadD4(s1m,s2m,p3,s4m,p5,s6m)
+        
+        #call ACCU(D4)
+        
+        if ( count(intd4,1) );        
+        if (count(s4m,1) < count(s1m,1)) 
+        multiply replace_(s1m,s4m,s4m,s1m,p3,p5,p5,p3);
+        
+        if ( (count(s1m,1)>0) && (count(s4m,1)>0) );
+        if (count(p3,1) < count(p5,1)) 
+        multiply replace_(s1m,s4m,s4m,s1m,p3,p5,p5,p3);
+        endif;
+        
+        if (count(p5,1)==0) multiply replace_(s1m,s4m,s4m,s1m,p3,p5,p5,p3);
+        endif;
         .sort
-
-#enddo
-
-#call mltadD4(s1m,s2m,p3,s4m,p5,s6m)
-
-#call ACCU(D4)
-
-if ( count(intd4,1) );        
-if (count(s4m,1) < count(s1m,1)) 
-multiply replace_(s1m,s4m,s4m,s1m,p3,p5,p5,p3);
-
-if ( (count(s1m,1)>0) && (count(s4m,1)>0) );
-if (count(p3,1) < count(p5,1)) 
-multiply replace_(s1m,s4m,s4m,s1m,p3,p5,p5,p3);
-endif;
-
-if (count(p5,1)==0) multiply replace_(s1m,s4m,s4m,s1m,p3,p5,p5,p3);
-endif;
-.sort
-
-#call ACCU(D4)
-
+        
+        #call ACCU(D4)
+        
 ************************************************************
-
+        
 * identify simple integrals
+        
+        if ( count(intd4,1) );        
+        if ( (count(s6m,1)<=0) && (count(s2m,1)>0) );
+        id 1/s6m=p6.p6+M^2; 
+        id p6=p4-p1;
+        id p5=-p5;
+        multiply replace_(p1,p5,p2,p4,p3,p2,p4,p6,p5,p1,
+        s1m,s5m,s2m,s4m,s4m,s6m);
+        multiply, intbm/intd4;
 
-if ( count(intd4,1) );        
-if ( (count(s6m,1)<=0) && (count(s2m,1)>0) );
-id 1/s6m=p6.p6+M^2; 
-id p6=p4-p1;
-id p5=-p5;
-multiply replace_(p1,p5,p2,p4,p3,p2,p4,p6,p5,p1,
-s1m,s5m,s2m,s4m,s4m,s6m);
-multiply, intbm/intd4;
-elseif ( (count(s2m,1)<=0) );
-id 1/s2m=p2.p2+M^2;
-id p2=p1+p3; 
-id p3=-p3;
-id p4=-p4;
-id p6=-p6;
-multiply replace_(p3,p4,p4,p3,p6,p2,
-s4m,s3m,s6m,s2m);
-multiply, intdm/intd4;
-elseif ( (count(s1m,1)<=0) );
-id 1/s1m=p1.p1+M^2;
-id p1=p4-p6; 
-id p5=-p5;
-multiply replace_(p2,p4,p3,p5,p4,p6,p5,p2,p6,p3,
-s2m,s4m,s4m,s6m,s6m,s3m);
+        elseif ( (count(s2m,1)<=0) );
+        id 1/s2m=p2.p2+M^2;
+        id p2=p1+p3; 
+        id p3=-p3;
+        id p4=-p4;
+        id p6=-p6;
+        multiply replace_(p3,p4,p4,p3,p6,p2,
+        s4m,s3m,s6m,s2m);
+        multiply, intdm/intd4;
 
+        elseif ( (count(s1m,1)<=0) );
+        id 1/s1m=p1.p1+M^2;
+        id p1=p4-p6; 
+        id p5=-p5;
+        multiply replace_(p2,p4,p3,p5,p4,p6,p5,p2,p6,p3,
+        s2m,s4m,s4m,s6m,s6m,s3m);
+        
 * needed because of topBN1
-id 1/s3m=p3.p3+M^2;
-id 1/s4m=p4.p4+M^2;
-id 1/s6m=p6.p6+M^2;
+        id 1/s3m=p3.p3+M^2;
+        id 1/s4m=p4.p4+M^2;
+        id 1/s6m=p6.p6+M^2;
+        
+        multiply, intbn1/intd4;
 
-multiply, intbn1/intd4;
-elseif ( (count(p3,1)==0) );
-id p5=-p5;
-multiply replace_(p1,p3,p2,p4,p4,p2,p6,p1,
-s1m,s3m,s2m,s4m,s4m,s2m,s6m,s1m);
-multiply, inte4/intd4;
-elseif ( (count(s1m,1)==1) && (count(s2m,1)==1)    && (count(p3.p3,1)==-1) && 
-(count(s4m,1)==1) && (count(p5.p5,1)==-1) && (count(s6m,1)==1) );
-id s1m*s2m/p3.p3*s4m/p5.p5*s6m = miD4;
-Multiply int0/intd4;
-else;
-multiply 1/(1-1);
-endif;
-endif;
-#call ACCU(D4)
+        elseif ( (count(p3,1)==0) );
+        id p5=-p5;
+        multiply replace_(p1,p3,p2,p4,p4,p2,p6,p1,
+        s1m,s3m,s2m,s4m,s4m,s2m,s6m,s1m);
+        multiply, inte4/intd4;
 
-#message - done
+        elseif ( (count(s1m,1)==1) && (count(s2m,1)==1)    && (count(p3.p3,1)==-1) && 
+        (count(s4m,1)==1) && (count(p5.p5,1)==-1) && (count(s6m,1)==1) );
+        id s1m*s2m/p3.p3*s4m/p5.p5*s6m = miD4;
+        Multiply int0/intd4;
+
+        else;
+*         multiply 1/(1-1);
+        exit "Unknown simpler topology";
+        endif;
+        endif;
+        #call ACCU(D4)
+        
+        #message - done
 #endprocedure
 
 
@@ -3387,7 +3336,7 @@ endif;
         + `p4'.`p4'^-1*n4*`s2m'^-1
         - `p4'.`p4'^-1*n5*`s2m'^-1
         + `p4'.`p4'^-1*n6*`s2m'^-1
-        - 1/2*`p4'.`p4'^-1*`s2m'^-1*n
+        - 1/2*`p4'.`p4'^-1*`s2m'^-1*num(d)
         + `p4'.`p4'^-1*`s2m'^-1
         );
 
@@ -3414,7 +3363,7 @@ endif;
         + `p4'.`p4'^-1*n4*`s1m'^-1
         + `p4'.`p4'^-1*n5*`s1m'^-1
         - `p4'.`p4'^-1*n6*`s1m'^-1
-        - 1/2*`p4'.`p4'^-1*`s1m'^-1*n
+        - 1/2*`p4'.`p4'^-1*`s1m'^-1*num(d)
         + `p4'.`p4'^-1*`s1m'^-1
         );
 
@@ -3457,7 +3406,7 @@ endif;
         + 1/2*`p5'.`p5'*n3*`s1m'^-1*`s3m'
         - 1/2*`p5'.`p5'*n3*`s2m'^-1*`s3m'
         + 2*`p5'.`p5'*(n5-1)
-        - 1/2*`p5'.`p5'*n
+        - 1/2*`p5'.`p5'*num(d)
         + 1/2*`p6'.`p6'*(n5-1)
         );
 
@@ -3489,7 +3438,7 @@ endif;
         + n5*`s1m'^-1
         - n6*`s1m'^-1
         - (n1-1)*`s1m'^-1
-        + 1/2*`s1m'^-1*n
+        + 1/2*`s1m'^-1*num(d)
         - `p4'.`p4'*n2*`s1m'^-1*`s2m'
         + `p5'.`p5'*n2*`s1m'^-1*`s2m'
         + `p5'.`p5'*n3*`s1m'^-1*`s3m'
@@ -3587,7 +3536,7 @@ endif;
         #call mltadDM(s1m,s2m,s3m,p4,p5,p6)
 * #include expandnomdeno
 
-        id n = num(4-2*ep);
+*         id n = num(4-2*ep);
 *         id acc(x1?)*acc(x2?) = acc(x1*x2);
         #call ACCU(DM)
 
@@ -3600,7 +3549,7 @@ endif;
 
         #call mltadDM(s1m,s2m,s3m,p4,p5,p6)
 
-        id n = num(4-2*ep);
+*         id n = num(4-2*ep);
 *         id acc(x1?)*acc(x2?) = acc(x1*x2);
         #call ACCU(DM)
 
@@ -3611,7 +3560,7 @@ endif;
 
         #call mltadDM(s1m,s2m,s3m,p4,p5,p6)
 
-        id n = num(4-2*ep);
+*         id n = num(4-2*ep);
 *         id acc(x1?)*acc(x2?) = acc(x1*x2);
         #call ACCU(DM)
 
@@ -3656,6 +3605,7 @@ endif;
         id p5=-p5;
         multiply replace_(p2,p6,p3,p4,p4,p3,p5,p1,p6,p5,s2m,s6m,s3m,s4m);
         multiply, intbn2/intdm;
+
         elseif ( (count(s1m,1) >0)   && (count(s2m,1) >0)   && (count(s3m,1) >0) && 
         (count(p4.p4,1) <0) && (count(p5.p5,1) <0) && (count(p6.p6,1)==0) ); 
 
@@ -3664,11 +3614,14 @@ endif;
         if (count(s1m,1) > count(s3m,1))
         multiply replace_(p1,p3,p3,p1,s1m,s3m,s3m,s1m);
         multiply, inte3/intdm;
+
         elseif ( (count(s1m,1)==1)   && (count(s2m,1)==1)   && (count(s3m,1)==1) && 
         (count(p4.p4,1)==-1) && (count(p5.p5,1)==-1) && (count(p6.p6,1)==-1));
         id s1m*s2m*s3m/p4.p4/p5.p5/p6.p6 = miDM*int0/intdm;
+
         else;
-        multiply 1/(1-1);
+*         multiply 1/(1-1);
+        exit "Unknown simpler topology";
         endif;
         endif;
         #call ACCU(DM)
@@ -3739,7 +3692,7 @@ endif;
         + 1/2*`p6'.`p6'*n4
         - 1/2*`p6'.`p6'*n5
         + 1/2*`p6'.`p6'*(n6-1)
-        - 1/4*`p6'.`p6'*n
+        - 1/4*`p6'.`p6'*num(d)
         );
 
         redefine i "0";
@@ -3772,7 +3725,7 @@ endif;
         - 1/2*n5*`s1m'^-1
         - 1/2*n6*`s1m'^-1
         - (n1-1)*`s1m'^-1
-        + 3/4*`s1m'^-1*n
+        + 3/4*`s1m'^-1*num(d)
         + 1/2*`p3'.`p3'*`p6'.`p6'^-1*n6*`s1m'^-1
         + 1/2*`p3'.`p3'*n2*`s1m'^-1*`s2m'
         - 1/2*`p4'.`p4'*`p6'.`p6'^-1*n6*`s1m'^-1
@@ -3857,7 +3810,7 @@ endif;
 
 * #include expandnomdeno
 
-        id n=num(4-2*ep);
+*         id n=num(4-2*ep);
 *         id acc(x1?)*acc(x2?)=acc(x1*x2);
         #call ACCU(DN)
 
@@ -3875,56 +3828,60 @@ endif;
                         .sort
                 #enddo
 
-                id n=num(4-2*ep);
+*                 id n=num(4-2*ep);
 *                 id acc(x1?)*acc(x2?)=acc(x1*x2);
                 #call ACCU(DN)
-
-#enddo
-
-#call mltadDN(s1m,s2m,p3,p4,p5,p6)
-
-id n=num(4-2*ep);
+                
+        #enddo
+        
+        #call mltadDN(s1m,s2m,p3,p4,p5,p6)
+        
+*         id n=num(4-2*ep);
 * id acc(x1?)*acc(x2?)=acc(x1*x2);
-#call ACCU(DN)
-
+        #call ACCU(DN)
+        
 ************************************************************
-
+        
 * identify simple integrals
+        
+        if ( count(intdn,1) );
+        if (count(s2m,1)<=0) multiply replace_(p6,p5,p5,p6,s1m,s2m,s2m,s1m);
+        if (count(p4.p4,1)>=0) multiply replace_(p4,p3,p3,p4,s1m,s2m,s2m,s1m);
+        if (count(p5.p5,1)>=0) multiply replace_(p5,p3,p3,p5,p4,p6,p6,p4);
+        if (count(p6.p6,1)>=0) multiply replace_(p6,p3,p3,p6,p4,p5,p5,p4);
+        endif;
+        .sort
+        
+        if ( count(intdn,1) );
+        if ( (count(s1m,1)<=0) );
+        id 1/s1m=p1.p1+M^2; 
+        id p1=p4-p5;
+        id p3=-p3;
+        id p5=-p5;
+        multiply replace_(p2,p6,p4,p2,p5,p4,p6,p1,
+        s2m,s6m);
+        multiply, intm3/intdn;
 
-if ( count(intdn,1) );
-if (count(s2m,1)<=0) multiply replace_(p6,p5,p5,p6,s1m,s2m,s2m,s1m);
-if (count(p4.p4,1)>=0) multiply replace_(p4,p3,p3,p4,s1m,s2m,s2m,s1m);
-if (count(p5.p5,1)>=0) multiply replace_(p5,p3,p3,p5,p4,p6,p6,p4);
-if (count(p6.p6,1)>=0) multiply replace_(p6,p3,p3,p6,p4,p5,p5,p4);
-endif;
-.sort
+        elseif ( (count(p3.p3,1)>=0) );
+        id p3=p5-p2;
+        id p6=-p6;
+        multiply replace_(p1,p3,p4,p5,p2,p4,p5,p2,p6,p1,
+        s1m,s3m,s2m,s4m);
+        multiply, intbn1/intdn;
 
-if ( count(intdn,1) );
-if ( (count(s1m,1)<=0) );
-id 1/s1m=p1.p1+M^2; 
-id p1=p4-p5;
-id p3=-p3;
-id p5=-p5;
-multiply replace_(p2,p6,p4,p2,p5,p4,p6,p1,
-s2m,s6m);
-multiply, intm3/intdn;
-elseif ( (count(p3.p3,1)>=0) );
-id p3=p5-p2;
-id p6=-p6;
-multiply replace_(p1,p3,p4,p5,p2,p4,p5,p2,p6,p1,
-s1m,s3m,s2m,s4m);
-multiply, intbn1/intdn;
-elseif ( (count(s1m,1)==1)   && (count(s2m,1)==1)   && (count(p3.p3,1)==-1) && 
-(count(p4.p4,1)==-1) && (count(p5.p5,1)==-1) && (count(p6.p6,1)==-1));
-id s1m*s2m/p3.p3/p4.p4/p5.p5/p6.p6 = miDN*int0/intdn;
-else;
-multiply 1/(1-1);
-endif;
-endif;
-#call ACCU(DN)
+        elseif ( (count(s1m,1)==1)   && (count(s2m,1)==1)   && (count(p3.p3,1)==-1) && 
+        (count(p4.p4,1)==-1) && (count(p5.p5,1)==-1) && (count(p6.p6,1)==-1));
+        id s1m*s2m/p3.p3/p4.p4/p5.p5/p6.p6 = miDN*int0/intdn;
 
-#message - done
-
+        else;
+*         multiply 1/(1-1);
+        exit "Unknown simpler topology";
+        endif;
+        endif;
+        #call ACCU(DN)
+        
+        #message - done
+        
 #endprocedure        
 
 
@@ -4125,7 +4082,7 @@ endif;
         - n4*`s2m'^-1
         - n5*`s2m'^-1
         - (n2-1)*`s2m'^-1
-        + 3/2*`s2m'^-1*n
+        + 3/2*`s2m'^-1*num(d)
         );
 
         redefine i "0";
@@ -4154,7 +4111,7 @@ endif;
         - (n4-1)*`s2m'^-1
         + 2*`p4'.`p4'*n5
         + `p4'.`p4'*(n4-1)
-        - `p4'.`p4'*n
+        - `p4'.`p4'*num(d)
         + `p5'.`p5'*(n4-1)
         );
 
@@ -4186,7 +4143,7 @@ endif;
         + 1/3*(n3-1)*`s1m'^-1
         - 1/3*(n3-1)*`s2m'^-1
         - (n3-1)*`s3m'^-1
-        + 1/3*`s3m'^-1*n
+        + 1/3*`s3m'^-1*num(d)
         );
 
         redefine i "0";
@@ -4273,7 +4230,7 @@ endif;
 
         #do i=1,1
                 #call redE3n2(s1m,s2m,s3m,p4,p5)
-                id n = num(4-2*ep);
+*                 id n = num(4-2*ep);
                 #call ACCU(E3)
                 .sort
         #enddo
@@ -4282,26 +4239,26 @@ endif;
 
         #do i=1,1
                 #call redE3n45(s1m,s2m,s3m,p4,p5)
-                id n = num(4-2*ep);
+*                 id n = num(4-2*ep);
                 #call ACCU(E3)
                 .sort
         #enddo
 
         #call mltadE3(s1m,s2m,s3m,p5,p5)
 
-        id n = num(4-2*ep);
+*         id n = num(4-2*ep);
         #call ACCU(E3)
 
         #do i=1,1
                 #call redE3n13(s1m,s2m,s3m,p4,p5)
-                id n = num(4-2*ep);
+*                 id n = num(4-2*ep);
                 #call ACCU(E3)
                 .sort
         #enddo
 
         #call mltadE3(s1m,s2m,s3m,p5,p5)
 
-        id n = num(4-2*ep);
+*         id n = num(4-2*ep);
         #call ACCU(E3)
         .sort
 
@@ -4926,7 +4883,7 @@ endif;
                 =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
                 *`x3'^n3 * `x4'^n4  * `x5'^n5 * `x6'^n6
                 *(
-                num( -2*4 + 4*(n3-1)+ 4*ep )/4/M^2/(n3-1) /x3
+                num( -2*4 + 4*(n3-1)+ 4*(2-d/2) )/4/M^2/(n3-1) /x3
                 -1/4/M^2/(n3-2)/(n3-1) * dala/x3^2
                 )
                 ;
@@ -4974,7 +4931,7 @@ endif;
                 *(-1)/(n5-1)
                 *(
                 ( n3*`x3'+n4*`x4'+n6*`x6' )*(-1)
-                -1/M^2*num(6-n1-n2-n3-n4-(n5-1)-n6-3*ep)
+                -1/M^2*nom(6-n1-n2-n3-n4-(n5-1)-n6,-3)
                 )
                 ;
                 
@@ -5017,7 +4974,7 @@ endif;
                 * `x3'^n3 * `x4'^(n4-1) *(-1) * `x5'^n5  * `x6'^n6
                 *1/2/(n4-1)/M^2
                 *(
-                +num(4-2*(n4-1)-n1-n6-2*ep)
+                +nom(4-2*(n4-1)-n1-n6,-2)
                 +n1/`p1'.`p1'*(1/`x5'-1/`x4')
                 +n6*`x6'     *(`p2'.`p2'-1/`x4'+2*M^2)
                 )
@@ -5051,8 +5008,8 @@ endif;
                 * `x3'^n3? * `x4'^n4? * `x5'^n5? * `x6'^n6?
                 =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
                 * `x3'^n3 * `x4'^n4  * `x5'^n5  * `x6'^n6
-                *M^2*den( 
-                + 2*n1 + 2*n2 + 3*n6 - 7+ep*6
+                *M^2*deno( 
+                + 2*n1 + 2*n2 + 3*n6 - 7,6
                 )        
                 *(-1)
                 *(
@@ -5068,9 +5025,9 @@ endif;
                 
                 - p1.p1^-1*x4*x5^-1 * ( 2 )
                 
-                + p1.p1^-1*x6^-1 * 1/M^2*num( - n2- n6 + 3 -ep*2)
+                + p1.p1^-1*x6^-1 * 1/M^2*nom( - n2- n6 + 3, -2)
                 
-                - p1.p1^-1 * num( 4 - 8*n1 - 4*n6 -ep*8 )
+                - p1.p1^-1 * nom( 4 - 8*n1 - 4*n6, -8 )
                 
                 
                 ) ;
@@ -5097,8 +5054,8 @@ endif;
                 * `x3'^n3? * `x4'^n4? * `x5'^n5? * `x6'^n6?
                 =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
                 * `x3'^n3 * `x4'^n4  * `x5'^n5  * `x6'^n6
-                *den(
-                + 12  - 8*n1 - 4*n6 - ep*8
+                *deno(
+                + 12  - 8*n1 - 4*n6, -8
                 )
                 *(-1)
                 *(
@@ -5110,9 +5067,9 @@ endif;
                 
                 + x4*x5^-1 * ( 2 )
                 
-                - x6^-1 * 1/M^2*num( - n2- n6 + 3 - ep*2 )
+                - x6^-1 * 1/M^2*nom( - n2- n6 + 3 , -2 )
                 
-                - p1.p1 * 1/M^2*num( + 2*n1 + 2*n2 + 3*n6 - 9+ep*6 )
+                - p1.p1 * 1/M^2*nom( + 2*n1 + 2*n2 + 3*n6 - 9,6 )
                 
                 - p2.p2^-1*x3^-1*x6^-1 * (  - n2*M^-2 )
                 
@@ -5144,8 +5101,8 @@ endif;
                 * `x3'^n3? * `x4'^n4? * `x5'^n5? * `x6'^n6?
                 =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
                 * `x3'^n3 * `x4'^n4  * `x5'^n5  * `x6'^n6
-                *M^2*den(
-                + 2*n1 + 2*n2 + 3*n6 - 7 + ep*6
+                *M^2*deno(
+                + 2*n1 + 2*n2 + 3*n6 - 7, 6
                 )
                 *(-1)
                 *(
@@ -5161,9 +5118,9 @@ endif;
                 
                 + p2.p2^-1*x4^-1 * (  - n6*M^-2 + M^-2 )
                 
-                + p2.p2^-1*x6^-1 * 1/M^2*num(  - n1 - n6 + 3 - ep*2 )
+                + p2.p2^-1*x6^-1 * 1/M^2*nom(  - n1 - n6 + 3, -2 )
                 
-                - p2.p2^-1 * num( 4 - 8*n2 - 4*n6 - ep*8 )
+                - p2.p2^-1 * nom( 4 - 8*n2 - 4*n6 ,-8 )
                 
                 
                 ) ;
@@ -5189,8 +5146,8 @@ endif;
                 * `x3'^n3? * `x4'^n4? * `x5'^n5? * `x6'^n6?
                 =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
                 * `x3'^n3 * `x4'^n4  * `x5'^n5  * `x6'^n6
-                *den(
-                + 12 - 8*n2 - 4*n6 - ep*8
+                *deno(
+                + 12 - 8*n2 - 4*n6, -8
                 )
                 *(-1)
                 *(
@@ -5202,13 +5159,13 @@ endif;
                 
                 - x4^-1 * (  - n6*M^-2 + M^-2 )
                 
-                - x6^-1 * 1/M^2*num(   - n1 - n6 + 3 - ep*2 )
+                - x6^-1 * 1/M^2*nom(   - n1 - n6 + 3 , -2)
                 
                 - p1.p1^-1*x4^-1*x6^-1 * (  - n1*M^-2 )
                 
                 - p1.p1^-1*x5^-1*x6^-1 * ( n1*M^-2 )
                 
-                - p2.p2 * 1/M^2*num(  + 2*n1 + 2*n2 + 3*n6 - 9 + ep*6 )
+                - p2.p2 * 1/M^2*nom(  + 2*n1 + 2*n2 + 3*n6 - 9 ,6 )
                 
                 
                 );
@@ -5259,33 +5216,33 @@ endif;
                 * `x3'^n3? * `x4'^n4? * `x5'^n5? * `x6'^n6?
                 =  1/`p1'.`p1'^n1 *1/`p2'.`p2'^n2 
                 * `x3'^n3 * `x4'^n4  * `x5'^n5  * `x6'^n6
-                *1/8/M^2/(n6-1)*den(4-n6-2*ep)*den(n6-3+2*ep)*den(n6-3+2*ep)
+                *1/8/M^2/(n6-1)*deno(4-n6,-2)*deno(n6-3,2)*deno(n6-3,2)
                 *(-1)
                 *(
-                3*M**2*`x3'*`x4'*num(3 - n6-2*ep)*num(-4 + n6+2*ep)/(`x5'*`x6') 
+                3*M**2*`x3'*`x4'*nom(3 - n6,-2)*nom(-4 + n6,2)/(`x5'*`x6') 
                 +
-                3*M**2*`x4'*`x5'*num(3 - n6-2*ep)*num(-4 + n6+2*ep)/(`x3'*`x6') 
+                3*M**2*`x4'*`x5'*nom(3 - n6,-2)*nom(-4 + n6,2)/(`x3'*`x6') 
                 +
-                M**2*(-1 + n6)*`x3'*num(-4 + n6+2*ep)*num(-3 + n6+2*ep)/`x5' 
+                M**2*(-1 + n6)*`x3'*nom(-4 + n6,2)*nom(-3 + n6,2)/`x5' 
                 +
-                M**2*(-1 + n6)*`x5'*num(-4 + n6+2*ep)*num(-3 + n6+2*ep)/`x3' 
+                M**2*(-1 + n6)*`x5'*nom(-4 + n6,2)*nom(-3 + n6,2)/`x3' 
                 -
-                (-2 + n6)*`x3'*num(-4 + n6+2*ep)*num(-3 + n6+2*ep)/(`x5'*`x6') 
+                (-2 + n6)*`x3'*nom(-4 + n6,2)*nom(-3 + n6,2)/(`x5'*`x6') 
                 -
-                (-2 + n6)*`x5'*num(-4 + n6+2*ep)*num(-3 + n6+2*ep)/(`x3'*`x6') 
+                (-2 + n6)*`x5'*nom(-4 + n6,2)*nom(-3 + n6,2)/(`x3'*`x6') 
                 +
-                M**2*(-1 + n6)*n6*`x6'*num(-4 + n6+2*ep)*num(-3 + n6+2*ep)/`x4' 
+                M**2*(-1 + n6)*n6*`x6'*nom(-4 + n6,2)*nom(-3 + n6,2)/`x4' 
                 +
-                (-2 + n6)*num(-5 + n6+3*ep)*num(-4 + n6+2*ep)*num(-3 + n6+2*ep)/
+                (-2 + n6)*nom(-5 + n6,3)*nom(-4 + n6,2)*nom(-3 + n6,2)/
                 (M**2*`x4'*`x6') 
                 +       
-                num(-5 + n6+3*ep)*num(-4 + n6+2*ep)**2*num(-3 + n6+2*ep)/
+                nom(-5 + n6,3)*nom(-4 + n6,2)**2*nom(-3 + n6,2)/
                 (M^2*`x6'^2) 
                 -    
-                (-1 + n6)*num(-4 + n6+2*ep)*num(-3 + n6+2*ep)*
-                num(-6 + 2*n6+3*ep)/`x4' 
+                (-1 + n6)*nom(-4 + n6,2)*nom(-3 + n6,2)*
+                nom(-6 + 2*n6,3)/`x4' 
                 -
-                num(-4 + n6+2*ep)*num(-3 + n6+2*ep)*
+                nom(-4 + n6,2)*nom(-3 + n6,2)*
                 nom(-58 + 41*n6 - 7*n6^2,54 - 20*n6,-12)/`x6'
                 )
                 
@@ -5369,1374 +5326,1560 @@ endif;
 * and it's dalambertian upto dala^11
 * 
 #procedure BNd0Exact
-id,only intbn*dala^0*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^4*miBN*rat(1,1) );
+id,only intbn*dala^0*x3^1*x4^1*x5^1*x6^1 =  + M^4*miBN*rat(1,1);
 
 
-id,only intbn*dala^0*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^2*miBN*rat(3*ep - 2,4
-         ) );
+id,only intbn*dala^0*x3^1*x4^1*x5^1*x6^2 =  + M^2*miBN*rat( - 3*d + 8,8);
 
 
-id,only intbn*dala^0*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( miBN*rat(18*ep^3 - 27*
-         ep^2 + 13*ep - 2,32*ep) + Gam(1,1)^3*rat(1,8*ep^4) );
+id,only intbn*dala^0*x3^1*x4^1*x5^2*x6^2 =  + miBN*rat(9*d^3 - 81*d^2 + 242*d
+          - 240,64*d - 256) + Gam(1,1)^3*rat(2,d^4 - 16*d^3 + 96*d^2 - 256*d
+          + 256);
 
 
-id,only intbn*dala^0*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-2*miBN*rat(54*ep^4
-          - 135*ep^3 + 120*ep^2 - 45*ep + 6,128*ep) + Gam(1,1)^3*M^-2*rat(11*
-         ep - 3,32*ep^4) );
+id,only intbn*dala^0*x3^1*x4^2*x5^2*x6^2 =  + M^-2*miBN*rat( - 27*d^4 + 297*
+         d^3 - 1212*d^2 + 2172*d - 1440,512*d - 2048) + Gam(1,1)^3*M^-2*rat(
+          - 11*d + 38,4*d^4 - 64*d^3 + 384*d^2 - 1024*d + 1024);
 
 
-id,only intbn*dala^0*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-4*miBN*rat(324*ep^6
-          - 864*ep^5 + 315*ep^4 + 312*ep^3 - 147*ep^2 - 24*ep + 12,1024*ep^2
-          + 1024*ep) + Gam(1,1)^3*M^-4*rat(162*ep^3 + 67*ep^2 - 11*ep - 6,256*
-         ep^5 + 256*ep^4) );
+id,only intbn*dala^0*x3^2*x4^2*x5^2*x6^2 =  + M^-4*miBN*rat(81*d^6 - 1512*d^5
+          + 11115*d^4 - 40224*d^3 + 71700*d^2 - 50400*d,4096*d^2 - 40960*d + 
+         98304) + Gam(1,1)^3*M^-4*rat(81*d^3 - 1039*d^2 + 4402*d - 6144,32*d^5
+          - 704*d^4 + 6144*d^3 - 26624*d^2 + 57344*d - 49152);
 #endprocedure
 
 #procedure BNdExact
-id,only intbn*dala^1*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^2*miBN*rat(6*ep^3 - 
-         25*ep^2 + 23*ep - 6,8*ep) + Gam(1,1)^3*M^2*rat(3,2*ep^4) );
+id,only intbn*dala^1*x3^1*x4^1*x5^1*x6^1 =  + M^2*miBN*rat(3*d^3 - 11*d^2 - 10
+         *d + 48,16*d - 64) + Gam(1,1)^3*M^2*rat(24,d^4 - 16*d^3 + 96*d^2 - 
+         256*d + 256);
 
 
-id,only intbn*dala^1*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( miBN*rat(18*ep^4 - 81*
-         ep^3 + 94*ep^2 - 41*ep + 6,32*ep) + Gam(1,1)^3*rat(9*ep - 3,8*ep^4) )
-         ;
-
-
-id,only intbn*dala^1*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-2*miBN*rat(108*ep^6
-          - 432*ep^5 + 321*ep^4 + 144*ep^3 - 249*ep^2 + 96*ep - 12,256*ep^2 + 
-         256*ep) + Gam(1,1)^3*M^-2*rat(54*ep^3 - 7*ep^2 - 25*ep + 6,64*ep^5 + 
-         64*ep^4) );
-
-
-id,only intbn*dala^1*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-4*miBN*rat(324*ep^7
-          - 1512*ep^6 + 2043*ep^5 - 318*ep^4 - 771*ep^3 + 270*ep^2 + 60*ep - 
-         24,1024*ep^2 + 1024*ep) + Gam(1,1)^3*M^-4*rat(162*ep^4 - 257*ep^3 - 
-         145*ep^2 + 16*ep + 12,256*ep^5 + 256*ep^4) );
-
-
-id,only intbn*dala^1*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-6*miBN*rat(1944*ep^9
-          - 6804*ep^8 - 594*ep^7 + 32697*ep^6 - 417*ep^5 - 23205*ep^4 + 159*
-         ep^3 + 5208*ep^2 - 12*ep - 336,8192*ep^3 + 24576*ep^2 + 16384*ep) + 
-         Gam(1,1)^3*M^-6*rat(972*ep^6 - 1944*ep^5 - 9947*ep^4 - 8084*ep^3 - 
-         1111*ep^2 + 650*ep + 168,2048*ep^6 + 6144*ep^5 + 4096*ep^4) );
-
-
-id,only intbn*dala^2*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( miBN*rat(36*ep^6 - 288*
-         ep^5 + 755*ep^4 - 416*ep^3 - 187*ep^2 + 192*ep - 36,64*ep^2 + 64*ep)
-          + Gam(1,1)^3*rat(18*ep^3 - 117*ep^2 - 27*ep + 18,16*ep^5 + 16*ep^4)
-          );
-
-
-id,only intbn*dala^2*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-2*miBN*rat(108*ep^6
-          - 864*ep^5 + 2265*ep^4 - 1248*ep^3 - 561*ep^2 + 576*ep - 108,256*ep
-          + 256) + Gam(1,1)^3*M^-2*rat(54*ep^3 - 351*ep^2 - 81*ep + 54,64*ep^4
-          + 64*ep^3) );
-
-
-id,only intbn*dala^2*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-4*miBN*rat(648*ep^9
-          - 3996*ep^8 + 4410*ep^7 + 16131*ep^6 - 20235*ep^5 - 231*ep^4 + 6837*
-         ep^3 - 1464*ep^2 - 516*ep + 144,2048*ep^3 + 6144*ep^2 + 4096*ep) + 
-         Gam(1,1)^3*M^-4*rat(324*ep^6 - 1512*ep^5 - 3673*ep^4 + 820*ep^3 + 
-         1091*ep^2 - 18*ep - 72,512*ep^6 + 1536*ep^5 + 1024*ep^4) );
-
-
-id,only intbn*dala^2*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-6*miBN*rat(1944*
-         ep^10 - 12636*ep^9 + 19818*ep^8 + 34479*ep^7 - 98508*ep^6 - 21954*
-         ep^5 + 69774*ep^4 + 4731*ep^3 - 15636*ep^2 - 300*ep + 1008,8192*ep^3
-          + 24576*ep^2 + 16384*ep) + Gam(1,1)^3*M^-6*rat(972*ep^7 - 4860*ep^6
-          - 4115*ep^5 + 21757*ep^4 + 23141*ep^3 + 3983*ep^2 - 1782*ep - 504,
-         2048*ep^6 + 6144*ep^5 + 4096*ep^4) );
-
-
-id,only intbn*dala^2*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-8*miBN*rat(11664*
-         ep^12 - 46656*ep^11 - 70632*ep^10 + 644112*ep^9 - 493767*ep^8 - 
-         4801392*ep^7 - 2931642*ep^6 + 3581892*ep^5 + 2604141*ep^4 - 817812*
-         ep^3 - 625716*ep^2 + 53136*ep + 41472,65536*ep^4 + 393216*ep^3 + 
-         720896*ep^2 + 393216*ep) + Gam(1,1)^3*M^-8*rat(5832*ep^9 - 14580*ep^8
-          - 48438*ep^7 + 556593*ep^6 + 2043681*ep^5 + 2488773*ep^4 + 1138125*
-         ep^3 + 29574*ep^2 - 106056*ep - 20736,16384*ep^7 + 98304*ep^6 + 
-         180224*ep^5 + 98304*ep^4) );
-
-
-id,only intbn*dala^3*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-2*miBN*rat(216*ep^9
-          - 2484*ep^8 + 9822*ep^7 - 8415*ep^6 - 38049*ep^5 + 32499*ep^4 + 8175
-         *ep^3 - 9288*ep^2 + 180*ep + 432,512*ep^3 + 1536*ep^2 + 1024*ep) + 
-         Gam(1,1)^3*M^-2*rat(108*ep^6 - 1080*ep^5 + 3453*ep^4 + 10452*ep^3 + 
-         2409*ep^2 - 918*ep - 216,128*ep^6 + 384*ep^5 + 256*ep^4) );
-
-
-id,only intbn*dala^3*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-4*miBN*rat(648*ep^10
-          - 7236*ep^9 + 26982*ep^8 - 15423*ep^7 - 122562*ep^6 + 59448*ep^5 + 
-         57024*ep^4 - 19689*ep^3 - 8748*ep^2 + 1476*ep + 432,2048*ep^3 + 6144*
-         ep^2 + 4096*ep) + Gam(1,1)^3*M^-4*rat(324*ep^7 - 3132*ep^6 + 9279*
-         ep^5 + 34809*ep^4 + 17679*ep^3 - 345*ep^2 - 1566*ep - 216,512*ep^6 + 
-         1536*ep^5 + 1024*ep^4) );
-
-
-id,only intbn*dala^3*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-6*miBN*rat(3888*
-         ep^12 - 31104*ep^11 + 30888*ep^10 + 359424*ep^9 - 916053*ep^8 - 
-         1639896*ep^7 + 1562610*ep^6 + 1162668*ep^5 - 844377*ep^4 - 261060*
-         ep^3 + 169092*ep^2 + 16848*ep - 10368,16384*ep^4 + 98304*ep^3 + 
-         180224*ep^2 + 98304*ep) + Gam(1,1)^3*M^-6*rat(1944*ep^9 - 12636*ep^8
-          - 594*ep^7 + 335091*ep^6 + 605931*ep^5 + 122295*ep^4 - 207873*ep^3
-          - 71478*ep^2 + 11448*ep + 5184,4096*ep^7 + 24576*ep^6 + 45056*ep^5
-          + 24576*ep^4) );
-
-
-id,only intbn*dala^3*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-8*miBN*rat(11664*
-         ep^13 - 93312*ep^12 + 115992*ep^11 + 926640*ep^10 - 3070215*ep^9 - 
-         2826324*ep^8 + 16273926*ep^7 + 15308460*ep^6 - 11723427*ep^5 - 
-         11234376*ep^4 + 2645532*ep^3 + 2556000*ep^2 - 171072*ep - 165888,
-         65536*ep^4 + 393216*ep^3 + 720896*ep^2 + 393216*ep) + Gam(1,1)^3*M^-8
-         *rat(5832*ep^10 - 37908*ep^9 + 9882*ep^8 + 750345*ep^7 - 182691*ep^6
-          - 5685951*ep^5 - 8816967*ep^4 - 4522926*ep^3 - 224352*ep^2 + 403488*
-         ep + 82944,16384*ep^7 + 98304*ep^6 + 180224*ep^5 + 98304*ep^4) );
-
-
-id,only intbn*dala^3*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-10*miBN*rat(69984*
-         ep^15 - 291600*ep^14 - 1321920*ep^13 + 8530920*ep^12 - 4930578*ep^11
-          - 117134649*ep^10 + 256737339*ep^9 + 1783904976*ep^8 + 2257021044*
-         ep^7 - 244562517*ep^6 - 1935136953*ep^5 - 598519602*ep^4 + 460273500*
-         ep^3 + 193809816*ep^2 - 30386016*ep - 14079744,524288*ep^5 + 5242880*
-         ep^4 + 18350080*ep^3 + 26214400*ep^2 + 12582912*ep) + Gam(1,1)^3*
-         M^-10*rat(34992*ep^12 - 93312*ep^11 - 748440*ep^10 + 2617920*ep^9 - 
-         21490989*ep^8 - 280174056*ep^7 - 949448058*ep^6 - 1500340416*ep^5 - 
-         1182911037*ep^4 - 388001544*ep^3 + 22933836*ep^2 + 42179184*ep + 
-         7039872,131072*ep^8 + 1310720*ep^7 + 4587520*ep^6 + 6553600*ep^5 + 
-         3145728*ep^4) );
-
-
-id,only intbn*dala^4*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-4*miBN*rat(1296*
-         ep^12 - 19008*ep^11 + 92952*ep^10 - 54480*ep^9 - 1095231*ep^8 + 
-         2713416*ep^7 + 5853750*ep^6 - 2700012*ep^5 - 3870219*ep^4 + 698148*
-         ep^3 + 825804*ep^2 - 47952*ep - 51840,4096*ep^4 + 24576*ep^3 + 45056*
-         ep^2 + 24576*ep) + Gam(1,1)^3*M^-4*rat(648*ep^9 - 8532*ep^8 + 34650*
-         ep^7 + 4809*ep^6 - 1138239*ep^5 - 2429883*ep^4 - 1425075*ep^3 - 94194
-         *ep^2 + 123336*ep + 25920,1024*ep^7 + 6144*ep^6 + 11264*ep^5 + 6144*
-         ep^4) );
-
-
-id,only intbn*dala^4*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-6*miBN*rat(3888*
-         ep^13 - 54432*ep^12 + 240840*ep^11 + 22464*ep^10 - 3394653*ep^9 + 
-         5949786*ep^8 + 22988082*ep^7 + 3607464*ep^6 - 17010681*ep^5 - 5645994
-         *ep^4 + 3873708*ep^3 + 1507752*ep^2 - 251424*ep - 103680,16384*ep^4
-          + 98304*ep^3 + 180224*ep^2 + 98304*ep) + Gam(1,1)^3*M^-6*rat(1944*
-         ep^10 - 24300*ep^9 + 86886*ep^8 + 83727*ep^7 - 3405099*ep^6 - 9566127
-         *ep^5 - 9134991*ep^4 - 3132732*ep^3 + 181620*ep^2 + 324432*ep + 51840
-         ,4096*ep^7 + 24576*ep^6 + 45056*ep^5 + 24576*ep^4) );
-
-
-id,only intbn*dala^4*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-8*miBN*rat(23328*
-         ep^15 - 221616*ep^14 + 57024*ep^13 + 5587704*ep^12 - 16476678*ep^11
-          - 45832563*ep^10 + 246722409*ep^9 + 541636272*ep^8 - 105304068*ep^7
-          - 609631911*ep^6 - 25012755*ep^5 + 251607834*ep^4 + 13284468*ep^3 - 
-         42627960*ep^2 - 1060128*ep + 2384640,131072*ep^5 + 1310720*ep^4 + 
-         4587520*ep^3 + 6553600*ep^2 + 3145728*ep) + Gam(1,1)^3*M^-8*rat(11664
-         *ep^12 - 93312*ep^11 - 93960*ep^10 + 2384640*ep^9 - 15588975*ep^8 - 
-         123457368*ep^7 - 248037726*ep^6 - 163465248*ep^5 + 30131457*ep^4 + 
-         66037416*ep^3 + 12913092*ep^2 - 4040496*ep - 1192320,32768*ep^8 + 
-         327680*ep^7 + 1146880*ep^6 + 1638400*ep^5 + 786432*ep^4) );
-
-
-id,only intbn*dala^4*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-10*miBN*rat(69984*
-         ep^16 - 641520*ep^15 + 136080*ep^14 + 15140520*ep^13 - 47585178*ep^12
-          - 92481759*ep^11 + 842410584*ep^10 + 500218281*ep^9 - 6662503836*
-         ep^8 - 11529667737*ep^7 - 712324368*ep^6 + 9077165163*ep^5 + 
-         3452871510*ep^4 - 2107557684*ep^3 - 999435096*ep^2 + 137850336*ep + 
-         70398720,524288*ep^5 + 5242880*ep^4 + 18350080*ep^3 + 26214400*ep^2
-          + 12582912*ep) + Gam(1,1)^3*M^-10*rat(34992*ep^13 - 268272*ep^12 - 
-         281880*ep^11 + 6360120*ep^10 - 34580589*ep^9 - 172719111*ep^8 + 
-         451422222*ep^7 + 3246899874*ep^6 + 6318791043*ep^5 + 5526553641*ep^4
-          + 1962941556*ep^3 - 72489996*ep^2 - 203856048*ep - 35199360,131072*
-         ep^8 + 1310720*ep^7 + 4587520*ep^6 + 6553600*ep^5 + 3145728*ep^4) );
-
-
-id,only intbn*dala^4*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-12*miBN*rat(419904*
-         ep^17 - 2519424*ep^16 - 12212208*ep^15 + 113724000*ep^14 - 151059492*
-         ep^13 - 1683245448*ep^12 + 10938699099*ep^11 + 17484608970*ep^10 - 
-         227981745153*ep^9 - 795700856682*ep^8 - 785497422699*ep^7 + 
-         219909241710*ep^6 + 735263239041*ep^5 + 185516095554*ep^4 - 
-         178814773692*ep^3 - 68171800680*ep^2 + 11903047200*ep + 5103648000,
-         4194304*ep^5 + 54525952*ep^4 + 247463936*ep^3 + 448790528*ep^2 + 
-         251658240*ep) + Gam(1,1)^3*M^-12*rat(209952*ep^14 - 944784*ep^13 - 
-         7208352*ep^12 + 42322824*ep^11 + 1391418*ep^10 + 1138887039*ep^9 + 
-         30107046219*ep^8 + 171318360246*ep^7 + 448167167376*ep^6 + 
-         621885198831*ep^5 + 453001390719*ep^4 + 138754523316*ep^3 - 
-         11056733460*ep^2 - 15733515600*ep - 2551824000,1048576*ep^8 + 
-         13631488*ep^7 + 61865984*ep^6 + 112197632*ep^5 + 62914560*ep^4) );
-
-
-id,only intbn*dala^5*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-6*miBN*rat(7776*
-         ep^14 - 143856*ep^13 + 878256*ep^12 - 443016*ep^11 - 19770042*ep^10
-          + 83648697*ep^9 + 91014738*ep^8 - 1117956018*ep^7 - 1450097994*ep^6
-          + 862161549*ep^5 + 1130693706*ep^4 - 198865116*ep^3 - 261816840*ep^2
-          + 12972960*ep + 17107200,32768*ep^4 + 294912*ep^3 + 851968*ep^2 + 
-         786432*ep) + Gam(1,1)^3*M^-6*rat(3888*ep^11 - 66096*ep^10 + 345816*
-         ep^9 + 155304*ep^8 - 8149677*ep^7 + 82446525*ep^6 + 488308833*ep^5 + 
-         793646535*ep^4 + 446481468*ep^3 + 31199580*ep^2 - 39275280*ep - 
-         8553600,8192*ep^7 + 73728*ep^6 + 212992*ep^5 + 196608*ep^4) );
-
-
-id,only intbn*dala^5*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-8*miBN*rat(23328*
-         ep^15 - 408240*ep^14 + 2203200*ep^13 + 1305720*ep^12 - 60639174*ep^11
-          + 191635965*ep^10 + 523990305*ep^9 - 3080823840*ep^8 - 7704162036*
-         ep^7 - 1763809335*ep^6 + 5978565765*ep^5 + 2795485770*ep^4 - 
-         1382045868*ep^3 - 746531640*ep^2 + 90240480*ep + 51321600,131072*ep^4
-          + 1179648*ep^3 + 3407872*ep^2 + 3145728*ep) + Gam(1,1)^3*M^-8*rat(
-         11664*ep^12 - 186624*ep^11 + 839160*ep^10 + 1503360*ep^9 - 23983119*
-         ep^8 + 222890544*ep^7 + 1712266074*ep^6 + 3845866104*ep^5 + 
-         3720384009*ep^4 + 1433043144*ep^3 - 24227100*ep^2 - 143486640*ep - 
-         25660800,32768*ep^7 + 294912*ep^6 + 851968*ep^5 + 786432*ep^4) );
-
-
-id,only intbn*dala^5*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-10*miBN*rat(139968*
-         ep^18 - 1492992*ep^17 - 1862352*ep^16 + 70720128*ep^15 - 185482764*
-         ep^14 - 1036687104*ep^13 + 6929504721*ep^12 + 8053978536*ep^11 - 
-         127167791751*ep^10 - 361735949916*ep^9 - 194403886461*ep^8 + 
-         327780306144*ep^7 + 318153329847*ep^6 - 99168439788*ep^5 - 
-         138018192408*ep^4 + 11895864192*ep^3 + 23310817200*ep^2 - 492091200*
-         ep - 1290816000,1048576*ep^6 + 15728640*ep^5 + 89128960*ep^4 + 
-         235929600*ep^3 + 287309824*ep^2 + 125829120*ep) + Gam(1,1)^3*M^-10*
-         rat(69984*ep^15 - 641520*ep^14 - 1788480*ep^13 + 30945240*ep^12 - 
-         37330578*ep^11 + 417623145*ep^10 + 15403234179*ep^9 + 82673128668*
-         ep^8 + 190214482836*ep^7 + 205362639021*ep^6 + 70650478047*ep^5 - 
-         46357028562*ep^4 - 41078799396*ep^3 - 5064913800*ep^2 + 2720109600*ep
-          + 645408000,262144*ep^9 + 3932160*ep^8 + 22282240*ep^7 + 58982400*
-         ep^6 + 71827456*ep^5 + 31457280*ep^4) );
-
-
-id,only intbn*dala^5*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-12*miBN*rat(419904*
-         ep^18 - 5038848*ep^17 + 2904336*ep^16 + 186997248*ep^15 - 833403492*
-         ep^14 - 776888496*ep^13 + 21038171787*ep^12 - 48147585624*ep^11 - 
-         332889398973*ep^10 + 572189614236*ep^9 + 3988707717393*ep^8 + 
-         4932893777904*ep^7 - 584192211219*ep^6 - 4226063338692*ep^5 - 
-         1291911347016*ep^4 + 1004716841472*ep^3 + 420933851280*ep^2 - 
-         66314635200*ep - 30621888000,4194304*ep^5 + 54525952*ep^4 + 247463936
-         *ep^3 + 448790528*ep^2 + 251658240*ep) + Gam(1,1)^3*M^-12*rat(209952*
-         ep^15 - 2204496*ep^14 - 1539648*ep^13 + 85572936*ep^12 - 252545526*
-         ep^11 + 1130538531*ep^10 + 23273723985*ep^9 - 9323917068*ep^8 - 
-         579742994100*ep^7 - 2067117805425*ep^6 - 3278309802267*ep^5 - 
-         2579253820998*ep^4 - 843583873356*ep^3 + 50606885160*ep^2 + 
-         91849269600*ep + 15310944000,1048576*ep^8 + 13631488*ep^7 + 61865984*
-         ep^6 + 112197632*ep^5 + 62914560*ep^4) );
-
-
-id,only intbn*dala^5*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-14*miBN*rat(2519424*
-         ep^21 - 8817984*ep^20 - 187907040*ep^19 + 771258672*ep^18 + 
-         3351784536*ep^17 - 26789487372*ep^16 + 103817077542*ep^15 + 
-         554312161809*ep^14 - 7502377161357*ep^13 - 21096357822135*ep^12 + 
-         212264679038859*ep^11 + 1407261578904711*ep^10 + 3530608360711785*
-         ep^9 + 4020728271593247*ep^8 + 769249291495491*ep^7 - 
-         2785063035366612*ep^6 - 2294416442972088*ep^5 + 67526202621744*ep^4
-          + 652718793105648*ep^3 + 143071014121920*ep^2 - 45795094156800*ep - 
-         13546662912000,33554432*ep^7 + 704643072*ep^6 + 5872025600*ep^5 + 
-         24662507520*ep^4 + 54492397568*ep^3 + 59190018048*ep^2 + 24159191040*
-         ep) + Gam(1,1)^3*M^-14*rat(1259712*ep^18 - 2519424*ep^17 - 95843088*
-         ep^16 + 224228736*ep^15 + 1979325396*ep^14 - 9893002392*ep^13 - 
-         153420682707*ep^12 - 3988501251732*ep^11 - 47776751165313*ep^10 - 
-         289752074018838*ep^9 - 1033706547769185*ep^8 - 2323452765971376*ep^7
-          - 3353799816489411*ep^6 - 3038483193155622*ep^5 - 1576463447412396*
-         ep^4 - 322614213750504*ep^3 + 75505073646240*ep^2 + 48861984326400*ep
-          + 6773331456000,8388608*ep^10 + 176160768*ep^9 + 1468006400*ep^8 + 
-         6165626880*ep^7 + 13623099392*ep^6 + 14797504512*ep^5 + 6039797760*
-         ep^4) );
-
-
-id,only intbn*dala^6*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-8*miBN*rat(46656*
-         ep^18 - 933120*ep^17 + 5071248*ep^16 + 16568064*ep^15 - 287305668*
-         ep^14 + 877909680*ep^13 + 4160205891*ep^12 - 36038356632*ep^11 - 
-         37078448517*ep^10 + 683291475900*ep^9 + 2135362771449*ep^8 + 
-         1885778793072*ep^7 - 725209849611*ep^6 - 1825601593860*ep^5 - 
-         391303622088*ep^4 + 447499610496*ep^3 + 158262938640*ep^2 - 
-         29874225600*ep - 12083904000,262144*ep^6 + 3932160*ep^5 + 22282240*
-         ep^4 + 58982400*ep^3 + 71827456*ep^2 + 31457280*ep) + Gam(1,1)^3*M^-8
-         *rat(23328*ep^15 - 431568*ep^14 + 1923264*ep^13 + 10264968*ep^12 - 
-         119083590*ep^11 + 213280443*ep^10 - 3433673511*ep^9 - 89473458060*
-         ep^8 - 482552416116*ep^7 - 1203088078521*ep^6 - 1598373481779*ep^5 - 
-         1118723407254*ep^4 - 327156667308*ep^3 + 30994543080*ep^2 + 
-         38097928800*ep + 6041952000,65536*ep^9 + 983040*ep^8 + 5570560*ep^7
-          + 14745600*ep^6 + 17956864*ep^5 + 7864320*ep^4) );
-
-
-id,only intbn*dala^6*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-10*miBN*rat(139968*
-         ep^19 - 2612736*ep^18 + 11481264*ep^17 + 69989184*ep^16 - 795644748*
-         ep^15 + 1484506368*ep^14 + 15992256393*ep^13 - 91474246332*ep^12 - 
-         255388772079*ep^11 + 1901560633632*ep^10 + 9139254217947*ep^9 + 
-         14198787465012*ep^8 + 5367485623455*ep^7 - 8377644180024*ep^6 - 
-         8476317241704*ep^5 - 222715656864*ep^4 + 2264787257904*ep^3 + 
-         543429077760*ep^2 - 155748614400*ep - 48335616000,1048576*ep^6 + 
-         15728640*ep^5 + 89128960*ep^4 + 235929600*ep^3 + 287309824*ep^2 + 
-         125829120*ep) + Gam(1,1)^3*M^-10*rat(69984*ep^16 - 1201392*ep^15 + 
-         4043520*ep^14 + 38487960*ep^13 - 316190898*ep^12 + 163506969*ep^11 - 
-         9447898761*ep^10 - 282155068224*ep^9 - 1805551080588*ep^8 - 
-         5539473900027*ep^7 - 9607472759421*ep^6 - 9749664148878*ep^5 - 
-         5456363630940*ep^4 - 1215643039992*ep^3 + 238271958720*ep^2 + 
-         170517571200*ep + 24167808000,262144*ep^9 + 3932160*ep^8 + 22282240*
-         ep^7 + 58982400*ep^6 + 71827456*ep^5 + 31457280*ep^4) );
-
-
-id,only intbn*dala^6*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-12*miBN*rat(839808*
-         ep^21 - 9657792*ep^20 - 35761824*ep^19 + 774967824*ep^18 - 1278990648
-         *ep^17 - 20088653508*ep^16 + 117808083810*ep^15 + 107615169963*ep^14
-          - 4274154414639*ep^13 + 417673086291*ep^12 + 113454038693529*ep^11
-          + 395942363470557*ep^10 + 477528159364515*ep^9 - 47652452733915*ep^8
-          - 548305558403967*ep^7 - 254582751663324*ep^6 + 195887862992664*ep^5
-          + 135217015505424*ep^4 - 28151201328048*ep^3 - 24150737891520*ep^2
-          + 1386980236800*ep + 1363848192000,8388608*ep^7 + 176160768*ep^6 + 
-         1468006400*ep^5 + 6165626880*ep^4 + 13623099392*ep^3 + 14797504512*
-         ep^2 + 6039797760*ep) + Gam(1,1)^3*M^-12*rat(419904*ep^18 - 4199040*
-         ep^17 - 23549616*ep^16 + 341241984*ep^15 - 89053668*ep^14 - 
-         9914662440*ep^13 - 53333020449*ep^12 - 1798100191980*ep^11 - 
-         18972501116715*ep^10 - 90583230387762*ep^9 - 235497669047739*ep^8 - 
-         346129564525920*ep^7 - 260154937695393*ep^6 - 39750417955170*ep^5 + 
-         76897943454492*ep^4 + 46482762820104*ep^3 + 3450154318560*ep^2 - 
-         3307532486400*ep - 681924096000,2097152*ep^10 + 44040192*ep^9 + 
-         367001600*ep^8 + 1541406720*ep^7 + 3405774848*ep^6 + 3699376128*ep^5
-          + 1509949440*ep^4) );
-
-
-id,only intbn*dala^6*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-14*miBN*rat(2519424*
-         ep^22 - 26453952*ep^21 - 126181152*ep^20 + 2086607952*ep^19 - 
-         2047026168*ep^18 - 50251979124*ep^17 + 291343489146*ep^16 - 
-         172407380985*ep^15 - 11382562294020*ep^14 + 31420282307364*ep^13 + 
-         359939183793804*ep^12 - 78591174367302*ep^11 - 6320222691621192*ep^10
-          - 20693530253389248*ep^9 - 27375848609657238*ep^8 - 8169808075835049
-         *ep^7 + 17201024804594196*ep^6 + 16128441303426360*ep^5 + 
-         180035374753440*ep^4 - 4425960537617616*ep^3 - 1047292193010240*ep^2
-          + 307018996185600*ep + 94826640384000,33554432*ep^7 + 704643072*ep^6
-          + 5872025600*ep^5 + 24662507520*ep^4 + 54492397568*ep^3 + 
-         59190018048*ep^2 + 24159191040*ep) + Gam(1,1)^3*M^-14*rat(1259712*
-         ep^19 - 11337408*ep^18 - 78207120*ep^17 + 895130352*ep^16 + 409724244
-         *ep^15 - 23748280164*ep^14 - 84169665963*ep^13 - 2914556472783*ep^12
-          - 19857242403189*ep^11 + 44685184138353*ep^10 + 994557970362681*ep^9
-          + 4912493068412919*ep^8 + 12910369545310221*ep^7 + 20438115522270255
-         *ep^6 + 19692918904676958*ep^5 + 10712629918136268*ep^4 + 
-         2333804569899768*ep^3 - 479673531197280*ep^2 - 335260558828800*ep - 
-         47413320192000,8388608*ep^10 + 176160768*ep^9 + 1468006400*ep^8 + 
-         6165626880*ep^7 + 13623099392*ep^6 + 14797504512*ep^5 + 6039797760*
-         ep^4) );
-
-
-id,only intbn*dala^6*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-16*miBN*rat(15116544
-         *ep^24 - 40310784*ep^23 - 1829101824*ep^22 + 5394926592*ep^21 + 
-         67745141856*ep^20 - 281974307328*ep^19 + 539718955056*ep^18 + 
-         6033692279232*ep^17 - 152342545570119*ep^16 - 7181691855048*ep^15 + 
-         9097172697965436*ep^14 + 14943011674960152*ep^13 - 328950853687087794
-         *ep^12 - 2301616403966272248*ep^11 - 7140307187117150604*ep^10 - 
-         11919900242908426968*ep^9 - 9277396851562325199*ep^8 + 
-         1408610648195587872*ep^7 + 8430966650367874296*ep^6 + 
-         4887946510400738592*ep^5 - 827458459095546288*ep^4 - 
-         1571605382270542464*ep^3 - 265760210153007360*ep^2 + 
-         114201282034022400*ep + 29714897350656000,268435456*ep^8 + 7516192768
-         *ep^7 + 86436216832*ep^6 + 526133493760*ep^5 + 1817039601664*ep^4 + 
-         3525094408192*ep^3 + 3507914539008*ep^2 + 1352914698240*ep) + Gam(1,1
-         )^3*M^-16*rat(7558272*ep^21 - 8817984*ep^20 - 916440480*ep^19 + 
-         1226434608*ep^18 + 34933405896*ep^17 - 81398025900*ep^16 + 
-         174370679154*ep^15 + 24413519344689*ep^14 + 604921089938085*ep^13 + 
-         9694105263680391*ep^12 + 90039439355115537*ep^11 + 517053506711573421
-         *ep^10 + 1951999971378659307*ep^9 + 5013106757265984417*ep^8 + 
-         8852598075971018457*ep^7 + 10623551524854856542*ep^6 + 
-         8302392182260351980*ep^5 + 3776555787160435416*ep^4 + 
-         625304218958220672*ep^3 - 216008361397825920*ep^2 - 
-         114054194272435200*ep - 14857448675328000,67108864*ep^11 + 1879048192
-         *ep^10 + 21609054208*ep^9 + 131533373440*ep^8 + 454259900416*ep^7 + 
-         881273602048*ep^6 + 876978634752*ep^5 + 338228674560*ep^4) );
-
-
-id,only intbn*dala^7*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-10*miBN*rat(279936*
-         ep^21 - 6205248*ep^20 + 30754080*ep^19 + 270681264*ep^18 - 3380688360
-         *ep^17 + 7392219156*ep^16 + 86610022614*ep^15 - 744794946567*ep^14 - 
-         133886923821*ep^13 + 27514741243185*ep^12 - 3184892281557*ep^11 - 
-         738666634740993*ep^10 - 2777751399430647*ep^9 - 4146602087714121*ep^8
-          - 1658132540490573*ep^7 + 2403228943597356*ep^6 + 2616032460193992*
-         ep^5 + 142396871844528*ep^4 - 699416922626064*ep^3 - 180920010922560*
-         ep^2 + 48114251942400*ep + 15692092416000,2097152*ep^7 + 44040192*
-         ep^6 + 367001600*ep^5 + 1541406720*ep^4 + 3405774848*ep^3 + 
-         3699376128*ep^2 + 1509949440*ep) + Gam(1,1)^3*M^-10*rat(139968*ep^18
-          - 2892672*ep^17 + 11247984*ep^16 + 146333952*ep^15 - 1412913996*
-         ep^14 + 1404752904*ep^13 + 44816186565*ep^12 + 365853074580*ep^11 + 
-         12611898920367*ep^10 + 130154054570874*ep^9 + 633927266752311*ep^8 + 
-         1753695964092024*ep^7 + 2938584791517309*ep^6 + 2982183884312922*ep^5
-          + 1701736203888468*ep^4 + 396069350533272*ep^3 - 70411881748320*ep^2
-          - 54133636435200*ep - 7846046208000,524288*ep^10 + 11010048*ep^9 + 
-         91750400*ep^8 + 385351680*ep^7 + 851443712*ep^6 + 924844032*ep^5 + 
-         377487360*ep^4) );
-
-
-id,only intbn*dala^7*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-12*miBN*rat(839808*
-         ep^22 - 17216064*ep^21 + 61236000*ep^20 + 965814192*ep^19 - 
-         8788658760*ep^18 + 5273215668*ep^17 + 296791163622*ep^16 - 
-         1801334726631*ep^15 - 4125635504298*ep^14 + 81874789110450*ep^13 + 
-         128019029371254*ep^12 - 2231924365630764*ep^11 - 12026587371996906*
-         ep^10 - 26328563260295598*ep^9 - 25707408060042324*ep^8 - 
-         1080975871660797*ep^7 + 19864242098568756*ep^6 + 13507352916503544*
-         ep^5 - 1386266408655552*ep^4 - 4039844645898000*ep^3 - 
-         760257298785600*ep^2 + 287647536960000*ep + 78460462080000,8388608*
-         ep^7 + 176160768*ep^6 + 1468006400*ep^5 + 6165626880*ep^4 + 
-         13623099392*ep^3 + 14797504512*ep^2 + 6039797760*ep) + Gam(1,1)^3*
-         M^-12*rat(419904*ep^19 - 7978176*ep^18 + 19280592*ep^17 + 495241776*
-         ep^16 - 3507072228*ep^15 - 2850311268*ep^14 + 141472324215*ep^13 + 
-         1321640156565*ep^12 + 39664962134001*ep^11 + 453521658314457*ep^10 + 
-         2552552073111303*ep^9 + 8430724226037627*ep^8 + 17584234195012047*
-         ep^7 + 23639475610525311*ep^6 + 20016128033230014*ep^5 + 
-         9696889071042156*ep^4 + 1769111107421400*ep^3 - 514460318047200*ep^2
-          - 294206320800000*ep - 39230231040000,2097152*ep^10 + 44040192*ep^9
-          + 367001600*ep^8 + 1541406720*ep^7 + 3405774848*ep^6 + 3699376128*
-         ep^5 + 1509949440*ep^4) );
-
-
-id,only intbn*dala^7*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-14*miBN*rat(5038848*
-         ep^24 - 60466176*ep^23 - 445098240*ep^22 + 7610340096*ep^21 + 
-         119369376*ep^20 - 328430386368*ep^19 + 1385421347952*ep^18 + 
-         3139077567888*ep^17 - 85631459993397*ep^16 + 232608496652064*ep^15 + 
-         3933200436002964*ep^14 - 5843444427326520*ep^13 - 155215302656563350*
-         ep^12 - 638958730961167704*ep^11 - 1167980732603948484*ep^10 - 
-         758329620479678808*ep^9 + 637148351890024947*ep^8 + 
-         1215972674955217368*ep^7 + 261657404658357768*ep^6 - 
-         481494820509529056*ep^5 - 216726178630769424*ep^4 + 74006503761378816
-         *ep^3 + 42528421906871040*ep^2 - 3820152110745600*ep - 
-         2485715226624000,67108864*ep^8 + 1879048192*ep^7 + 21609054208*ep^6
-          + 131533373440*ep^5 + 454259900416*ep^4 + 881273602048*ep^3 + 
-         876978634752*ep^2 + 338228674560*ep) + Gam(1,1)^3*M^-14*rat(2519424*
-         ep^21 - 26453952*ep^20 - 258450912*ep^19 + 3350099088*ep^18 + 
-         5154432408*ep^17 - 151744560516*ep^16 + 447887488230*ep^15 + 
-         12812115487635*ep^14 + 267043587157143*ep^13 + 3982872325196637*ep^12
-          + 31773702688472619*ep^11 + 147947222729676303*ep^10 + 
-         429011211721788297*ep^9 + 788142926636915931*ep^8 + 
-         882399581654092515*ep^7 + 503002260487668978*ep^6 - 5713101262882188*
-         ep^5 - 184496065554456216*ep^4 - 87561818231813568*ep^3 - 
-         3067248624693120*ep^2 + 6674363573068800*ep + 1242857613312000,
-         16777216*ep^11 + 469762048*ep^10 + 5402263552*ep^9 + 32883343360*ep^8
-          + 113564975104*ep^7 + 220318400512*ep^6 + 219244658688*ep^5 + 
-         84557168640*ep^4) );
-
-
-id,only intbn*dala^7*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-16*miBN*rat(15116544
-         *ep^25 - 161243136*ep^24 - 1506615552*ep^23 + 20027741184*ep^22 + 
-         24585729120*ep^21 - 823935442176*ep^20 + 2795513413680*ep^19 + 
-         1715940638784*ep^18 - 200612083803975*ep^17 + 1211558672705904*ep^16
-          + 9154626232805820*ep^15 - 57834369908763336*ep^14 - 
-         448494947086769010*ep^13 + 329990425530430104*ep^12 + 
-         11272624044613027380*ep^11 + 45202557254028777864*ep^10 + 
-         86081805091705090545*ep^9 + 75627785460694189464*ep^8 - 
-         2837918535196828680*ep^7 - 62559786692542255776*ep^6 - 
-         39931030542301455024*ep^5 + 5048062290493827840*ep^4 + 
-         12307082848011332352*ep^3 + 2240282963258081280*ep^2 - 
-         883895358921523200*ep - 237719178805248000,268435456*ep^8 + 
-         7516192768*ep^7 + 86436216832*ep^6 + 526133493760*ep^5 + 
-         1817039601664*ep^4 + 3525094408192*ep^3 + 3507914539008*ep^2 + 
-         1352914698240*ep) + Gam(1,1)^3*M^-16*rat(7558272*ep^22 - 69284160*
-         ep^21 - 845896608*ep^20 + 8557958448*ep^19 + 25121929032*ep^18 - 
-         360865273068*ep^17 + 825554886354*ep^16 + 23018553911457*ep^15 + 
-         409612935180573*ep^14 + 4854736544175711*ep^13 + 12486597245672409*
-         ep^12 - 203262008129350875*ep^11 - 2184428082313928061*ep^10 - 
-         10602893013763290039*ep^9 - 31252255982156856879*ep^8 - 
-         60197233082913291114*ep^7 - 76686020016578500356*ep^6 - 
-         62642581670922380424*ep^5 - 29587142078325262656*ep^4 - 
-         5218442113063591296*ep^3 + 1614012696910172160*ep^2 + 
-         897576105504153600*ep + 118859589402624000,67108864*ep^11 + 
-         1879048192*ep^10 + 21609054208*ep^9 + 131533373440*ep^8 + 
-         454259900416*ep^7 + 881273602048*ep^6 + 876978634752*ep^5 + 
-         338228674560*ep^4) );
-
-
-id,only intbn*dala^7*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-18*miBN*rat(90699264
-         *ep^27 - 136048896*ep^26 - 16471994112*ep^25 + 26247359232*ep^24 + 
-         1029784746816*ep^23 - 1953785388384*ep^22 - 11821798414656*ep^21 + 
-         31451703633936*ep^20 - 2176923322169946*ep^19 + 6649384311155871*
-         ep^18 + 205276275541861839*ep^17 - 578321748894945834*ep^16 - 
-         14308894652978231136*ep^15 - 9315029383336648494*ep^14 + 
-         690983965966386183714*ep^13 + 5148911488775812662816*ep^12 + 
-         18970044518066835858714*ep^11 + 41403081627879826525911*ep^10 + 
-         52544833339721954438439*ep^9 + 28269535507104284372466*ep^8 - 
-         16783777969883346983400*ep^7 - 34921480093247596422528*ep^6 - 
-         15156143725123148129424*ep^5 + 4947848075235662004384*ep^4 + 
-         5643031072155927314688*ep^3 + 737938259706696491520*ep^2 - 
-         425198770807968460800*ep - 100193994274332672000,2147483648*ep^9 + 
-         77309411328*ep^8 + 1172526071808*ep^7 + 9740985827328*ep^6 + 
-         48208860413952*ep^5 + 144491289772032*ep^4 + 253669358436352*ep^3 + 
-         235329848082432*ep^2 + 86586540687360*ep) + Gam(1,1)^3*M^-18*rat(
-         45349632*ep^24 - 8167972608*ep^22 + 372874752*ep^21 + 506192802336*
-         ep^20 - 152093427840*ep^19 - 5662880495280*ep^18 + 2712153240864*
-         ep^17 - 3829215163823973*ep^16 - 113642091476855640*ep^15 - 
-         2138191098711604236*ep^14 - 26679067733202665688*ep^13 - 
-         221059293781597756326*ep^12 - 1255437269938050589224*ep^11 - 
-         5033740178700919410516*ep^10 - 14511283089558556947624*ep^9 - 
-         30253896123152597280333*ep^8 - 45289335604407799858272*ep^7 - 
-         47531205020955544324200*ep^6 - 33177141456359875735104*ep^5 - 
-         13549882297927013606736*ep^4 - 1801624486034238983424*ep^3 + 
-         884343905812130077440*ep^2 + 404637874429788518400*ep + 
-         50096997137166336000,536870912*ep^12 + 19327352832*ep^11 + 
-         293131517952*ep^10 + 2435246456832*ep^9 + 12052215103488*ep^8 + 
-         36122822443008*ep^7 + 63417339609088*ep^6 + 58832462020608*ep^5 + 
-         21646635171840*ep^4) );
-
-
-id,only intbn*dala^8*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-12*miBN*rat(1679616*
-         ep^24 - 40310784*ep^23 + 157324032*ep^22 + 3364830720*ep^21 - 
-         34128918432*ep^20 + 12009223296*ep^19 + 1516880262384*ep^18 - 
-         11019798314208*ep^17 - 2392486627455*ep^16 + 653179013024688*ep^15 - 
-         1962455890159044*ep^14 - 29812517272399176*ep^13 + 40872994614441342*
-         ep^12 + 1178561385652668120*ep^11 + 5160879809787087828*ep^10 + 
-         10701889297573629096*ep^9 + 10404262429732923129*ep^8 + 
-         616729535308622232*ep^7 - 8028409335246106920*ep^6 - 
-         5696514901754521632*ep^5 + 474146237540206800*ep^4 + 
-         1696446119520200448*ep^3 + 335752744805694720*ep^2 - 
-         120663702683596800*ep - 33819860938752000,16777216*ep^8 + 469762048*
-         ep^7 + 5402263552*ep^6 + 32883343360*ep^5 + 113564975104*ep^4 + 
-         220318400512*ep^3 + 219244658688*ep^2 + 84557168640*ep) + Gam(1,1)^3*
-         M^-12*rat(839808*ep^21 - 18895680*ep^20 + 51578208*ep^19 + 1722201264
-         *ep^18 - 14140510200*ep^17 - 14898381516*ep^16 + 714531348738*ep^15
-          - 4387763330487*ep^14 - 92505758659227*ep^13 - 2098194591487401*
-         ep^12 - 31410617711700447*ep^11 - 251841528319039155*ep^10 - 
-         1200887484686245989*ep^9 - 3660003641008227375*ep^8 - 
-         7363678090777500231*ep^7 - 9791587734126974298*ep^6 - 
-         8322366352039418628*ep^5 - 4086469336632201864*ep^4 - 
-         770085834768679104*ep^3 + 211357616014419840*ep^2 + 
-         125153251474406400*ep + 16909930469376000,4194304*ep^11 + 117440512*
-         ep^10 + 1350565888*ep^9 + 8220835840*ep^8 + 28391243776*ep^7 + 
-         55079600128*ep^6 + 54811164672*ep^5 + 21139292160*ep^4) );
-
-
-id,only intbn*dala^8*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-14*miBN*rat(5038848*
-         ep^24 - 120932352*ep^23 + 471972096*ep^22 + 10094492160*ep^21 - 
-         102386755296*ep^20 + 36027669888*ep^19 + 4550640787152*ep^18 - 
-         33059394942624*ep^17 - 7177459882365*ep^16 + 1959537039074064*ep^15
-          - 5887367670477132*ep^14 - 89437551817197528*ep^13 + 
-         122618983843324026*ep^12 + 3535684156958004360*ep^11 + 
-         15482639429361263484*ep^10 + 32105667892720887288*ep^9 + 
-         31212787289198769387*ep^8 + 1850188605925866696*ep^7 - 
-         24085228005738320760*ep^6 - 17089544705263564896*ep^5 + 
-         1422438712620620400*ep^4 + 5089338358560601344*ep^3 + 
-         1007258234417084160*ep^2 - 361991108050790400*ep - 101459582816256000
-         ,67108864*ep^7 + 1744830464*ep^6 + 18119393280*ep^5 + 95294586880*
-         ep^4 + 263670726656*ep^3 + 353932148736*ep^2 + 169114337280*ep) + 
-         Gam(1,1)^3*M^-14*rat(2519424*ep^21 - 56687040*ep^20 + 154734624*ep^19
-          + 5166603792*ep^18 - 42421530600*ep^17 - 44695144548*ep^16 + 
-         2143594046214*ep^15 - 13163289991461*ep^14 - 277517275977681*ep^13 - 
-         6294583774462203*ep^12 - 94231853135101341*ep^11 - 755524584957117465
-         *ep^10 - 3602662454058737967*ep^9 - 10980010923024682125*ep^8 - 
-         22091034272332500693*ep^7 - 29374763202380922894*ep^6 - 
-         24967099056118255884*ep^5 - 12259408009896605592*ep^4 - 
-         2310257504306037312*ep^3 + 634072848043259520*ep^2 + 
-         375459754423219200*ep + 50729791408128000,16777216*ep^10 + 436207616*
-         ep^9 + 4529848320*ep^8 + 23823646720*ep^7 + 65917681664*ep^6 + 
-         88483037184*ep^5 + 42278584320*ep^4) );
-
-
-id,only intbn*dala^8*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-16*miBN*rat(30233088
-         *ep^27 - 367835904*ep^26 - 4630701312*ep^25 + 68409080064*ep^24 + 
-         173132157888*ep^23 - 4593825179424*ep^22 + 9440725525056*ep^21 + 
-         91464597184176*ep^20 - 1239348796952094*ep^19 + 6203332022517621*
-         ep^18 + 76816635798773061*ep^17 - 594845289406647054*ep^16 - 
-         5098221203337985824*ep^15 + 16333281541167798726*ep^14 + 
-         299831330546954796726*ep^13 + 1419502817349666232416*ep^12 + 
-         3435165780989041352286*ep^11 + 4250045595982655488221*ep^10 + 
-         1210256954428173317901*ep^9 - 3423421287506181199194*ep^8 - 
-         3775645777179955443192*ep^7 - 111761117319556114560*ep^6 + 
-         1655155975314530620368*ep^5 + 525195626743365626592*ep^4 - 
-         267191151891464017152*ep^3 - 117505771503487879680*ep^2 + 
-         14189893467795763200*ep + 7172741757984768000,536870912*ep^9 + 
-         19327352832*ep^8 + 293131517952*ep^7 + 2435246456832*ep^6 + 
-         12052215103488*ep^5 + 36122822443008*ep^4 + 63417339609088*ep^3 + 
-         58832462020608*ep^2 + 21646635171840*ep) + Gam(1,1)^3*M^-16*rat(
-         15116544*ep^24 - 161243136*ep^23 - 2534540544*ep^22 + 29994582528*
-         ep^21 + 130527508320*ep^20 - 2047190537088*ep^19 + 1523356438896*
-         ep^18 + 44879886775008*ep^17 - 1908362238656823*ep^16 - 
-         50547606310359432*ep^15 - 886205353450434372*ep^14 - 
-         9987945022514554632*ep^13 - 71481221017034524578*ep^12 - 
-         337187908169243848440*ep^11 - 1078909282558445893596*ep^10 - 
-         2360819161217904535800*ep^9 - 3466706047660611975663*ep^8 - 
-         3186815661631723595040*ep^7 - 1419612515176106598264*ep^6 + 
-         263145817388399950656*ep^5 + 644238247137196905360*ep^4 + 
-         255640354417356247296*ep^3 + 174844747285367040*ep^2 - 
-         20842701770035353600*ep - 3586370878992384000,134217728*ep^12 + 
-         4831838208*ep^11 + 73282879488*ep^10 + 608811614208*ep^9 + 
-         3013053775872*ep^8 + 9030705610752*ep^7 + 15854334902272*ep^6 + 
-         14708115505152*ep^5 + 5411658792960*ep^4) );
-
-
-id,only intbn*dala^8*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-18*miBN*rat(90699264
-         *ep^28 - 952342272*ep^27 - 15247554048*ep^26 + 174495306240*ep^25 + 
-         793558513728*ep^24 - 11221848109728*ep^23 + 5762270080800*ep^22 + 
-         137847889365840*ep^21 - 2459988654875370*ep^20 + 26241694210685385*
-         ep^19 + 145431816741459000*ep^18 - 2425808228771702385*ep^17 - 
-         9103998912923718630*ep^16 + 119465022493467431730*ep^15 + 
-         774819230416416020160*ep^14 - 1069944204921662990610*ep^13 - 
-         27370158880915478106630*ep^12 - 129327319034721696202515*ep^11 - 
-         320082901311196484294760*ep^10 - 444633964550393305573485*ep^9 - 
-         271209597533821906335594*ep^8 + 116132521635702526428072*ep^7 + 
-         299137177114105219673328*ep^6 + 141353141601343995169200*ep^5 - 
-         38887601604965030724768*ep^4 - 50049341389696649340672*ep^3 - 
-         7066643108168236884480*ep^2 + 3726594942997383475200*ep + 
-         901745948468994048000,2147483648*ep^9 + 77309411328*ep^8 + 
-         1172526071808*ep^7 + 9740985827328*ep^6 + 48208860413952*ep^5 + 
-         144491289772032*ep^4 + 253669358436352*ep^3 + 235329848082432*ep^2 + 
-         86586540687360*ep) + Gam(1,1)^3*M^-18*rat(45349632*ep^25 - 408146688*
-         ep^24 - 8167972608*ep^23 + 73884628224*ep^22 + 502836929568*ep^21 - 
-         4707828648864*ep^20 - 4294039644720*ep^19 + 53678077698384*ep^18 - 
-         3853624542991749*ep^17 - 79179155002439883*ep^16 - 
-         1115412275419903476*ep^15 - 7435347844798227564*ep^14 + 
-         19052315817226234866*ep^13 + 734096374096329217710*ep^12 + 
-         6265195250741535892500*ep^11 + 30792378518749717747020*ep^10 + 
-         100347651682874415248283*ep^9 + 226995729503965575664725*ep^8 + 
-         360072815418714654400248*ep^7 + 394603703732240023182696*ep^6 + 
-         285044390809311868009200*ep^5 + 120147316195308883477200*ep^4 + 
-         17098964280120280928256*ep^3 - 7554457277879382178560*ep^2 - 
-         3591643872730930329600*ep - 450872974234497024000,536870912*ep^12 + 
-         19327352832*ep^11 + 293131517952*ep^10 + 2435246456832*ep^9 + 
-         12052215103488*ep^8 + 36122822443008*ep^7 + 63417339609088*ep^6 + 
-         58832462020608*ep^5 + 21646635171840*ep^4) );
-
-
-id,only intbn*dala^8*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-20*miBN*rat(
-         544195584*ep^30 - 140054780160*ep^28 - 4232632320*ep^27 + 
-         13253795268480*ep^26 + 1833294145536*ep^25 - 424911131647776*ep^24 - 
-         878371617763584*ep^23 - 22122565352089740*ep^22 + 203506148567917440*
-         ep^21 + 3496232389190102235*ep^20 - 26487165310177100760*ep^19 - 
-         310655735717668257735*ep^18 + 2012289454051748761680*ep^17 + 
-         29076072521319304971570*ep^16 - 12861710493694822181520*ep^15 - 
-         1899484361547846258112650*ep^14 - 15090210246782293708256640*ep^13 - 
-         64248093593662592985309585*ep^12 - 172678845436780702664073240*ep^11
-          - 298604947145606411197776579*ep^10 - 304578658611203122644195600*
-         ep^9 - 104556716847330730858228140*ep^8 + 145214387713435922164825920
-         *ep^7 + 197026718512673533091183280*ep^6 + 65004635072054061924873984
-         *ep^5 - 34190198595329347139022144*ep^4 - 28924846690141651178474496*
-         ep^3 - 2871133844206328779760640*ep^2 + 2261524130479752787353600*ep
-          + 491960527946797400064000,17179869184*ep^10 + 773094113280*ep^9 + 
-         14946486190080*ep^8 + 162349763788800*ep^7 + 1087021862879232*ep^6 + 
-         4626968267980800*ep^5 + 12432727731077120*ep^4 + 20146832592076800*
-         ep^3 + 17636441387433984*ep^2 + 6234230929489920*ep) + Gam(1,1)^3*
-         M^-20*rat(272097792*ep^27 + 408146688*ep^26 - 69007023360*ep^25 - 
-         108007706880*ep^24 + 6374844379584*ep^23 + 10953535332384*ep^22 - 
-         188493102765504*ep^21 - 761913245220912*ep^20 - 12273728886236430*
-         ep^19 + 480674018402803107*ep^18 + 23237302549180019229*ep^17 + 
-         526562953293857516046*ep^16 + 8122873819146068108448*ep^15 + 
-         88763541194931757426890*ep^14 + 696652090474139759220102*ep^13 + 
-         3995900348865770815415424*ep^12 + 17013912094570015187070606*ep^11 + 
-         54312597425757359425322043*ep^10 + 130365008815103084162924325*ep^9
-          + 234078605482539100897704762*ep^8 + 309689066319615921933141192*
-         ep^7 + 292916885242242333403363968*ep^6 + 186667653091158042613309008
-         *ep^5 + 69525225925124673137974560*ep^4 + 7252737950922177201239808*
-         ep^3 - 5051348304416933744494080*ep^2 - 2073686410471238077132800*ep
-          - 245980263973398700032000,4294967296*ep^13 + 193273528320*ep^12 + 
-         3736621547520*ep^11 + 40587440947200*ep^10 + 271755465719808*ep^9 + 
-         1156742066995200*ep^8 + 3108181932769280*ep^7 + 5036708148019200*ep^6
-          + 4409110346858496*ep^5 + 1558557732372480*ep^4) );
-
-
-id,only intbn*dala^9*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-14*miBN*rat(10077696
-         *ep^27 - 256981248*ep^26 + 566030592*ep^25 + 35935384320*ep^24 - 
-         299599591104*ep^23 - 902371713120*ep^22 + 22232874631104*ep^21 - 
-         117254345273712*ep^20 - 207981399667338*ep^19 + 11706826904851671*
-         ep^18 - 63134185183443585*ep^17 - 674414842151557386*ep^16 + 
-         5110290673106502528*ep^15 + 44199321317598029922*ep^14 - 
-         131857061519788187454*ep^13 - 2594417232577918296960*ep^12 - 
-         12930538297480930817046*ep^11 - 34092098213381717698737*ep^10 - 
-         50619819087367764950313*ep^9 - 34270833211552453869774*ep^8 + 
-         10337422367168026942104*ep^7 + 34801473245014912384512*ep^6 + 
-         18001576775161556524656*ep^5 - 4063594227768707227488*ep^4 - 
-         6103729911565000707840*ep^3 - 937720678490414784000*ep^2 + 
-         449704732794960384000*ep + 112426011477319680000,134217728*ep^9 + 
-         4831838208*ep^8 + 73282879488*ep^7 + 608811614208*ep^6 + 
-         3013053775872*ep^5 + 9030705610752*ep^4 + 15854334902272*ep^3 + 
-         14708115505152*ep^2 + 5411658792960*ep) + Gam(1,1)^3*M^-14*rat(
-         5038848*ep^24 - 120932352*ep^23 + 109175040*ep^22 + 17894628864*ep^21
-          - 121131269856*ep^20 - 617989606272*ep^19 + 9913407771600*ep^18 - 
-         43283084425056*ep^17 - 150665554367613*ep^16 + 17834837439120480*
-         ep^15 + 446972090124290940*ep^14 + 7863674408189265024*ep^13 + 
-         88925385784734434322*ep^12 + 643231342071409422528*ep^11 + 
-         3105133650688821099012*ep^10 + 10346876602432971141024*ep^9 + 
-         24208678046883771261747*ep^8 + 39791970420537471877728*ep^7 + 
-         45119099363804047324440*ep^6 + 33652505597884199194176*ep^5 + 
-         14659347350544560209584*ep^4 + 2237597359489033009920*ep^3 - 
-         884937532158406944000*ep^2 - 440335555062342912000*ep - 
-         56213005738659840000,33554432*ep^12 + 1207959552*ep^11 + 18320719872*
-         ep^10 + 152202903552*ep^9 + 753263443968*ep^8 + 2257676402688*ep^7 + 
-         3963583725568*ep^6 + 3677028876288*ep^5 + 1352914698240*ep^4) );
-
-
-id,only intbn*dala^9*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-16*miBN*rat(30233088
-         *ep^28 - 700399872*ep^27 - 100776960*ep^26 + 111768367104*ep^25 - 
-         647251083072*ep^24 - 4804312277088*ep^23 + 60382021901472*ep^22 - 
-         196132913403408*ep^21 - 1444724615917998*ep^20 + 33664610916883647*
-         ep^19 - 107454767216369058*ep^18 - 2465183822738777253*ep^17 + 
-         10609968124258605882*ep^16 + 168369998664539607462*ep^15 - 
-         86175935336178352908*ep^14 - 8706251128372272203058*ep^13 - 
-         56952535520488220529858*ep^12 - 192790062722511668815533*ep^11 - 
-         390504144755775318742098*ep^10 - 457151233246231716261513*ep^9 - 
-         208883565379363096262106*ep^8 + 176766376305220925748264*ep^7 + 
-         297615043040589056265552*ep^6 + 113820254742824773990128*ep^5 - 
-         46756349329075952715936*ep^4 - 45539271416426249306880*ep^3 - 
-         5214930551048022336000*ep^2 + 3485211163996681728000*ep + 
-         786982080341237760000,536870912*ep^9 + 19327352832*ep^8 + 
-         293131517952*ep^7 + 2435246456832*ep^6 + 12052215103488*ep^5 + 
-         36122822443008*ep^4 + 63417339609088*ep^3 + 58832462020608*ep^2 + 
-         21646635171840*ep) + Gam(1,1)^3*M^-16*rat(15116544*ep^25 - 327525120*
-         ep^24 - 519001344*ep^23 + 54448111872*ep^22 - 238131407520*ep^21 - 
-         2701887707808*ep^20 + 25414296070896*ep^19 - 60455398873968*ep^18 - 
-         754978254078231*ep^17 + 52449853436788149*ep^16 + 1465760132446716180
-         *ep^15 + 26719827855437831652*ep^14 + 321821878211528158134*ep^13 + 
-         2552171726707369307838*ep^12 + 13818020346566329254732*ep^11 + 
-         52776565362120661116156*ep^10 + 145054170357682111772409*ep^9 + 
-         288836657589798814465413*ep^8 + 413901091035174445117416*ep^7 + 
-         416791212340280928853608*ep^6 + 279545581236823074987984*ep^5 + 
-         109328223532279020496848*ep^4 + 13008368919948010237440*ep^3 - 
-         7515569390295877344000*ep^2 - 3250987902652379904000*ep - 
-         393491040170618880000,134217728*ep^12 + 4831838208*ep^11 + 
-         73282879488*ep^10 + 608811614208*ep^9 + 3013053775872*ep^8 + 
-         9030705610752*ep^7 + 15854334902272*ep^6 + 14708115505152*ep^5 + 
-         5411658792960*ep^4) );
-
-
-id,only intbn*dala^9*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-18*miBN*rat(
-         181398528*ep^30 - 2176782336*ep^29 - 43419753216*ep^28 + 570236350464
-         *ep^27 + 3523516080768*ep^26 - 56125292428800*ep^25 - 43721328214368*
-         ep^24 + 1992834170507520*ep^23 - 11927188132929540*ep^22 + 
-         97099966469959920*ep^21 + 1066967684793331425*ep^20 - 
-         17987624654695426080*ep^19 - 76745786831523706005*ep^18 + 
-         1413233702675439882840*ep^17 + 8791327399121406519750*ep^16 - 
-         48687343219814557131360*ep^15 - 774843746701108034617470*ep^14 - 
-         4142078320855713888888000*ep^13 - 12400221222776467015210755*ep^12 - 
-         21942924602624965551873600*ep^11 - 19725860549440923791160393*ep^10
-          + 1023747146628972207861816*ep^9 + 20941853598938427514805196*ep^8
-          + 16140878980428369740985216*ep^7 - 2330532817521138969771888*ep^6
-          - 7930764456686454910861440*ep^5 - 1795826725084616158948032*ep^4 + 
-         1338641611389963549987840*ep^3 + 479912017996959037056000*ep^2 - 
-         72745033624106425344000*ep - 30790282220370247680000,4294967296*ep^10
-          + 193273528320*ep^9 + 3736621547520*ep^8 + 40587440947200*ep^7 + 
-         271755465719808*ep^6 + 1156742066995200*ep^5 + 3108181932769280*ep^4
-          + 5036708148019200*ep^3 + 4409110346858496*ep^2 + 1558557732372480*
-         ep) + Gam(1,1)^3*M^-18*rat(90699264*ep^27 - 952342272*ep^26 - 
-         23002341120*ep^25 + 248188458240*ep^24 + 2115999132480*ep^23 - 
-         24375987561888*ep^22 - 58455923469120*ep^21 + 865976857887600*ep^20
-          - 4452004263580506*ep^19 + 241117197049885401*ep^18 + 
-         10478450137738114719*ep^17 + 219393576521890536834*ep^16 + 
-         3127002006147879315168*ep^15 + 30736626619840239992670*ep^14 + 
-         210483750296547151783938*ep^13 + 1023037280132652966026448*ep^12 + 
-         3579004772913173416981722*ep^11 + 9044701741480194809125569*ep^10 + 
-         16332012666771647211392247*ep^9 + 20353376684607317583381702*ep^8 + 
-         15983471753189181404208792*ep^7 + 5563496361826781294771520*ep^6 - 
-         2230572973112762489003664*ep^5 - 3187120132534714527361824*ep^4 - 
-         1094489992862816441137920*ep^3 + 34179456828510963648000*ep^2 + 
-         95387224401096187392000*ep + 15395141110185123840000,1073741824*ep^13
-          + 48318382080*ep^12 + 934155386880*ep^11 + 10146860236800*ep^10 + 
-         67938866429952*ep^9 + 289185516748800*ep^8 + 777045483192320*ep^7 + 
-         1259177037004800*ep^6 + 1102277586714624*ep^5 + 389639433093120*ep^4)
-          );
-
-
-id,only intbn*dala^9*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-20*miBN*rat(
-         544195584*ep^31 - 5441955840*ep^30 - 140054780160*ep^29 + 
-         1396315169280*ep^28 + 13296121591680*ep^27 - 130704658539264*ep^26 - 
-         443244073103136*ep^25 + 3370739698714176*ep^24 - 13338849174453900*
-         ep^23 + 424731802088814840*ep^22 + 1461170903510927835*ep^21 - 
-         61449489202078123110*ep^20 - 45784082615897250135*ep^19 + 
-         5118846811228431339030*ep^18 + 8953177980801817354770*ep^17 - 
-         303622435706887871897220*ep^16 - 1770867256610898036297450*ep^15 + 
-         3904633368696168872869860*ep^14 + 86654008874160344097256815*ep^13 + 
-         469802090499845227189022610*ep^12 + 1428183507222200615442955821*
-         ep^11 + 2681470812844860989333570190*ep^10 + 
-         2941229869264700495583727860*ep^9 + 1190781556186743230747107320*ep^8
-          - 1255117158621685688557075920*ep^7 - 1905262550054681268986958816*
-         ep^6 - 684236549315869966387761984*ep^5 + 312977139263151820211746944
-         *ep^4 + 286377333057210183004984320*ep^3 + 30972862572543040584960000
-         *ep^2 - 22123280776850730473472000*ep - 4919605279467974000640000,
-         17179869184*ep^10 + 773094113280*ep^9 + 14946486190080*ep^8 + 
-         162349763788800*ep^7 + 1087021862879232*ep^6 + 4626968267980800*ep^5
-          + 12432727731077120*ep^4 + 20146832592076800*ep^3 + 
-         17636441387433984*ep^2 + 6234230929489920*ep) + Gam(1,1)^3*M^-20*rat(
-         272097792*ep^28 - 2312831232*ep^27 - 73088490240*ep^26 + 582062526720
-         *ep^25 + 7454921448384*ep^24 - 52794908463456*ep^23 - 298028456089344
-         *ep^22 + 1123017782434128*ep^21 - 4654596434027310*ep^20 + 
-         603411307265167407*ep^19 + 18430562365151988159*ep^18 + 
-         294189927802057323756*ep^17 + 2857244286207492947988*ep^16 + 
-         7534803003471076342410*ep^15 - 190983321475177815048798*ep^14 - 
-         2970620555875626776785596*ep^13 - 22945091394087692967083634*ep^12 - 
-         115826523519942792445384017*ep^11 - 412760965442470510090296105*ep^10
-          - 1069571482668491740731538488*ep^9 - 2031096988505775087043906428*
-         ep^8 - 2803973777953916885928047952*ep^7 - 
-         2742501199331265291420330672*ep^6 - 1797151304986455752995115520*ep^5
-          - 687999521300324554178505792*ep^4 - 77578727813638705756892160*ep^3
-          + 48439796633698099367808000*ep^2 + 20490883840738982071296000*ep + 
-         2459802639733987000320000,4294967296*ep^13 + 193273528320*ep^12 + 
-         3736621547520*ep^11 + 40587440947200*ep^10 + 271755465719808*ep^9 + 
-         1156742066995200*ep^8 + 3108181932769280*ep^7 + 5036708148019200*ep^6
-          + 4409110346858496*ep^5 + 1558557732372480*ep^4) );
-
-
-id,only intbn*dala^9*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-22*miBN*rat(
-         3265173504*ep^33 + 5986151424*ep^32 - 1139092056576*ep^31 - 
-         2242977682176*ep^30 + 152134622102016*ep^29 + 355089430025856*ep^28
-          - 8377295133132864*ep^27 - 38635972665742944*ep^26 - 
-         111682385417068200*ep^25 + 4749775401491976060*ep^24 + 
-         50824575511677228510*ep^23 - 662468457919076761815*ep^22 - 
-         4925919138765021735705*ep^21 + 79604237481550312423095*ep^20 + 
-         529150600383042646368495*ep^19 - 6876544985586954321801030*ep^18 - 
-         74881829624402656771098390*ep^17 + 132829157984336057196468810*ep^16
-          + 6632984272334024032107826860*ep^15 + 56093817018756495209903396685
-         *ep^14 + 270613847484516190241273219451*ep^13 + 
-         863044766465804227583563068531*ep^12 + 
-         1880334276482576530334975225031*ep^11 + 
-         2724199210222218555416237552256*ep^10 + 
-         2291198171149489932796618925964*ep^9 + 370232193063213127794803356224
-         *ep^8 - 1433032963863471713850420441456*ep^7 - 
-         1486118174588413766104422110976*ep^6 - 366913104033633541162932968640
-         *ep^5 + 297541676659176768908501280000*ep^4 + 
-         204166847893514411703215232000*ep^3 + 14706173107832430874406400000*
-         ep^2 - 16571231247337783311052800000*ep - 
-         3373001869828765999104000000,137438953472*ep^11 + 7559142440960*ep^10
-          + 181419418583040*ep^9 + 2494517005516800*ep^8 + 21684156006137856*
-         ep^7 + 123977495174184960*ep^6 + 469619283287080960*ep^5 + 
-         1155792879222784000*ep^4 + 1752838138465615872*ep^3 + 
-         1460789158430638080*ep^2 + 498738474359193600*ep) + Gam(1,1)^3*M^-22*
-         rat(1632586752*ep^30 + 5441955840*ep^29 - 558934214400*ep^28 - 
-         1969685683200*ep^27 + 72322270416000*ep^26 + 288684747429120*ep^25 - 
-         3655985720460768*ep^24 - 25072770210817536*ep^23 - 98177725972516644*
-         ep^22 + 2216508213736491048*ep^21 - 34986392754763335435*ep^20 - 
-         4564854074573730877428*ep^19 - 137853743467274890548651*ep^18 - 
-         2604133437300206253876294*ep^17 - 35467394451131609806082022*ep^16 - 
-         360051968984974448116739760*ep^15 - 2761725726418491625010723298*
-         ep^14 - 16179848001717402246452263116*ep^13 - 
-         73038694075893031189824138879*ep^12 - 255425888730744027784705989852*
-         ep^11 - 692754312494677954279013646687*ep^10 - 
-         1451175895236914272270531408518*ep^9 - 
-         2323368639453955158084117536496*ep^8 - 
-         2788189985175795082694701090224*ep^7 - 
-         2423987247526844498385974231472*ep^6 - 
-         1431626115188386827102841642080*ep^5 - 491570270920606085141206896000
-         *ep^4 - 38446629150439257838497216000*ep^3 + 
-         39165323183982053821728000000*ep^2 + 14750535874174026487142400000*ep
-          + 1686500934914382999552000000,34359738368*ep^14 + 1889785610240*
-         ep^13 + 45354854645760*ep^12 + 623629251379200*ep^11 + 
-         5421039001534464*ep^10 + 30994373793546240*ep^9 + 117404820821770240*
-         ep^8 + 288948219805696000*ep^7 + 438209534616403968*ep^6 + 
-         365197289607659520*ep^5 + 124684618589798400*ep^4) );
-
-
-id,only intbn*dala^10*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-16*miBN*rat(
-         60466176*ep^30 - 1612431360*ep^29 - 377913600*ep^28 + 346807111680*
-         ep^27 - 2263207257216*ep^26 - 21257235025920*ep^25 + 274837242417120*
-         ep^24 - 675547557926400*ep^23 - 6650369171439660*ep^22 + 
-         166141402971048000*ep^21 - 1249898362101132525*ep^20 - 
-         11560157107386058800*ep^19 + 174655330563585433905*ep^18 + 
-         758853641445431603400*ep^17 - 13379504199054122134350*ep^16 - 
-         85818536286337032638400*ep^15 + 447246901679558774136390*ep^14 + 
-         7519334079197023693556400*ep^13 + 41952396153846646193070375*ep^12 + 
-         133757584161432798340666800*ep^11 + 264182399292289818744555669*ep^10
-          + 307009871367740374400762760*ep^9 + 141613247495193048535500900*
-         ep^8 - 117119848838849864095121280*ep^7 - 201344374641185051064765264
-         *ep^6 - 78898811098815816397073280*ep^5 + 31099784381727328500742080*
-         ep^4 + 31275487346025451988966400*ep^3 + 3706020415997768373120000*
-         ep^2 - 2389409004045385405440000*ep - 545672524937663692800000,
-         1073741824*ep^10 + 48318382080*ep^9 + 934155386880*ep^8 + 
-         10146860236800*ep^7 + 67938866429952*ep^6 + 289185516748800*ep^5 + 
-         777045483192320*ep^4 + 1259177037004800*ep^3 + 1102277586714624*ep^2
-          + 389639433093120*ep) + Gam(1,1)^3*M^-16*rat(30233088*ep^27 - 
-         760866048*ep^26 - 1284906240*ep^25 + 170002333440*ep^24 - 
-         868162577472*ep^23 - 11728539034848*ep^22 + 117159826413888*ep^21 - 
-         164669307402672*ep^20 - 3340272296540574*ep^19 + 76011722760723435*
-         ep^18 - 2491513746435988659*ep^17 - 104425739249840635194*ep^16 - 
-         2170146063161190087936*ep^15 - 30954439280527236870822*ep^14 - 
-         305858195660392847839386*ep^13 - 2119512352065212886078096*ep^12 - 
-         10520557721926696700299458*ep^11 - 38057850379975576655636829*ep^10
-          - 101255606360950899277415403*ep^9 - 198069871050662943828013038*
-         ep^8 - 281621914643260538576363448*ep^7 - 283275981696297135060813888
-         *ep^6 - 190658378109181583087233200*ep^5 - 75119908777301311480153440
-         *ep^4 - 9161036236854522654163200*ep^3 + 5114007679690383163200000*
-         ep^2 + 2240576841486548113920000*ep + 272836262468831846400000,
-         268435456*ep^13 + 12079595520*ep^12 + 233538846720*ep^11 + 
-         2536715059200*ep^10 + 16984716607488*ep^9 + 72296379187200*ep^8 + 
-         194261370798080*ep^7 + 314794259251200*ep^6 + 275569396678656*ep^5 + 
-         97409858273280*ep^4) );
-
-
-id,only intbn*dala^10*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-18*miBN*rat(
-         181398528*ep^31 - 4353564672*ep^30 - 14033191680*ep^29 + 
-         1037398026240*ep^28 - 4015164878208*ep^27 - 81877363135488*ep^26 + 
-         654453847044000*ep^25 + 172055265557760*ep^24 - 25355487977730180*
-         ep^23 + 445221255541626720*ep^22 - 2420563862535013575*ep^21 - 
-         44679658218967236600*ep^20 + 431484734831667831315*ep^19 + 
-         3673803568844978281440*ep^18 - 34067683465598913575850*ep^17 - 
-         364491642451444074990000*ep^16 + 655192414747980061301970*ep^15 + 
-         26135977451027541273760320*ep^14 + 186011861095116128127662325*ep^13
-          + 736891921715071564566563400*ep^12 + 1862607871168331842959001407*
-         ep^11 + 3034488808441539673158733632*ep^10 + 
-         2880918713427502140812604780*ep^9 + 781546433444994795998643360*ep^8
-          - 1540991914634354065955266032*ep^7 - 1847451430425927857709341952*
-         ep^6 - 537891135645344545674360000*ep^5 + 342624737091894983972835840
-         *ep^4 + 261321960016196921031091200*ep^3 + 22479936315845990768640000
-         *ep^2 - 20752289607176074321920000*ep - 4365380199501309542400000,
-         4294967296*ep^10 + 193273528320*ep^9 + 3736621547520*ep^8 + 
-         40587440947200*ep^7 + 271755465719808*ep^6 + 1156742066995200*ep^5 + 
-         3108181932769280*ep^4 + 5036708148019200*ep^3 + 4409110346858496*ep^2
-          + 1558557732372480*ep) + Gam(1,1)^3*M^-18*rat(90699264*ep^28 - 
-         2040733440*ep^27 - 9941647104*ep^26 + 499727750400*ep^25 - 
-         1244469064896*ep^24 - 42130917724320*ep^23 + 257651166962880*ep^22 + 
-         443270689103088*ep^21 - 11338171348843098*ep^20 + 201312989909845713*
-         ep^19 - 6866447457222178497*ep^18 - 333209327721009814854*ep^17 - 
-         7345844103482295345360*ep^16 - 110224486346871231315954*ep^15 - 
-         1165210101225396438484734*ep^14 - 8805402621478781440949376*ep^13 - 
-         48517771982301793189523142*ep^12 - 198338012915340303569306151*ep^11
-          - 608229622122657311077340841*ep^10 - 1404254464039596025703362338*
-         ep^9 - 2429424712335085166353194648*ep^8 - 
-         3102803262234975713793349248*ep^7 - 2838182987897921829748210704*ep^6
-          - 1750626751205356599138325920*ep^5 - 628442378928974059803717120*
-         ep^4 - 57946266855765031743705600*ep^3 + 47633791961982709647360000*
-         ep^2 + 18743123519298880450560000*ep + 2182690099750654771200000,
-         1073741824*ep^13 + 48318382080*ep^12 + 934155386880*ep^11 + 
-         10146860236800*ep^10 + 67938866429952*ep^9 + 289185516748800*ep^8 + 
-         777045483192320*ep^7 + 1259177037004800*ep^6 + 1102277586714624*ep^5
-          + 389639433093120*ep^4) );
-
-
-id,only intbn*dala^10*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-20*miBN*rat(
-         1088391168*ep^33 - 12516498432*ep^32 - 379697352192*ep^31 + 
-         4438323134208*ep^30 + 50824410895872*ep^29 - 608550810910848*ep^28 - 
-         2852606574445248*ep^27 + 33795760004639712*ep^26 - 8915434277231160*
-         ep^25 + 1040097192158982420*ep^24 + 9172370228045053770*ep^23 - 
-         373049190623667620205*ep^22 - 392965575135838051635*ep^21 + 
-         44142185150828196973965*ep^20 + 52090040525828646451365*ep^19 - 
-         3895958891011281593802210*ep^18 - 19251525717497693634378930*ep^17 + 
-         172465495692906065872680270*ep^16 + 2579102469375682983772066020*
-         ep^15 + 15345929871288910861275654495*ep^14 + 
-         54568824381733432262781986217*ep^13 + 124316137829383998865636171617*
-         ep^12 + 174423268559075719611308317677*ep^11 + 
-         114574723468384574767561057152*ep^10 - 52349416252403307376710649212*
-         ep^9 - 160661226398815533906105475392*ep^8 - 
-         92172744320582887161934333392*ep^7 + 30943596466866948798721966848*
-         ep^6 + 51812654759336762110112287680*ep^5 + 
-         8083259534692832699568326400*ep^4 - 9137615852685725982523008000*ep^3
-          - 2767418162684647718561280000*ep^2 + 506987265500079662592000000*ep
-          + 187560784581871067136000000,34359738368*ep^11 + 1889785610240*
-         ep^10 + 45354854645760*ep^9 + 623629251379200*ep^8 + 5421039001534464
-         *ep^7 + 30994373793546240*ep^6 + 117404820821770240*ep^5 + 
-         288948219805696000*ep^4 + 438209534616403968*ep^3 + 
-         365197289607659520*ep^2 + 124684618589798400*ep) + Gam(1,1)^3*M^-20*
-         rat(544195584*ep^30 - 5441955840*ep^29 - 197195316480*ep^28 + 
-         1909219507200*ep^27 + 28076020156800*ep^26 - 257786329939200*ep^25 - 
-         1798776734030496*ep^24 + 13668477682364928*ep^23 + 16801205434742772*
-         ep^22 + 563487234170457816*ep^21 - 26511873396251626665*ep^20 - 
-         2174009369866007951916*ep^19 - 58711129194520355658777*ep^18 - 
-         1022688307479483849573378*ep^17 - 12785324706791763423955074*ep^16 - 
-         116933715223245694662254640*ep^15 - 790429808256099743609612406*ep^14
-          - 3989248081829961795885698532*ep^13 - 15138833026342484473508836773
-         *ep^12 - 43247930893130717673725029284*ep^11 - 
-         92326607175740735649417894549*ep^10 - 144343650007219624240596034626*
-         ep^9 - 158057715471007245858249519312*ep^8 - 
-         108536955622053450212878758288*ep^7 - 28738061220971935003366817424*
-         ep^6 + 20378296834934579875843745760*ep^5 + 
-         21678548114914884887383036800*ep^4 + 6580389789925286272530624000*
-         ep^3 - 408594943411848079407360000*ep^2 - 612985136531959376640000000
-         *ep - 93780392290935533568000000,8589934592*ep^14 + 472446402560*
-         ep^13 + 11338713661440*ep^12 + 155907312844800*ep^11 + 
-         1355259750383616*ep^10 + 7748593448386560*ep^9 + 29351205205442560*
-         ep^8 + 72237054951424000*ep^7 + 109552383654100992*ep^6 + 
-         91299322401914880*ep^5 + 31171154647449600*ep^4) );
-
-
-id,only intbn*dala^10*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-22*miBN*rat(
-         3265173504*ep^34 - 29930757120*ep^33 - 1204939722240*ep^32 + 
-         10287034940160*ep^31 + 176807376605952*ep^30 - 1318391413096320*ep^29
-          - 12283278863417280*ep^28 + 53514273798718560*ep^27 + 
-         313313313906104184*ep^26 + 5978281641079726260*ep^25 - 
-         1422953904734508150*ep^24 - 1221538788547526275425*ep^23 + 
-         2361233898344822644260*ep^22 + 133789348007965551515850*ep^21 - 
-         346496011914010790285550*ep^20 - 12697201589800423431854475*ep^19 + 
-         760165217053840768712940*ep^18 + 956529283852765281678551100*ep^17 + 
-         5171863534506327402946669950*ep^16 - 16869009976917769143282698775*
-         ep^15 - 346418139721805257067664144084*ep^14 - 
-         2113707555863873865070442345430*ep^13 - 
-         7613158154641269973084218528810*ep^12 - 
-         17959477831086123278268489923085*ep^11 - 
-         27674993141294914176781994148852*ep^10 - 
-         24832947689581176132968004829380*ep^9 - 
-         5505587087558816119593257359920*ep^8 + 
-         14277244427909775086250202745040*ep^7 + 
-         15980386816438917885985710252096*ep^6 + 
-         4333585821029145721700763935040*ep^5 - 
-         3068791595357430046290298848000*ep^4 - 
-         2231129153720826097860961152000*ep^3 - 178339135433494522929523200000
-         *ep^2 + 178910541850886850422476800000*ep + 
-         37103020568116425990144000000,137438953472*ep^11 + 7559142440960*
-         ep^10 + 181419418583040*ep^9 + 2494517005516800*ep^8 + 
-         21684156006137856*ep^7 + 123977495174184960*ep^6 + 469619283287080960
-         *ep^5 + 1155792879222784000*ep^4 + 1752838138465615872*ep^3 + 
-         1460789158430638080*ep^2 + 498738474359193600*ep) + Gam(1,1)^3*M^-22*
-         rat(1632586752*ep^31 - 12516498432*ep^30 - 618795728640*ep^29 + 
-         4178590675200*ep^28 + 93988812931200*ep^27 - 506860227146880*ep^26 - 
-         6831517942181088*ep^25 + 15143072714250912*ep^24 + 177622746346476252
-         *ep^23 + 3296463199434174132*ep^22 - 59367983105864736963*ep^21 - 
-         4180003754271334187643*ep^20 - 87640348646963850896943*ep^19 - 
-         1087742259160182457841133*ep^18 - 6821926640829341013442788*ep^17 + 
-         30089369977473259750162482*ep^16 + 1198845932416227304273414062*ep^15
-          + 14199134988886005628665693162*ep^14 + 
-         104939633942998393521150755397*ep^13 + 547999746104079315303359537817
-         *ep^12 + 2116930463543506351352752241685*ep^11 + 
-         6169121542204543224798618705039*ep^10 + 
-         13639566208152101836891727957202*ep^9 + 
-         22768865048817711656230591811232*ep^8 + 
-         28246102589406901411255737760992*ep^7 + 
-         25232233607606902655142874904112*ep^6 + 
-         15256316996151649012990051166880*ep^5 + 
-         5368826350976227678714778640000*ep^4 + 462078243838813890045197376000
-         *ep^3 - 416068019149628565551865600000*ep^2 - 
-         160569393680999908359014400000*ep - 18551510284058212995072000000,
-         34359738368*ep^14 + 1889785610240*ep^13 + 45354854645760*ep^12 + 
-         623629251379200*ep^11 + 5421039001534464*ep^10 + 30994373793546240*
-         ep^9 + 117404820821770240*ep^8 + 288948219805696000*ep^7 + 
-         438209534616403968*ep^6 + 365197289607659520*ep^5 + 
-         124684618589798400*ep^4) );
-
-
-id,only intbn*dala^10*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat(
-         19591041024*ep^36 + 78364164096*ep^35 - 8941133445120*ep^34 - 
-         38121989050368*ep^33 + 1602649207551744*ep^32 + 7817986923816960*
-         ep^31 - 129467506239422208*ep^30 - 963239522958484992*ep^29 + 
-         1367431245248829552*ep^28 + 103073015495689614144*ep^27 + 
-         680361892509151089288*ep^26 - 13475107885183654280400*ep^25 - 
-         68677506788506593048135*ep^24 + 1941102306018155084843520*ep^23 + 
-         4722868610817737013500130*ep^22 - 256464716144965835096428740*ep^21
-          - 917392642218552511646333325*ep^20 + 26561732989954897972211394420*
-         ep^19 + 238982173488701029493059143960*ep^18 - 
-         828001361557521028387706989320*ep^17 - 
-         28709516473350672436395672527649*ep^16 - 
-         257846595976727315185371223979736*ep^15 - 
-         1388779447897560847583604992826150*ep^14 - 
-         5123784539350667201184159587985492*ep^13 - 
-         13451397611907859164197830908645579*ep^12 - 
-         25026255065374177655693288600413020*ep^11 - 
-         31351059224744618890074255595027452*ep^10 - 
-         21937157132011915543113003030431568*ep^9 + 
-         629409471015685201612703222680368*ep^8 + 
-         17265598682329160347629266372903616*ep^7 + 
-         14676867679660186526492140683087552*ep^6 + 
-         2573238779464291113104111553050880*ep^5 - 
-         3297628271940500292332122482048000*ep^4 - 
-         1926207101275417321994823289344000*ep^3 - 
-         91703550183707227240503705600000*ep^2 + 
-         162347768650437671194487193600000*ep + 
-         31228469227906297060589568000000,1099511627776*ep^12 + 72567767433216
-         *ep^11 + 2116559883468800*ep^10 + 35921044879441920*ep^9 + 
-         392990744534581248*ep^8 + 2900025689933611008*ep^7 + 
-         14666973841624924160*ep^6 + 50572839963045396480*ep^5 + 
-         115732478479329918976*ep^4 + 165936069452419301376*ep^3 + 
-         132539353736769699840*ep^2 + 43888985743609036800*ep) + Gam(1,1)^3*
-         M^-24*rat(9795520512*ep^33 + 53875362816*ep^32 - 4375060397568*ep^31
-          - 25650522802944*ep^30 + 756340104337920*ep^29 + 5051331531768960*
-         ep^28 - 56002249062767808*ep^27 - 566046056811327840*ep^26 - 
-         259825949649945720*ep^25 + 50888665987139518236*ep^24 + 
-         419635528008516070362*ep^23 + 5178537392413495846833*ep^22 + 
-         878432481614586229450569*ep^21 + 36576770887604900460485385*ep^20 + 
-         865654877912942089764853821*ep^19 + 14426228026554761017690799832*
-         ep^18 + 181579749950473160176206018018*ep^17 + 
-         1769679535544441920038295855134*ep^16 + 
-         13507323970046566289374545162660*ep^15 + 
-         81336709192397795743504933306161*ep^14 + 
-         388422719969888862949987000910925*ep^13 + 
-         1475245603492303444675240904873037*ep^12 + 
-         4456127751847278752594021688673317*ep^11 + 
-         10667458203783993867270965849789814*ep^10 + 
-         20080232645001010983344576102398416*ep^9 + 
-         29320637164020458822618505111258432*ep^8 + 
-         32483599122039644241107933778531216*ep^7 + 
-         26318130249039674084157436311186144*ep^6 + 
-         14562136868081205363021190227807360*ep^5 + 
-         4645881605981242416226161312576000*ep^4 + 
-         249684095692602874822867875072000*ep^3 - 
-         401939334360241972475927961600000*ep^2 - 
-         141028450345372571630040268800000*ep - 
-         15614234613953148530294784000000,274877906944*ep^15 + 18141941858304*
-         ep^14 + 529139970867200*ep^13 + 8980261219860480*ep^12 + 
-         98247686133645312*ep^11 + 725006422483402752*ep^10 + 
-         3666743460406231040*ep^9 + 12643209990761349120*ep^8 + 
-         28933119619832479744*ep^7 + 41484017363104825344*ep^6 + 
-         33134838434192424960*ep^5 + 10972246435902259200*ep^4) );
-
-
-id,only intbn*dala^11*x3^1*x4^1*x5^1*x6^1 =  + int0 * ( M^-18*miBN*rat(
-         362797056*ep^33 - 9976919040*ep^32 - 35140925952*ep^31 + 
-         3106868016384*ep^30 - 13856573339136*ep^29 - 331022949713280*ep^28 + 
-         2857385683703232*ep^27 + 5752804708338336*ep^26 - 132182086669090920*
-         ep^25 + 1755344907442734300*ep^24 - 18789247456996290930*ep^23 - 
-         163261528249375164015*ep^22 + 4025834205111409209255*ep^21 + 
-         5710593787674411905775*ep^20 - 461638380023767243273185*ep^19 - 
-         597446399360175994606230*ep^18 + 40853137355505481288323690*ep^17 + 
-         209650190205785897008618650*ep^16 - 1774167676651744318376211780*
-         ep^15 - 27725136672381183891963140715*ep^14 - 
-         170982718619873227930357646661*ep^13 - 638290617192817152228045197685
-         *ep^12 - 1567903964537249006522383939113*ep^11 - 
-         2521985656123055253776107646304*ep^10 - 
-         2387972624350100591131608392244*ep^9 - 657627764194857865812368454720
-         *ep^8 + 1270210935604127041721345635728*ep^7 + 
-         1542304566983518518799778252544*ep^6 + 459049491577079572197680688960
-         *ep^5 - 283426405806897111893248224000*ep^4 - 
-         220447967361280413759128448000*ep^3 - 19603431363406186313740800000*
-         ep^2 + 17475378519951316313395200000*ep + 
-         3705756097386556071936000000,8589934592*ep^11 + 472446402560*ep^10 + 
-         11338713661440*ep^9 + 155907312844800*ep^8 + 1355259750383616*ep^7 + 
-         7748593448386560*ep^6 + 29351205205442560*ep^5 + 72237054951424000*
-         ep^4 + 109552383654100992*ep^3 + 91299322401914880*ep^2 + 
-         31171154647449600*ep) + Gam(1,1)^3*M^-18*rat(181398528*ep^30 - 
-         4716361728*ep^29 - 24372907776*ep^28 + 1507804720128*ep^27 - 
-         4639286669184*ep^26 - 170351463460608*ep^25 + 1151641765269792*ep^24
-          + 4472292047567616*ep^23 - 56533282199472132*ep^22 + 
-         780754720731217416*ep^21 - 8213591161117198899*ep^20 + 
-         257391591278589679860*ep^19 + 23648524272629904113397*ep^18 + 
-         639673407078507739153530*ep^17 + 11148476086212431057851050*ep^16 + 
-         139775669927962679344371264*ep^15 + 1286799608013892190212796766*
-         ep^14 + 8801676948514298126904722484*ep^13 + 
-         45262389698551305081246632409*ep^12 + 176636920376742898129922213388*
-         ep^11 + 525603337455638697652262898657*ep^10 + 
-         1191303649544349635799267525786*ep^9 + 
-         2040273931113120697075579985424*ep^8 + 
-         2594875963154625733380373281744*ep^7 + 
-         2373478051966094228365562341968*ep^6 + 
-         1468311923553874713389487561120*ep^5 + 530195550412751741731007376000
-         *ep^4 + 50111551794437910947663424000*ep^3 - 
-         39905442740936445925190400000*ep^2 - 15840388446633223961241600000*ep
-          - 1852878048693278035968000000,2147483648*ep^14 + 118111600640*ep^13
-          + 2834678415360*ep^12 + 38976828211200*ep^11 + 338814937595904*ep^10
-          + 1937148362096640*ep^9 + 7337801301360640*ep^8 + 18059263737856000*
-         ep^7 + 27388095913525248*ep^6 + 22824830600478720*ep^5 + 
-         7792788661862400*ep^4) );
-
-
-id,only intbn*dala^11*x3^1*x4^1*x5^1*x6^2 =  + int0 * ( M^-20*miBN*rat(
-         1088391168*ep^33 - 29930757120*ep^32 - 105422777856*ep^31 + 
-         9320604049152*ep^30 - 41569720017408*ep^29 - 993068849139840*ep^28 + 
-         8572157051109696*ep^27 + 17258414125015008*ep^26 - 396546260007272760
-         *ep^25 + 5266034722328202900*ep^24 - 56367742370988872790*ep^23 - 
-         489784584748125492045*ep^22 + 12077502615334227627765*ep^21 + 
-         17131781363023235717325*ep^20 - 1384915140071301729819555*ep^19 - 
-         1792339198080527983818690*ep^18 + 122559412066516443864971070*ep^17
-          + 628950570617357691025855950*ep^16 - 5322503029955232955128635340*
-         ep^15 - 83175410017143551675889422145*ep^14 - 
-         512948155859619683791072939983*ep^13 - 
-         1914871851578451456684135593055*ep^12 - 
-         4703711893611747019567151817339*ep^11 - 
-         7565956968369165761328322938912*ep^10 - 
-         7163917873050301773394825176732*ep^9 - 
-         1972883292584573597437105364160*ep^8 + 
-         3810632806812381125164036907184*ep^7 + 
-         4626913700950555556399334757632*ep^6 + 
-         1377148474731238716593042066880*ep^5 - 850279217420691335679744672000
-         *ep^4 - 661343902083841241277385344000*ep^3 - 
-         58810294090218558941222400000*ep^2 + 52426135559853948940185600000*ep
-          + 11117268292159668215808000000,34359738368*ep^10 + 1786706395136*
-         ep^9 + 39994735460352*ep^8 + 503645044998144*ep^7 + 3910103866540032*
-         ep^6 + 19264062193926144*ep^5 + 59612634239991808*ep^4 + 
-         110110317085720576*ep^3 + 107878583359242240*ep^2 + 41561539529932800
-         *ep) + Gam(1,1)^3*M^-20*rat(544195584*ep^30 - 14149085184*ep^29 - 
-         73118723328*ep^28 + 4523414160384*ep^27 - 13917860007552*ep^26 - 
-         511054390381824*ep^25 + 3454925295809376*ep^24 + 13416876142702848*
-         ep^23 - 169599846598416396*ep^22 + 2342264162193652248*ep^21 - 
-         24640773483351596697*ep^20 + 772174773835769039580*ep^19 + 
-         70945572817889712340191*ep^18 + 1919020221235523217460590*ep^17 + 
-         33445428258637293173553150*ep^16 + 419327009783888038033113792*ep^15
-          + 3860398824041676570638390298*ep^14 + 26405030845542894380714167452
-         *ep^13 + 135787169095653915243739897227*ep^12 + 
-         529910761130228694389766640164*ep^11 + 
-         1576810012366916092956788695971*ep^10 + 
-         3573910948633048907397802577358*ep^9 + 
-         6120821793339362091226739956272*ep^8 + 
-         7784627889463877200141119845232*ep^7 + 
-         7120434155898282685096687025904*ep^6 + 
-         4404935770661624140168462683360*ep^5 + 
-         1590586651238255225193022128000*ep^4 + 150334655383313732842990272000
-         *ep^3 - 119716328222809337775571200000*ep^2 - 
-         47521165339899671883724800000*ep - 5558634146079834107904000000,
-         8589934592*ep^13 + 446676598784*ep^12 + 9998683865088*ep^11 + 
-         125911261249536*ep^10 + 977525966635008*ep^9 + 4816015548481536*ep^8
-          + 14903158559997952*ep^7 + 27527579271430144*ep^6 + 
-         26969645839810560*ep^5 + 10390384882483200*ep^4) );
-
-
-id,only intbn*dala^11*x3^1*x4^1*x5^2*x6^2 =  + int0 * ( M^-22*miBN*rat(
-         6530347008*ep^36 - 69657034752*ep^35 - 3155971590144*ep^34 + 
-         32295226466304*ep^33 + 621257261315328*ep^32 - 5899637346527232*ep^31
-          - 61532867480502528*ep^30 + 464630634966491136*ep^29 + 
-         2849463030249841104*ep^28 + 7899875611597626624*ep^27 - 
-         49671393255657890568*ep^26 - 6378954856710730860960*ep^25 + 
-         13398441994486241026155*ep^24 + 971921090092605375586680*ep^23 - 
-         3112089475827006613179450*ep^22 - 118493718656081179806214380*ep^21
-          + 178456412405549065117757625*ep^20 + 12928576529926989955533262500*
-         ep^19 + 51357252193183188947077507080*ep^18 - 
-         736348566454518210837283803240*ep^17 - 
-         10743802498928011225946390515683*ep^16 - 
-         70344199341184017344239708962048*ep^15 - 
-         289146807910277486205302391651666*ep^14 - 
-         802585902555335180721520055691324*ep^13 - 
-         1500475489693176993921560086508673*ep^12 - 
-         1735360376149619291590858289922588*ep^11 - 
-         792122155762666155749366944651092*ep^10 + 
-         861875965069279590708077430693744*ep^9 + 
-         1567473420705519665929652835173136*ep^8 + 
-         679650678755291096724109204506816*ep^7 - 
-         391167436967750270217231355741632*ep^6 - 
-         450539544966822700476227212481280*ep^5 - 
-         43566214035691770303782871936000*ep^4 + 
-         83073254481496619584128382464000*ep^3 + 
-         21728201744345809372698931200000*ep^2 - 
-         4700900557071681833867673600000*ep - 1562418227343467765956608000000,
-         274877906944*ep^12 + 18141941858304*ep^11 + 529139970867200*ep^10 + 
-         8980261219860480*ep^9 + 98247686133645312*ep^8 + 725006422483402752*
-         ep^7 + 3666743460406231040*ep^6 + 12643209990761349120*ep^5 + 
-         28933119619832479744*ep^4 + 41484017363104825344*ep^3 + 
-         33134838434192424960*ep^2 + 10972246435902259200*ep) + Gam(1,1)^3*
-         M^-22*rat(3265173504*ep^33 - 29930757120*ep^32 - 1617984170496*ep^31
-          + 13639823933184*ep^30 + 329206130081280*ep^29 - 2421519926590080*
-         ep^28 - 34126573330414656*ep^27 + 175256073992929248*ep^26 + 
-         1673497673175755736*ep^25 + 6866456640418241748*ep^24 - 
-         14130684001693421730*ep^23 + 2403981176225770713267*ep^22 + 
-         434580339878980234447779*ep^21 + 16111788400890790277684931*ep^20 + 
-         348737351403099717907704783*ep^19 + 5359830692604933215354660640*
-         ep^18 + 61845170126926105139734779462*ep^17 + 
-         545018194451206600608026045034*ep^16 + 
-         3699105742815229921171766450796*ep^15 + 
-         19452419578724094555031758616803*ep^14 + 
-         79539058885302479424939143452911*ep^13 + 
-         252830656157242036180848891665967*ep^12 + 
-         621352122474388266900759690892935*ep^11 + 
-         1165155574870870354673143627692762*ep^10 + 
-         1624490810404605926495030453479488*ep^9 + 
-         1598239589632368871732262438339520*ep^8 + 
-         973645086008118747119935544776368*ep^7 + 
-         183590740404949066945336300440096*ep^6 - 
-         226144901026499639093359940684160*ep^5 - 
-         197268395740520533031240593344000*ep^4 - 
-         53664552886067218990773004032000*ep^3 + 
-         4981538273508823637957068800000*ep^2 + 
-         5345085214277487468350668800000*ep + 781209113671733882978304000000,
-         68719476736*ep^15 + 4535485464576*ep^14 + 132284992716800*ep^13 + 
-         2245065304965120*ep^12 + 24561921533411328*ep^11 + 181251605620850688
-         *ep^10 + 916685865101557760*ep^9 + 3160802497690337280*ep^8 + 
-         7233279904958119936*ep^7 + 10371004340776206336*ep^6 + 
-         8283709608548106240*ep^5 + 2743061608975564800*ep^4) );
-
-
-id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat(
-         19591041024*ep^37 - 156728328192*ep^36 - 9881503414272*ep^35 + 
-         69171612291072*ep^34 + 2060113076156160*ep^33 - 11413803566803968*
-         ep^32 - 223283349325225728*ep^31 + 590370551914581504*ep^30 + 
-         12926305520750649456*ep^29 + 86663840552703659520*ep^28 - 
-         556514293439124280440*ep^27 - 21639450595293467351856*ep^26 + 
-         93023787833697258316665*ep^25 + 2765232387480234201421140*ep^24 - 
-         18570359061400124004622110*ep^23 - 313139139474778679258430300*ep^22
-          + 2160183951521037509510811555*ep^21 + 37570444696577528111967394320
-         *ep^20 - 79758622390757746173477589080*ep^19 - 
-         3695787443421933382304416716840*ep^18 - 
-         18773500134660420095743188655809*ep^17 + 
-         86667601703480754051376846352052*ep^16 + 
-         1705379703823166934640849694930682*ep^15 + 
-         11541568835420062969819100325928308*ep^14 + 
-         48034016860300147250012084147180325*ep^13 + 1363905162775201323146806\
-         82303333928*ep^12 + 268964001559745512978245207609928788*ep^11 + 
-         354275553564923511137778064109897856*ep^10 + 263875295055158671718968\
-         739587859184*ep^9 + 9712685030140937928276827700739200*ep^8 - 
-         192510316508289737645059055791755840*ep^7 - 1735491733764579472048015\
-         76643999744*ep^6 - 34176493625511993649581461118658560*ep^5 + 
-         37645332162010586185990646495232000*ep^4 + 
-         23022781665121300636697375766528000*ep^3 + 
-         1262790370854924398080531660800000*ep^2 - 
-         1916944754577345757273256755200000*ep - 
-         374741630734875564727074816000000,1099511627776*ep^12 + 
-         72567767433216*ep^11 + 2116559883468800*ep^10 + 35921044879441920*
-         ep^9 + 392990744534581248*ep^8 + 2900025689933611008*ep^7 + 
-         14666973841624924160*ep^6 + 50572839963045396480*ep^5 + 
-         115732478479329918976*ep^4 + 165936069452419301376*ep^3 + 
-         132539353736769699840*ep^2 + 43888985743609036800*ep) + Gam(1,1)^3*
-         M^-24*rat(9795520512*ep^34 - 63670883328*ep^33 - 5021564751360*ep^32
-          + 26850201967872*ep^31 + 1064146377973248*ep^30 - 4024749720286080*
-         ep^29 - 116618227443995328*ep^28 + 105980931941885856*ep^27 + 
-         6532726732085988360*ep^26 + 54006577382938866876*ep^25 - 
-         191028463837158148470*ep^24 + 142911056311303002489*ep^23 + 
-         816290032905624279288573*ep^22 + 26035581108229865707078557*ep^21 + 
-         426733627261683284239029201*ep^20 + 4038369491599455940512553980*
-         ep^19 + 8465013631816027963916420034*ep^18 - 
-         409277463861236002076176361082*ep^17 - 
-         7728830456486736751085005098948*ep^16 - 
-         80751178448160999728989608645759*ep^15 - 
-         587617790338884685972072198763007*ep^14 - 
-         3185827036146362910724603106058063*ep^13 - 
-         13246819490060362583508869169803127*ep^12 - 
-         42806074818383351163857294414289990*ep^11 - 1079292658004069154239070\
-         14095079352*ep^10 - 211642154575991672977516408117522560*ep^9 - 
-         319364046846205861630314127556569968*ep^8 - 3634850592154360568091377\
-         69031188448*ep^7 - 301255426120394883646868045506426368*ep^6 - 
-         170099760810993221940028121421112320*ep^5 - 
-         55500895176082306119891067875840000*ep^4 - 
-         3398148482671476470350342462464000*ep^3 + 
-         4682243561977531098081095270400000*ep^2 + 
-         1676727169530517711030188441600000*ep + 
-         187370815367437782363537408000000,274877906944*ep^15 + 18141941858304
-         *ep^14 + 529139970867200*ep^13 + 8980261219860480*ep^12 + 
-         98247686133645312*ep^11 + 725006422483402752*ep^10 + 
-         3666743460406231040*ep^9 + 12643209990761349120*ep^8 + 
-         28933119619832479744*ep^7 + 41484017363104825344*ep^6 + 
-         33134838434192424960*ep^5 + 10972246435902259200*ep^4) );
-
-
-id,only intbn*dala^11*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-26*miBN*rat(
-         117546246144*ep^39 + 764050599936*ep^38 - 68163762069504*ep^37 - 
-         473930138585088*ep^36 + 15772167650824704*ep^35 + 124707552876382464*
-         ep^34 - 1717847922431953152*ep^33 - 18955118424913761024*ep^32 + 
-         49485051068399701920*ep^31 + 2131544589272534194704*ep^30 + 
-         9185804495047780880256*ep^29 - 255521678386522145190408*ep^28 - 
-         1033101614468459222211618*ep^27 + 38212718159020864066545591*ep^26 - 
-         16597308281441078659345245*ep^25 - 6072240237232074709835032020*ep^24
-          + 11834329595021542071248282820*ep^23 + 
-         936009633646094203530579046725*ep^22 + 918406534159715755057076201985
-         *ep^21 - 119395078208054202227541840073530*ep^20 - 
-         924673004277439424147840351921454*ep^19 + 
-         5244584967371225707121888213422329*ep^18 + 15094091487726711436382903\
-         9697576309*ep^17 + 1436020004178076261229808028632643248*ep^16 + 
-         8535977551588009138511855199394163256*ep^15 + 35762163649750460888461\
-         249097983627491*ep^14 + 109874861296835618027897543713240626327*ep^13
-          + 249146219179515273759925413361790407974*ep^12 + 408201825433476028\
-         733345559718288623060*ep^11 + 450881398248611050810239394921454268216
-         *ep^10 + 261506715636871759774169268106156833264*ep^9 - 6530846200873\
-         5668875412702439676141152*ep^8 - 257112687634003617856991165159301920\
-         832*ep^7 - 186063735309283830597840339973817187456*ep^6 - 20461025267\
-         393573399921080676517450240*ep^5 + 4624560640156279339067576364652723\
-         2000*ep^4 + 23690794181716538145445788271475712000*ep^3 + 59415359615\
-         1716364731110464921600000*ep^2 - 2073992136723656453875266817228800000
-         *ep - 379877015415849782690317860864000000,8796093022208*ep^13 + 
-         686095255732224*ep^12 + 23898984741339136*ep^11 + 490558107848540160*
-         ep^10 + 6592346264703074304*ep^9 + 60927316994788687872*ep^8 + 
-         395738256966626050048*ep^7 + 1812612208500355891200*ep^6 + 
-         5780852464286997413888*ep^5 + 12437806489635026632704*ep^4 + 
-         16990177497326410530816*ep^3 + 13074889844678763479040*ep^2 + 
-         4213342631386467532800*ep) + Gam(1,1)^3*M^-26*rat(58773123072*ep^36
-          + 470184984576*ep^35 - 33288443873280*ep^34 - 286838961979392*ep^33
-          + 7404599707925760*ep^32 + 73395356204132352*ep^31 - 
-         736686933144028416*ep^30 - 10556095513519319040*ep^29 + 
-         7477919438265561168*ep^28 + 1070267874588428909184*ep^27 + 
-         6275512254014221315320*ep^26 - 117177451528637290295232*ep^25 - 
-         2847806458414012074010077*ep^24 - 194660375948344105847074152*ep^23
-          - 9895504639437722640727314702*ep^22 - 
-         293100939355154997812128084512*ep^21 - 
-         5966875760161228205460501912867*ep^20 - 
-         91277399940832290749003573387832*ep^19 - 
-         1092863670607994352708051499377672*ep^18 - 
-         10431330020087185059014145274498512*ep^17 - 
-         80103988363760414000723990259535779*ep^16 - 4975369127359427462402128\
-         64851406808*ep^15 - 2507612103080672492568368537076876102*ep^14 - 
-         10269952146214799100609751372828650240*ep^13 - 3415565109366136728063\
-         6220547943673437*ep^12 - 91956963747734557809497699874822574344*ep^11
-          - 199184801601537898976504689140428029116*ep^10 - 343631779683690525\
-         645301608721126419792*ep^9 - 464881702323681656012599674034987545840*
-         ep^8 - 481507482312589606890150346083647006976*ep^7 - 367268995906878\
-         886098487666223845396032*ep^6 - 1919353066676336628222634051939928332\
-         80*ep^5 - 57229067783694783072253262934506112000*ep^4 - 1734097151163\
-         089072756617456928256000*ep^3 + 5340036739755492820165513475174400000
-         *ep^2 + 1765093681242206977094075975270400000*ep + 189938507707924891\
-         345158930432000000,2199023255552*ep^16 + 171523813933056*ep^15 + 
-         5974746185334784*ep^14 + 122639526962135040*ep^13 + 
-         1648086566175768576*ep^12 + 15231829248697171968*ep^11 + 
-         98934564241656512512*ep^10 + 453153052125088972800*ep^9 + 
-         1445213116071749353472*ep^8 + 3109451622408756658176*ep^7 + 
-         4247544374331602632704*ep^6 + 3268722461169690869760*ep^5 + 
-         1053335657846616883200*ep^4) );
+id,only intbn*dala^1*x3^1*x4^1*x5^1*x6^2 =  + miBN*rat( - 9*d^4 + 63*d^3 - 80*
+         d^2 - 244*d + 480,128*d - 512) + Gam(1,1)^3*rat( - 9*d + 30,d^4 - 16*
+         d^3 + 96*d^2 - 256*d + 256);
+
+
+id,only intbn*dala^1*x3^1*x4^1*x5^2*x6^2 =  + M^-2*miBN*rat(27*d^6 - 432*d^5
+          + 2481*d^4 - 5424*d^3 - 1284*d^2 + 21792*d - 23040,1024*d^2 - 10240*
+         d + 24576) + Gam(1,1)^3*M^-2*rat(27*d^3 - 317*d^2 + 1190*d - 1440,8*
+         d^5 - 176*d^4 + 1536*d^3 - 6656*d^2 + 14336*d - 12288);
+
+
+id,only intbn*dala^1*x3^1*x4^2*x5^2*x6^2 =  + M^-4*miBN*rat( - 81*d^7 + 1512*
+         d^6 - 11115*d^5 + 40224*d^4 - 71700*d^3 + 50400*d^2,8192*d^2 - 81920*
+         d + 196608) + Gam(1,1)^3*M^-4*rat( - 81*d^4 + 1039*d^3 - 4402*d^2 + 
+         6144*d,64*d^5 - 1408*d^4 + 12288*d^3 - 53248*d^2 + 114688*d - 98304);
+
+
+id,only intbn*dala^1*x3^2*x4^2*x5^2*x6^2 =  + M^-6*miBN*rat(243*d^9 - 7047*d^8
+          + 85239*d^7 - 568701*d^6 + 2425926*d^5 - 7943412*d^4 + 23639160*d^3
+          - 58066848*d^2 + 88646400*d - 58060800,65536*d^3 - 1179648*d^2 + 
+         6815744*d - 12582912) + Gam(1,1)^3*M^-6*rat(243*d^6 - 4860*d^5 + 
+         28933*d^4 + 19800*d^3 - 842332*d^2 + 3104016*d - 3628800,512*d^6 - 
+         15360*d^5 + 188416*d^4 - 1212416*d^3 + 4325376*d^2 - 8126464*d + 
+         6291456);
+
+
+id,only intbn*dala^2*x3^1*x4^1*x5^1*x6^1 =  + miBN*rat(9*d^6 - 72*d^5 + 35*d^4
+          + 272*d^3 + 4148*d^2 - 19872*d + 23040,256*d^2 - 2560*d + 6144) + 
+         Gam(1,1)^3*rat(9*d^3 + 9*d^2 - 558*d + 1440,2*d^5 - 44*d^4 + 384*d^3
+          - 1664*d^2 + 3584*d - 3072);
+
+
+id,only intbn*dala^2*x3^1*x4^1*x5^1*x6^2 =  + M^-2*miBN*rat( - 27*d^6 + 216*
+         d^5 - 105*d^4 - 816*d^3 - 12444*d^2 + 59616*d - 69120,2048*d - 12288)
+          + Gam(1,1)^3*M^-2*rat( - 27*d^3 - 27*d^2 + 1674*d - 4320,16*d^4 - 
+         288*d^3 + 1920*d^2 - 5632*d + 6144);
+
+
+id,only intbn*dala^2*x3^1*x4^1*x5^2*x6^2 =  + M^-4*miBN*rat(81*d^9 - 1917*d^8
+          + 16893*d^7 - 65775*d^6 + 119874*d^5 - 549180*d^4 + 4551720*d^3 - 
+         17205216*d^2 + 29548800*d - 19353600,16384*d^3 - 294912*d^2 + 1703936
+         *d - 3145728) + Gam(1,1)^3*M^-4*rat(81*d^6 - 1188*d^5 + 647*d^4 + 
+         74408*d^3 - 501364*d^2 + 1296816*d - 1209600,128*d^6 - 3840*d^5 + 
+         47104*d^4 - 303104*d^3 + 1081344*d^2 - 2031616*d + 1572864);
+
+
+id,only intbn*dala^2*x3^1*x4^2*x5^2*x6^2 =  + M^-6*miBN*rat( - 243*d^10 + 6561
+         *d^9 - 71145*d^8 + 398223*d^7 - 1288524*d^6 + 3091560*d^5 - 7752336*
+         d^4 + 10788528*d^3 + 27487296*d^2 - 119232000*d + 116121600,131072*
+         d^3 - 2359296*d^2 + 13631488*d - 25165824) + Gam(1,1)^3*M^-6*rat( - 
+         243*d^7 + 4374*d^6 - 19213*d^5 - 77666*d^4 + 802732*d^3 - 1419352*d^2
+          - 2579232*d + 7257600,1024*d^6 - 30720*d^5 + 376832*d^4 - 2424832*
+         d^3 + 8650752*d^2 - 16252928*d + 12582912);
+
+
+id,only intbn*dala^2*x3^2*x4^2*x5^2*x6^2 =  + M^-8*miBN*rat(729*d^12 - 29160*
+         d^11 + 495558*d^10 - 4747896*d^9 + 29179449*d^8 - 123024960*d^7 + 
+         280266840*d^6 + 993951648*d^5 - 14076897840*d^4 + 69070707072*d^3 - 
+         181925602560*d^2 + 253232179200*d - 146313216000,1048576*d^4 - 
+         29360128*d^3 + 297795584*d^2 - 1291845632*d + 2013265920) + Gam(1,1)^
+         3*M^-8*rat(729*d^9 - 22599*d^8 + 279045*d^7 - 2164605*d^6 + 19758954*
+         d^5 - 199774188*d^4 + 1359604968*d^3 - 5309789376*d^2 + 10895283072*d
+          - 9144576000,8192*d^7 - 327680*d^6 + 5472256*d^5 - 49545216*d^4 + 
+         263192576*d^3 - 822083584*d^2 + 1400897536*d - 1006632960);
+
+
+id,only intbn*dala^3*x3^1*x4^1*x5^1*x6^1 =  + M^-2*miBN*rat(27*d^9 - 351*d^8
+          + 591*d^7 + 3963*d^6 + 17286*d^5 + 55596*d^4 - 3119880*d^3 + 
+         17590368*d^2 - 38534400*d + 30412800,4096*d^3 - 73728*d^2 + 425984*d
+          - 786432) + Gam(1,1)^3*M^-2*rat(27*d^6 - 108*d^5 - 867*d^4 - 24312*
+         d^3 + 350052*d^2 - 1431792*d + 1900800,32*d^6 - 960*d^5 + 11776*d^4
+          - 75776*d^3 + 270336*d^2 - 507904*d + 393216);
+
+
+id,only intbn*dala^3*x3^1*x4^1*x5^1*x6^2 =  + M^-4*miBN*rat( - 81*d^10 + 1431*
+         d^9 - 6687*d^8 - 3615*d^7 + 3624*d^6 + 75216*d^5 + 10137984*d^4 - 
+         96449424*d^3 + 361868352*d^2 - 630720000*d + 425779200,32768*d^3 - 
+         589824*d^2 + 3407872*d - 6291456) + Gam(1,1)^3*M^-4*rat( - 81*d^7 + 
+         702*d^6 + 1089*d^5 + 60798*d^4 - 1390524*d^3 + 9196104*d^2 - 25747488
+         *d + 26611200,256*d^6 - 7680*d^5 + 94208*d^4 - 606208*d^3 + 2162688*
+         d^2 - 4063232*d + 3145728);
+
+
+id,only intbn*dala^3*x3^1*x4^1*x5^2*x6^2 =  + M^-6*miBN*rat(243*d^12 - 7776*
+         d^11 + 93258*d^10 - 488592*d^9 + 849099*d^8 + 1157712*d^7 - 34392120*
+         d^6 + 640660704*d^5 - 5398794384*d^4 + 23666752896*d^3 - 57489027840*
+         d^2 + 73943193600*d - 39481344000,262144*d^4 - 7340032*d^3 + 74448896
+         *d^2 - 322961408*d + 503316480) + Gam(1,1)^3*M^-6*rat(243*d^9 - 5589*
+         d^8 + 38583*d^7 - 217911*d^6 + 5670606*d^5 - 79226532*d^4 + 528775032
+         *d^3 - 1862844096*d^2 + 3367361664*d - 2467584000,2048*d^7 - 81920*
+         d^6 + 1368064*d^5 - 12386304*d^4 + 65798144*d^3 - 205520896*d^2 + 
+         350224384*d - 251658240);
+
+
+id,only intbn*dala^3*x3^1*x4^2*x5^2*x6^2 =  + M^-8*miBN*rat( - 729*d^13 + 
+         26244*d^12 - 378918*d^11 + 2765664*d^10 - 10187865*d^9 + 6307164*d^8
+          + 211833000*d^7 - 2115019008*d^6 + 10101091248*d^5 - 12763115712*d^4
+          - 94357225728*d^3 + 474470231040*d^2 - 866615500800*d + 585252864000
+         ,2097152*d^4 - 58720256*d^3 + 595591168*d^2 - 2583691264*d + 
+         4026531840) + Gam(1,1)^3*M^-8*rat( - 729*d^10 + 19683*d^9 - 188649*
+         d^8 + 1048425*d^7 - 11100534*d^6 + 120738372*d^5 - 560508216*d^4 - 
+         128630496*d^3 + 10343874432*d^2 - 34436556288*d + 36578304000,16384*
+         d^7 - 655360*d^6 + 10944512*d^5 - 99090432*d^4 + 526385152*d^3 - 
+         1644167168*d^2 + 2801795072*d - 2013265920);
+
+
+id,only intbn*dala^3*x3^2*x4^2*x5^2*x6^2 =  + M^-10*miBN*rat(2187*d^15 - 
+         112995*d^14 + 2488320*d^13 - 30690090*d^12 + 233341911*d^11 - 
+         1056919419*d^10 + 914368158*d^9 + 25853022648*d^8 - 99950514912*d^7
+          - 1704085546032*d^6 + 24215500975968*d^5 - 149873783099904*d^4 + 
+         537525560885760*d^3 - 1152067285094400*d^2 + 1373435191296000*d - 
+         702303436800000,16777216*d^5 - 671088640*d^4 + 10401873920*d^3 - 
+         77846282240*d^2 + 280246616064*d - 386547056640) + Gam(1,1)^3*M^-10*
+         rat(2187*d^12 - 93312*d^11 + 1609146*d^10 - 14353200*d^9 + 44877171*
+         d^8 + 1142803824*d^7 - 29378517864*d^6 + 368205556416*d^5 - 
+         2794923757392*d^4 + 13267456636416*d^3 - 38540796509952*d^2 + 
+         62747225026560*d - 43893964800000,131072*d^8 - 6815744*d^7 + 
+         150470656*d^6 - 1843396608*d^5 + 13723762688*d^4 - 63686311936*d^3 + 
+         180254408704*d^2 - 285078454272*d + 193273528320);
+
+
+id,only intbn*dala^4*x3^1*x4^1*x5^1*x6^1 =  + M^-4*miBN*rat(81*d^12 - 1512*
+         d^11 + 4230*d^10 + 48120*d^9 - 170751*d^8 + 1875792*d^7 - 29960616*
+         d^6 - 111171552*d^5 + 3910322256*d^4 - 26660373888*d^3 + 85368119040*
+         d^2 - 135415756800*d + 85929984000,65536*d^4 - 1835008*d^3 + 18612224
+         *d^2 - 80740352*d + 125829120) + Gam(1,1)^3*M^-4*rat(81*d^9 - 783*d^8
+          - 4275*d^7 + 30219*d^6 - 1371798*d^5 + 43059348*d^4 - 464207640*d^3
+          + 2334165696*d^2 - 5662942848*d + 5370624000,512*d^7 - 20480*d^6 + 
+         342016*d^5 - 3096576*d^4 + 16449536*d^3 - 51380224*d^2 + 87556096*d
+          - 62914560);
+
+
+id,only intbn*dala^4*x3^1*x4^1*x5^1*x6^2 =  + M^-6*miBN*rat( - 243*d^13 + 5832
+         *d^12 - 36882*d^11 - 76680*d^10 + 1282173*d^9 - 8359392*d^8 + 
+         119894520*d^7 - 145855200*d^6 - 13509711600*d^5 + 142546277760*d^4 - 
+         682670339328*d^3 + 1772137175040*d^2 - 2424442060800*d + 
+         1374879744000,524288*d^4 - 14680064*d^3 + 148897792*d^2 - 645922816*d
+          + 1006632960) + Gam(1,1)^3*M^-6*rat( - 243*d^10 + 3645*d^9 + 297*d^8
+          - 159057*d^7 + 4598898*d^6 - 151126812*d^5 + 2081572488*d^4 - 
+         14429819328*d^3 + 54335479680*d^2 - 106718957568*d + 85929984000,4096
+         *d^7 - 163840*d^6 + 2736128*d^5 - 24772608*d^4 + 131596288*d^3 - 
+         411041792*d^2 + 700448768*d - 503316480);
+
+
+id,only intbn*dala^4*x3^1*x4^1*x5^2*x6^2 =  + M^-8*miBN*rat(729*d^15 - 29889*
+         d^14 + 456192*d^13 - 2829006*d^12 - 221283*d^11 + 110369079*d^10 - 
+         1066533750*d^9 + 7165439208*d^8 + 16357988448*d^7 - 946495921680*d^6
+          + 9500913239328*d^5 - 50585129436672*d^4 + 162036446270976*d^3 - 
+         314046340116480*d^2 + 340642249113600*d - 159188779008000,4194304*d^5
+          - 167772160*d^4 + 2600468480*d^3 - 19461570560*d^2 + 70061654016*d
+          - 96636764160) + Gam(1,1)^3*M^-8*rat(729*d^12 - 23328*d^11 + 233118*
+         d^10 - 252720*d^9 - 20371215*d^8 + 633538704*d^7 - 12501583608*d^6 + 
+         144168451392*d^5 - 1002014245488*d^4 + 4295686181376*d^3 - 
+         11155592975616*d^2 + 16117693894656*d - 9949298688000,32768*d^8 - 
+         1703936*d^7 + 37617664*d^6 - 460849152*d^5 + 3430940672*d^4 - 
+         15921577984*d^3 + 45063602176*d^2 - 71269613568*d + 48318382080);
+
+
+id,only intbn*dala^4*x3^1*x4^2*x5^2*x6^2 =  + M^-10*miBN*rat( - 2187*d^16 + 
+         99873*d^15 - 1810350*d^14 + 15760170*d^13 - 49201371*d^12 - 343132047
+         *d^11 + 5427148356*d^10 - 31339231596*d^9 - 55167620976*d^8 + 
+         2303788635504*d^7 - 13990987699776*d^6 + 4580777244096*d^5 + 
+         361717137713664*d^4 - 2073086080220160*d^3 + 5538968519270400*d^2 - 
+         7538307710976000*d + 4213820620800000,33554432*d^5 - 1342177280*d^4
+          + 20803747840*d^3 - 155692564480*d^2 + 560493232128*d - 773094113280
+         ) + Gam(1,1)^3*M^-10*rat( - 2187*d^13 + 80190*d^12 - 1049274*d^11 + 
+         4698324*d^10 + 41242029*d^9 - 1412066850*d^8 + 22521694920*d^7 - 
+         191934449232*d^6 + 585690418896*d^5 + 3502085907936*d^4 - 
+         41063943308544*d^3 + 168497554033152*d^2 - 332589385359360*d + 
+         263363788800000,262144*d^8 - 13631488*d^7 + 300941312*d^6 - 
+         3686793216*d^5 + 27447525376*d^4 - 127372623872*d^3 + 360508817408*
+         d^2 - 570156908544*d + 386547056640);
+
+
+id,only intbn*dala^4*x3^2*x4^2*x5^2*x6^2 =  + M^-12*miBN*rat(6561*d^17 - 
+         367416*d^16 + 8474625*d^15 - 102789000*d^14 + 651752487*d^13 - 
+         557195112*d^12 - 31704255045*d^11 + 259910425800*d^10 + 541449337068*
+         d^9 - 14863395882528*d^8 - 121739988976560*d^7 + 3815602724822400*d^6
+          - 36323239444583616*d^5 + 193194912017005056*d^4 - 
+         633239229292139520*d^3 + 1274374072606924800*d^2 - 
+         1448842040819712000*d + 713821213163520000,268435456*d^5 - 
+         12348030976*d^4 + 217969590272*d^3 - 1831803551744*d^2 + 
+         7267084664832*d - 10823317585920) + Gam(1,1)^3*M^-12*rat(6561*d^14 - 
+         308367*d^13 + 5581224*d^12 - 46482498*d^11 + 115207029*d^10 - 
+         433073127*d^9 + 102149117058*d^8 - 3390454992216*d^7 + 57135461050272
+         *d^6 - 585766082751600*d^5 + 3859367113195680*d^4 - 16463017297873152
+         *d^3 + 44029209591922176*d^2 - 67170496982999040*d + 
+         44613825822720000,2097152*d^8 - 121634816*d^7 + 2961178624*d^6 - 
+         39510343680*d^5 + 316418293760*d^4 - 1561757483008*d^3 + 
+         4655744548864*d^2 - 7692286427136*d + 5411658792960);
+
+
+id,only intbn*dala^5*x3^1*x4^1*x5^1*x6^1 =  + M^-6*miBN*rat(243*d^14 - 4617*
+         d^13 - 3942*d^12 + 401058*d^11 - 1129461*d^10 + 11036079*d^9 - 
+         41980776*d^8 - 3763887096*d^7 + 21152057808*d^6 + 383256272688*d^5 - 
+         5404645775232*d^4 + 29550824671488*d^3 - 84100568279040*d^2 + 
+         123647982796800*d - 74392141824000,1048576*d^4 - 35651584*d^3 + 
+         436207616*d^2 - 2248146944*d + 4026531840) + Gam(1,1)^3*M^-6*rat(243*
+         d^11 - 2430*d^10 - 30186*d^9 + 192564*d^8 + 1209171*d^7 - 107062158*
+         d^6 + 4567191012*d^5 - 73486290216*d^4 + 579872609472*d^3 - 
+         2443288959360*d^2 + 5295651084288*d - 4649508864000,8192*d^7 - 376832
+         *d^6 + 7143424*d^5 - 72351744*d^4 + 423624704*d^3 - 1438646272*d^2 + 
+         2634022912*d - 2013265920);
+
+
+id,only intbn*dala^5*x3^1*x4^1*x5^1*x6^2 =  + M^-8*miBN*rat( - 729*d^15 + 
+         18225*d^14 - 71280*d^13 - 1274130*d^12 + 10607427*d^11 - 53438535*
+         d^10 + 324591750*d^9 + 10536007320*d^8 - 131206141152*d^7 - 
+         769031777520*d^6 + 23112550234080*d^5 - 185936097968640*d^4 + 
+         784216548923904*d^3 - 1884754177413120*d^2 + 2448840115814400*d - 
+         1339058552832000,8388608*d^4 - 285212672*d^3 + 3489660928*d^2 - 
+         17985175552*d + 32212254720) + Gam(1,1)^3*M^-8*rat( - 729*d^12 + 
+         11664*d^11 + 46818*d^10 - 1121040*d^9 - 161361*d^8 + 342951552*d^7 - 
+         15628691880*d^6 + 302668308864*d^5 - 3062371052304*d^4 + 
+         17767573848576*d^3 - 59866154521344*d^2 + 109270246109184*d - 
+         83691159552000,65536*d^7 - 3014656*d^6 + 57147392*d^5 - 578813952*d^4
+          + 3388997632*d^3 - 11509170176*d^2 + 21072183296*d - 16106127360);
+
+
+id,only intbn*dala^5*x3^1*x4^1*x5^2*x6^2 =  + M^-10*miBN*rat(2187*d^18 - 
+         110808*d^17 + 2064771*d^16 - 14081040*d^15 - 56712771*d^14 + 
+         1674178344*d^13 - 13691393343*d^12 + 34768195200*d^11 + 918312757956*
+         d^10 - 11512751811264*d^9 - 41959411694352*d^8 + 2213094593502720*d^7
+          - 24955415148267072*d^6 + 157292459107273728*d^5 - 
+         631104495033240576*d^4 + 1652600320416645120*d^3 - 
+         2746826647481548800*d^2 + 2638184132247552000*d - 1116943385886720000
+         ,67108864*d^6 - 3623878656*d^5 + 79188459520*d^4 - 893890068480*d^3
+          + 5480378269696*d^2 - 17239998726144*d + 21646635171840) + Gam(1,1)^
+         3*M^-10*rat(2187*d^15 - 91125*d^14 + 1205280*d^13 - 1418310*d^12 - 
+         96153129*d^11 - 124449693*d^10 + 61730637438*d^9 - 1966424387160*d^8
+          + 34849542704160*d^7 - 391253559826512*d^6 + 2911132991157600*d^5 - 
+         14578076120884224*d^4 + 48665879186932224*d^3 - 103913989348478976*
+         d^2 + 128397731444490240*d - 69808961617920000,524288*d^9 - 34603008*
+         d^8 + 983564288*d^7 - 15799943168*d^6 + 158125260800*d^5 - 
+         1023275958272*d^4 + 4287451103232*d^3 - 11234560704512*d^2 + 
+         16737487552512*d - 10823317585920);
+
+
+id,only intbn*dala^5*x3^1*x4^2*x5^2*x6^2 =  + M^-12*miBN*rat( - 6561*d^18 + 
+         314928*d^17 - 5535297*d^16 + 34992000*d^15 + 170559513*d^14 - 
+         4656824784*d^13 + 36161815941*d^12 - 6276385440*d^11 - 2620732743468*
+         d^10 + 10531801185984*d^9 + 240647156036784*d^8 - 2841682813009920*
+         d^7 + 5798417646004416*d^6 + 97391003539663872*d^5 - 
+         912320066843900928*d^4 + 3791539761730191360*d^3 - 
+         8746150540035686400*d^2 + 10876915113394176000*d - 
+         5710569705308160000,536870912*d^5 - 24696061952*d^4 + 435939180544*
+         d^3 - 3663607103488*d^2 + 14534169329664*d - 21646635171840) + Gam(1,
+         1)^3*M^-12*rat( - 6561*d^15 + 255879*d^14 - 3114288*d^13 + 1832706*
+         d^12 + 256652955*d^11 - 488583105*d^10 - 98684532042*d^9 + 
+         2573262055752*d^8 - 30011821112544*d^7 + 128682394349424*d^6 + 
+         826761548817120*d^5 - 14411919607692288*d^4 + 87674928791063040*d^3
+          - 285063179752378368*d^2 + 492750150041272320*d - 356910606581760000
+         ,4194304*d^8 - 243269632*d^7 + 5922357248*d^6 - 79020687360*d^5 + 
+         632836587520*d^4 - 3123514966016*d^3 + 9311489097728*d^2 - 
+         15384572854272*d + 10823317585920);
+
+
+id,only intbn*dala^5*x3^2*x4^2*x5^2*x6^2 =  + M^-14*miBN*rat(19683*d^21 - 
+         1515591*d^20 + 49240305*d^19 - 858487167*d^18 + 7928588691*d^17 - 
+         14881071897*d^16 - 586846673325*d^15 + 7490595070971*d^14 - 
+         23682221677746*d^13 - 185132725619148*d^12 - 1483335193481640*d^11 + 
+         52574629671692784*d^10 + 231635411393831712*d^9 - 
+         17640357491038895424*d^8 + 258775405412924338560*d^7 - 
+         2144043203767542425088*d^6 + 11628418305466626140160*d^5 - 
+         42969004169148102205440*d^4 + 107761276964693694873600*d^3 - 
+         176009889416894152704000*d^2 + 169135359688059125760000*d - 
+         72576149527461888000000,4294967296*d^7 - 300647710720*d^6 + 
+         8778913153024*d^5 - 138297946931200*d^4 + 1266087639384064*d^3 - 
+         6715267266641920*d^2 + 19039143346569216*d - 22166154415964160) + 
+         Gam(1,1)^3*M^-14*rat(19683*d^18 - 1338444*d^17 + 36840015*d^16 - 
+         501260400*d^15 + 2667834549*d^14 + 20114862516*d^13 - 667149898707*
+         d^12 + 20713940389944*d^11 - 746779038794820*d^10 + 19455927510604752
+         *d^9 - 343391872235997456*d^8 + 4216875606272830464*d^7 - 
+         36849278535731948736*d^6 + 231145682015079744768*d^5 - 
+         1034621296481450769408*d^4 + 3227324876453857996800*d^3 - 
+         6666788615102266245120*d^2 + 8195267231191439769600*d - 
+         4536009345466368000000,33554432*d^10 - 2751463424*d^9 + 98381594624*
+         d^8 - 2018366193664*d^7 + 26299158495232*d^6 - 227409928388608*d^5 + 
+         1322231451877376*d^4 - 5109361814798336*d^3 + 12575389364781056*d^2
+          - 17831879579271168*d + 11083077207982080);
+
+
+id,only intbn*dala^6*x3^1*x4^1*x5^1*x6^1 =  + M^-8*miBN*rat(729*d^18 - 23328*
+         d^17 + 118665*d^16 + 3024864*d^15 - 36989937*d^14 + 115062624*d^13 + 
+         1048206195*d^12 - 45453455712*d^11 + 266112165132*d^10 + 
+         7520947004736*d^9 - 81470677926960*d^8 - 821202070560768*d^7 + 
+         22307185784437056*d^6 - 206065496349637632*d^5 + 1078845337746201600*
+         d^4 - 3496440014440464384*d^3 + 6972043537232363520*d^2 - 
+         7864254361003622400*d + 3847948622364672000,16777216*d^6 - 905969664*
+         d^5 + 19797114880*d^4 - 223472517120*d^3 + 1370094567424*d^2 - 
+         4309999681536*d + 5411658792960) + Gam(1,1)^3*M^-8*rat(729*d^15 - 
+         16767*d^14 - 45360*d^13 + 2976750*d^12 - 9954243*d^11 - 33555447*d^10
+          - 10947036006*d^9 + 693209196792*d^8 - 20098955584800*d^7 + 
+         329179413474576*d^6 - 3330359927329248*d^5 + 21695563148608512*d^4 - 
+         91525637479684608*d^3 + 242140818806083584*d^2 - 365608792195006464*d
+          + 240496788897792000,131072*d^9 - 8650752*d^8 + 245891072*d^7 - 
+         3949985792*d^6 + 39531315200*d^5 - 255818989568*d^4 + 1071862775808*
+         d^3 - 2808640176128*d^2 + 4184371888128*d - 2705829396480);
+
+
+id,only intbn*dala^6*x3^1*x4^1*x5^1*x6^2 =  + M^-10*miBN*rat( - 2187*d^19 + 
+         84564*d^18 - 822555*d^17 - 6701292*d^16 + 171467091*d^15 - 1084986612
+         *d^14 - 843366105*d^13 + 157324491036*d^12 - 1707405609636*d^11 - 
+         17240597711568*d^10 + 394830973875600*d^9 + 834192653143104*d^8 - 
+         83345598764526528*d^7 + 1064340204737654016*d^6 - 7357845940231357440
+         *d^5 + 32066226798245425152*d^4 - 90844930900506378240*d^3 + 
+         163033633827658137600*d^2 - 168828933087166464000*d + 
+         76958972447293440000,134217728*d^6 - 7247757312*d^5 + 158376919040*
+         d^4 - 1787780136960*d^3 + 10960756539392*d^2 - 34479997452288*d + 
+         43293270343680) + Gam(1,1)^3*M^-10*rat( - 2187*d^16 + 64881*d^15 - 
+         199260*d^14 - 9837450*d^13 + 89397729*d^12 - 98418519*d^11 + 
+         32169999078*d^10 - 2298568310496*d^9 + 74161050690240*d^8 - 
+         1389517352119728*d^7 + 16574668051479264*d^6 - 131693887992410496*d^5
+          + 708488175411224064*d^4 - 2556935206011942912*d^3 + 
+         5939642752706691072*d^2 - 8033666210593505280*d + 4809935777955840000
+         ,1048576*d^9 - 69206016*d^8 + 1967128576*d^7 - 31599886336*d^6 + 
+         316250521600*d^5 - 2046551916544*d^4 + 8574902206464*d^3 - 
+         22469121409024*d^2 + 33474975105024*d - 21646635171840);
+
+
+id,only intbn*dala^6*x3^1*x4^1*x5^2*x6^2 =  + M^-12*miBN*rat(6561*d^21 - 
+         400221*d^20 + 8855163*d^19 - 63228357*d^18 - 687535695*d^17 + 
+         17083906749*d^16 - 127275124239*d^15 - 219250631079*d^14 + 
+         15629662753434*d^13 - 96248715700356*d^12 - 1656461219580216*d^11 + 
+         23085994374682704*d^10 + 193518107895332448*d^9 - 7556945421774845376
+         *d^8 + 92746571191450169472*d^7 - 674560960832797843968*d^6 + 
+         3265687118050569418752*d^5 - 10858680215674760503296*d^4 + 
+         24622799773686455992320*d^3 - 36489742314143337676800*d^2 + 
+         31909672310283436032000*d - 12496803086016184320000,1073741824*d^7 - 
+         75161927680*d^6 + 2194728288256*d^5 - 34574486732800*d^4 + 
+         316521909846016*d^3 - 1678816816660480*d^2 + 4759785836642304*d - 
+         5541538603991040) + Gam(1,1)^3*M^-12*rat(6561*d^18 - 341172*d^17 + 
+         5666517*d^16 - 5563728*d^15 - 859971897*d^14 + 9680327820*d^13 - 
+         119764617057*d^12 + 7770358145160*d^11 - 326992781262060*d^10 + 
+         8155736859033072*d^9 - 133317455718986928*d^8 + 1503275266378538496*
+         d^7 - 11998567240402752576*d^6 + 68418377029704939264*d^5 - 
+         277129970605456856064*d^4 + 778868441228281909248*d^3 - 
+         1443526852246727786496*d^2 + 1585549763518558371840*d - 
+         781050192876011520000,8388608*d^10 - 687865856*d^9 + 24595398656*d^8
+          - 504591548416*d^7 + 6574789623808*d^6 - 56852482097152*d^5 + 
+         330557862969344*d^4 - 1277340453699584*d^3 + 3143847341195264*d^2 - 
+         4457969894817792*d + 2770769301995520);
+
+
+id,only intbn*dala^6*x3^1*x4^2*x5^2*x6^2 =  + M^-14*miBN*rat( - 19683*d^22 + 
+         1318761*d^21 - 34084395*d^20 + 366084117*d^19 + 656282979*d^18 - 
+         64404815013*d^17 + 735657392295*d^16 - 1622128337721*d^15 - 
+         51223729031964*d^14 + 421954942396608*d^13 + 3334662449673120*d^12 - 
+         37741277736876384*d^11 - 757381708110759552*d^10 + 
+         15324003377100578304*d^9 - 82371830502535384320*d^8 - 
+         443710850361700960512*d^7 + 9812013732208798110720*d^6 - 
+         73315178885518159196160*d^5 + 321928764726787327180800*d^4 - 
+         901602880230042796032000*d^3 + 1590963534480882401280000*d^2 - 
+         1618777447353129369600000*d + 725761495274618880000000,8589934592*d^7
+          - 601295421440*d^6 + 17557826306048*d^5 - 276595893862400*d^4 + 
+         2532175278768128*d^3 - 13430534533283840*d^2 + 38078286693138432*d - 
+         44332308831928320) + Gam(1,1)^3*M^-14*rat( - 19683*d^19 + 1141614*
+         d^18 - 23455575*d^17 + 132860250*d^16 + 2344769451*d^15 - 46793208006
+         *d^14 + 466001273547*d^13 - 14042441402874*d^12 + 539639634895380*
+         d^11 - 11988137122656552*d^10 + 148832597129949936*d^9 - 
+         782956883912855904*d^8 - 5319477526996355904*d^7 + 
+         137347103342239742592*d^6 - 1276835523669346678272*d^5 + 
+         7118888088360649697280*d^4 - 25606460149436313722880*d^3 + 
+         58472618919831222681600*d^2 - 77416662966448029696000*d + 
+         45360093454663680000000,67108864*d^10 - 5502926848*d^9 + 196763189248
+         *d^8 - 4036732387328*d^7 + 52598316990464*d^6 - 454819856777216*d^5
+          + 2644462903754752*d^4 - 10218723629596672*d^3 + 25150778729562112*
+         d^2 - 35663759158542336*d + 22166154415964160);
+
+
+id,only intbn*dala^6*x3^2*x4^2*x5^2*x6^2 =  + M^-16*miBN*rat(59049*d^24 - 
+         5353776*d^23 + 203207292*d^22 - 4027719168*d^21 + 37698320646*d^20 + 
+         90720235872*d^19 - 7138582730676*d^18 + 82532293364160*d^17 - 
+         191337103781127*d^16 - 3828076488223920*d^15 + 8771160561929136*d^14
+          + 82207087637266368*d^13 + 12274439542118834400*d^12 - 
+         199852526305882927872*d^11 - 1522572833056963283712*d^10 + 
+         85107163722451798496256*d^9 - 1332853181249024375394048*d^8 + 
+         12459054672037995795357696*d^7 - 79164737600394055794647040*d^6 + 
+         356163902498462783461392384*d^5 - 1141160131189932655777873920*d^4 + 
+         2554346154770715394179072000*d^3 - 3801423216058473798696960000*d^2
+          + 3380750183334554432962560000*d - 1359150310127150353612800000,
+         68719476736*d^8 - 6047313952768*d^7 + 227049151135744*d^6 - 
+         4741094138970112*d^5 + 60087210946330624*d^4 - 472077516408881152*d^3
+          + 2238623266337980416*d^2 - 5837931754467360768*d + 
+         6383852471797678080) + Gam(1,1)^3*M^-16*rat(59049*d^21 - 4822335*d^20
+          + 158743395*d^19 - 2507502663*d^18 + 11949984513*d^17 + 252299026071
+         *d^16 - 5190078599559*d^15 + 9724415782131*d^14 + 2756966734812690*
+         d^13 - 143559324370962324*d^12 + 4734888147824330376*d^11 - 
+         109894659267031815600*d^10 + 1848053366389595032416*d^9 - 
+         22955818180294982731968*d^8 + 213143383992533046148224*d^7 - 
+         1485231500101659170761728*d^6 + 7731200928826175442112512*d^5 - 
+         29609953771178275723689984*d^4 + 80958307183032759520886784*d^3 - 
+         149455951843095594801561600*d^2 + 166812799903220196546969600*d - 
+         84946894382946897100800000,536870912*d^11 - 53687091200*d^10 + 
+         2366526980096*d^9 - 60627758350336*d^8 + 1002075999698944*d^7 - 
+         11212716500844544*d^6 + 86649762605957120*d^5 - 462552447177457664*
+         d^4 + 1672702432498417664*d^3 - 3907022210325282816*d^2 + 
+         5312910554157809664*d - 3191926235898839040);
+
+
+id,only intbn*dala^7*x3^1*x4^1*x5^1*x6^1 =  + M^-10*miBN*rat(2187*d^21 - 86751
+         *d^20 + 552825*d^19 + 18633321*d^18 - 298195317*d^17 + 558520767*d^16
+          + 25955109675*d^15 - 480387320973*d^14 + 793287423054*d^13 + 
+         96048006807060*d^12 - 329547587722920*d^11 - 22895838989653392*d^10
+          + 201796284845855520*d^9 + 3473995061902857408*d^8 - 
+         89505224671765714560*d^7 + 930536035791618783744*d^6 - 
+         5819181975847951570944*d^5 + 23837507875276989014016*d^4 - 
+         64742319306552938987520*d^3 + 112726977624043801804800*d^2 - 
+         114153708475024146432000*d + 51166327001233489920000,268435456*d^7 - 
+         18790481920*d^6 + 548682072064*d^5 - 8643621683200*d^4 + 
+         79130477461504*d^3 - 419704204165120*d^2 + 1189946459160576*d - 
+         1385384650997760) + Gam(1,1)^3*M^-10*rat(2187*d^18 - 67068*d^17 - 
+         90153*d^16 + 19204128*d^15 - 126791379*d^14 - 958652892*d^13 + 
+         20736029061*d^12 - 1624849997976*d^11 + 109083562772796*d^10 - 
+         4129089071598000*d^9 + 95981978073975408*d^8 - 1459382904741447936*
+         d^7 + 15104998875867746112*d^6 - 108609344608482429696*d^5 + 
+         543692649481401664512*d^4 - 1861181913866998763520*d^3 + 
+         4157100622720272531456*d^2 - 5460121339639210967040*d + 
+         3197895437577093120000,2097152*d^10 - 171966464*d^9 + 6148849664*d^8
+          - 126147887104*d^7 + 1643697405952*d^6 - 14213120524288*d^5 + 
+         82639465742336*d^4 - 319335113424896*d^3 + 785961835298816*d^2 - 
+         1114492473704448*d + 692692325498880);
+
+
+id,only intbn*dala^7*x3^1*x4^1*x5^1*x6^2 =  + M^-12*miBN*rat( - 6561*d^22 + 
+         308367*d^21 - 3566997*d^20 - 43737813*d^19 + 1304519013*d^18 - 
+         8235859275*d^17 - 65577872151*d^16 + 2012174375769*d^15 - 
+         12948383330568*d^14 - 270691697113992*d^13 + 3101698912924080*d^12 + 
+         61437470039055936*d^11 - 1109097312309941184*d^10 - 
+         5982466919099750784*d^9 + 344943565377160006656*d^8 - 
+         4760723050153702071552*d^7 + 37929338714959467955200*d^6 - 
+         199534527094485901602816*d^5 + 718652131175752575270912*d^4 - 
+         1762511957616296063139840*d^3 + 2822454633154036079001600*d^2 - 
+         2664880567454231691264000*d + 1125659194027136778240000,2147483648*
+         d^7 - 150323855360*d^6 + 4389456576512*d^5 - 69148973465600*d^4 + 
+         633043819692032*d^3 - 3357633633320960*d^2 + 9519571673284608*d - 
+         11083077207982080) + Gam(1,1)^3*M^-12*rat( - 6561*d^19 + 249318*d^18
+          - 1205037*d^17 - 59595750*d^16 + 802864953*d^15 + 86548338*d^14 - 
+         83298450807*d^13 + 5330742633270*d^12 - 362997388273860*d^11 + 
+         14787105595795512*d^10 - 378785893797082224*d^9 + 6489752231851802784
+         *d^8 - 77421420531915092928*d^7 + 658138009094537703552*d^6 - 
+         4020483529830818446848*d^5 + 17544784030191832909824*d^4 - 
+         53417303973234790391808*d^3 + 107836577718763628593152*d^2 - 
+         129716355784793920634880*d + 70353699626696048640000,16777216*d^10 - 
+         1375731712*d^9 + 49190797312*d^8 - 1009183096832*d^7 + 13149579247616
+         *d^6 - 113704964194304*d^5 + 661115725938688*d^4 - 2554680907399168*
+         d^3 + 6287694682390528*d^2 - 8915939789635584*d + 5541538603991040);
+
+
+id,only intbn*dala^7*x3^1*x4^1*x5^2*x6^2 =  + M^-14*miBN*rat(19683*d^24 - 
+         1417176*d^23 + 36505404*d^22 - 263227320*d^21 - 5719820022*d^20 + 
+         140993726328*d^19 - 956793282372*d^18 - 7861524712488*d^17 + 
+         213681578188203*d^16 - 864884342285568*d^15 - 22163945025500208*d^14
+          + 106932190797117504*d^13 + 5916430281551472288*d^12 - 
+         65160786203483929344*d^11 - 1048052594650080432384*d^10 + 
+         35055527211570387649536*d^9 - 463678726258441596333312*d^8 + 
+         3820773788623236177653760*d^7 - 21722859246912856794685440*d^6 + 
+         88078063785720129556512768*d^5 - 255388725017482877800611840*d^4 + 
+         518812164522634280435712000*d^3 - 702360145416656364503040000*d^2 + 
+         569459957555740457041920000*d - 209194240963444840857600000,
+         17179869184*d^8 - 1511828488192*d^7 + 56762287783936*d^6 - 
+         1185273534742528*d^5 + 15021802736582656*d^4 - 118019379102220288*d^3
+          + 559655816584495104*d^2 - 1459482938616840192*d + 
+         1595963117949419520) + Gam(1,1)^3*M^-14*rat(19683*d^21 - 1240029*d^20
+          + 24990849*d^19 - 14414517*d^18 - 6377803029*d^17 + 84971689605*d^16
+          - 68710448205*d^15 - 21179736402183*d^14 + 1337690912369670*d^13 - 
+         62644641619733532*d^12 + 1983393526222546776*d^11 - 
+         43437775641982272144*d^10 + 680640736598568166176*d^9 - 
+         7815715992589115184192*d^8 + 66696637619385097937280*d^7 - 
+         425094276869066032081920*d^6 + 2015164329339759202455552*d^5 - 
+         7000050936580769086783488*d^4 + 17290842897630135606018048*d^3 - 
+         28726739615261544225177600*d^2 + 28745546133193138844467200*d - 
+         13074640060215302553600000,134217728*d^11 - 13421772800*d^10 + 
+         591631745024*d^9 - 15156939587584*d^8 + 250518999924736*d^7 - 
+         2803179125211136*d^6 + 21662440651489280*d^5 - 115638111794364416*d^4
+          + 418175608124604416*d^3 - 976755552581320704*d^2 + 
+         1328227638539452416*d - 797981558974709760);
+
+
+id,only intbn*dala^7*x3^1*x4^2*x5^2*x6^2 =  + M^-16*miBN*rat( - 59049*d^25 + 
+         4645188*d^24 - 138961980*d^23 + 1589231664*d^22 + 10634309370*d^21 - 
+         543100083624*d^20 + 6049939900212*d^19 + 3130699403952*d^18 - 
+         799050416588793*d^17 + 6124121733597444*d^16 + 37165757296757904*d^15
+          - 187461014380416000*d^14 - 13260924593766030816*d^13 + 
+         52559251800456915072*d^12 + 3920803148727558418176*d^11 - 
+         66836289725768239091712*d^10 + 311567216579602793438976*d^9 + 
+         3535183502950296709370880*d^8 - 70343918464061893749645312*d^7 + 
+         593812948706265886074372096*d^6 - 3132806698791620745758834688*d^5 + 
+         11139575419508476475155415040*d^4 - 26850730641190110931451904000*d^3
+          + 42236328409367131151400960000*d^2 - 39209851889887502841937920000*
+         d + 16309803721525804243353600000,137438953472*d^8 - 12094627905536*
+         d^7 + 454098302271488*d^6 - 9482188277940224*d^5 + 120174421892661248
+         *d^4 - 944155032817762304*d^3 + 4477246532675960832*d^2 - 
+         11675863508934721536*d + 12767704943595356160) + Gam(1,1)^3*M^-16*
+         rat( - 59049*d^22 + 4113747*d^21 - 100875375*d^20 + 602581923*d^19 + 
+         18140047443*d^18 - 395698840227*d^17 + 2162490286707*d^16 + 
+         52556527412577*d^15 - 2873659724198262*d^14 + 110475723553210044*d^13
+          - 3012176255372782488*d^12 + 53076001493139851088*d^11 - 
+         529317455185213245216*d^10 + 779177783619842342976*d^9 + 
+         62326434171006746635392*d^8 - 1072489107808737383016960*d^7 + 
+         10091577072393734607028224*d^6 - 63164457374735829581660160*d^5 + 
+         274361138071106549163393024*d^4 - 822043734353297519449079808*d^3 + 
+         1626658622213926941071769600*d^2 - 1916806704455695461462835200*d + 
+         1019362732595362765209600000,1073741824*d^11 - 107374182400*d^10 + 
+         4733053960192*d^9 - 121255516700672*d^8 + 2004151999397888*d^7 - 
+         22425433001689088*d^6 + 173299525211914240*d^5 - 925104894354915328*
+         d^4 + 3345404864996835328*d^3 - 7814044420650565632*d^2 + 
+         10625821108315619328*d - 6383852471797678080);
+
+
+id,only intbn*dala^7*x3^2*x4^2*x5^2*x6^2 =  + M^-18*miBN*rat(177147*d^27 - 
+         18600435*d^26 + 810900234*d^25 - 17939794788*d^24 + 161306292186*d^23
+          + 1682833711230*d^22 - 66586642336152*d^21 + 729494669607228*d^20 + 
+         36273515353875*d^19 - 78032367182890179*d^18 + 569765341109379942*
+         d^17 - 2856145565032373376*d^16 + 121250177978574518784*d^15 - 
+         14607146198728627488*d^14 - 67326073443568154453184*d^13 + 
+         914015658569612157400320*d^12 + 10996818542821241718121728*d^11 - 
+         527861802276298196496421632*d^10 + 8822999527802188753569338880*d^9
+          - 91893886220254586959832592384*d^8 + 670339903437583223508910817280
+         *d^7 - 3566344118364856449332485226496*d^6 + 
+         13989498105481528582246054625280*d^5 - 
+         40140135664381531718456573952000*d^4 + 
+         82026150652381035546383745024000*d^3 - 
+         113089388781707217031554662400000*d^2 + 
+         94259693281675671355627929600000*d - 35851858021068383490932736000000
+         ,1099511627776*d^9 - 118747255799808*d^8 + 5567926883057664*d^7 - 
+         148513234586959872*d^6 + 2478545499611725824*d^5 - 
+         26781147765367898112*d^4 + 186882777512249655296*d^3 - 
+         809766353299631505408*d^2 + 1970279800978318295040*d - 
+         2042832790975256985600) + Gam(1,1)^3*M^-18*rat(177147*d^24 - 17006112
+         *d^23 + 654656580*d^22 - 11727603792*d^21 + 42800617890*d^20 + 
+         2317410600048*d^19 - 47024941815468*d^18 + 263501455224528*d^17 + 
+         635647735738395*d^16 + 353229166149646320*d^15 - 28083606424460723952
+         *d^14 + 1199621255701316268096*d^13 - 35422060569945761376864*d^12 + 
+         771820415543449829170944*d^11 - 12746948952399167838719232*d^10 + 
+         161873987969216090509028352*d^9 - 1592687159887034872721509632*d^8 + 
+         12165943999083690456686223360*d^7 - 71879084158189251453629718528*d^6
+          + 325027527964676560465777852416*d^5 - 
+         1102940347982367322533999476736*d^4 + 2715784853761057850458861731840
+         *d^3 - 4577036994825904570118543769600*d^2 + 
+         4717856923336025394017992704000*d - 2240741126316773968183296000000,
+         8589934592*d^12 - 1030792151040*d^11 + 55044300865536*d^10 - 
+         1727332767236096*d^9 + 35434098667290624*d^8 - 500067783917174784*d^7
+          + 4974465481965568000*d^6 - 35128763188745601024*d^5 + 
+         174780022016761135104*d^4 - 597777133764698177536*d^3 + 
+         1335253676170615455744*d^2 - 1751202197104880517120*d + 
+         1021416395487628492800);
+
+
+id,only intbn*dala^8*x3^1*x4^1*x5^1*x6^1 =  + M^-12*miBN*rat(6561*d^24 - 
+         314928*d^23 + 2458188*d^22 + 103471344*d^21 - 2062513530*d^20 + 
+         1899595152*d^19 + 328337031996*d^18 - 4657373125488*d^17 - 
+         7701528149631*d^16 + 1037782363385952*d^15 + 311024384408304*d^14 - 
+         272280267635342400*d^13 - 419034507962967072*d^12 + 
+         93565660850417578752*d^11 - 641636800780932373248*d^10 - 
+         18801313774505936243712*d^9 + 475519228321890628253952*d^8 - 
+         5485567915258430484860928*d^7 + 39894621127373926032629760*d^6 - 
+         198173700703198255004319744*d^5 + 686075209411917681763614720*d^4 - 
+         1635129607765701424840704000*d^3 + 2563192756153807853322240000*d^2
+          - 2381195803928950902620160000*d + 993366516508742438092800000,
+         4294967296*d^8 - 377957122048*d^7 + 14190571945984*d^6 - 
+         296318383685632*d^5 + 3755450684145664*d^4 - 29504844775555072*d^3 + 
+         139913954146123776*d^2 - 364870734654210048*d + 398990779487354880)
+          + Gam(1,1)^3*M^-12*rat(6561*d^21 - 255879*d^20 + 37179*d^19 + 
+         108936657*d^18 - 1096294743*d^17 - 10052173953*d^16 + 264219753537*
+         d^15 - 2109785552901*d^14 - 204942488096430*d^13 + 19350604272416940*
+         d^12 - 915134464281570552*d^11 + 27746163197359561296*d^10 - 
+         576605341462218471072*d^9 + 8505597508004532900672*d^8 - 
+         90983714983625433174912*d^7 + 713382485412574192241664*d^6 - 
+         4101373349485949851029504*d^5 + 17092504905488634206306304*d^4 - 
+         50241513283849095516094464*d^3 + 98723746362042399109939200*d^2 - 
+         116314142646903744076185600*d + 62085407281796402380800000,33554432*
+         d^11 - 3355443200*d^10 + 147907936256*d^9 - 3789234896896*d^8 + 
+         62629749981184*d^7 - 700794781302784*d^6 + 5415610162872320*d^5 - 
+         28909527948591104*d^4 + 104543902031151104*d^3 - 244188888145330176*
+         d^2 + 332056909634863104*d - 199495389743677440);
+
+
+id,only intbn*dala^8*x3^1*x4^1*x5^1*x6^2 =  + M^-14*miBN*rat( - 19683*d^24 + 
+         944784*d^23 - 7374564*d^22 - 310414032*d^21 + 6187540590*d^20 - 
+         5698785456*d^19 - 985011095988*d^18 + 13972119376464*d^17 + 
+         23104584448893*d^16 - 3113347090157856*d^15 - 933073153224912*d^14 + 
+         816840802906027200*d^13 + 1257103523888901216*d^12 - 
+         280696982551252736256*d^11 + 1924910402342797119744*d^10 + 
+         56403941323517808731136*d^9 - 1426557684965671884761856*d^8 + 
+         16456703745775291454582784*d^7 - 119683863382121778097889280*d^6 + 
+         594521102109594765012959232*d^5 - 2058225628235753045290844160*d^4 + 
+         4905388823297104274522112000*d^3 - 7689578268461423559966720000*d^2
+          + 7143587411786852707860480000*d - 2980099549526227314278400000,
+         34359738368*d^7 - 2748779069440*d^6 + 91534343012352*d^5 - 
+         1638272325386240*d^4 + 16937426870075392*d^3 - 100539343243837440*d^2
+          + 314996887218290688*d - 398990779487354880) + Gam(1,1)^3*M^-14*rat(
+          - 19683*d^21 + 767637*d^20 - 111537*d^19 - 326809971*d^18 + 
+         3288884229*d^17 + 30156521859*d^16 - 792659260611*d^15 + 
+         6329356658703*d^14 + 614827464289290*d^13 - 58051812817250820*d^12 + 
+         2745403392844711656*d^11 - 83238489592078683888*d^10 + 
+         1729816024386655413216*d^9 - 25516792524013598702016*d^8 + 
+         272951144950876299524736*d^7 - 2140147456237722576724992*d^6 + 
+         12304120048457849553088512*d^5 - 51277514716465902618918912*d^4 + 
+         150724539851547286548283392*d^3 - 296171239086127197329817600*d^2 + 
+         348942427940711232228556800*d - 186256221845389207142400000,268435456
+         *d^10 - 24696061952*d^9 + 985694994432*d^8 - 22428319219712*d^7 + 
+         321611446091776*d^6 - 3033466681688064*d^5 + 19057147849474048*d^4 - 
+         78819040792936448*d^3 + 205798889905717248*d^2 - 307119985916903424*d
+          + 199495389743677440);
+
+
+id,only intbn*dala^8*x3^1*x4^1*x5^2*x6^2 =  + M^-16*miBN*rat(59049*d^27 - 
+         4940433*d^26 + 146008494*d^25 - 1033462476*d^24 - 39425289570*d^23 + 
+         1012151480490*d^22 - 6072106996872*d^21 - 117623197015020*d^20 + 
+         2526610608590769*d^19 - 7628615094716289*d^18 - 281654327691503838*
+         d^17 + 868040595659949696*d^16 + 60273284079590419968*d^15 + 
+         198047309798454954912*d^14 - 29221283012939305487424*d^13 + 
+         243453366451877756643072*d^12 + 6764323038547227931752192*d^11 - 
+         211117518328792040437969152*d^10 + 2998517940278420446590497280*d^9
+          - 27622280184926081990620188672*d^8 + 180765219695460994266868334592
+         *d^7 - 868587971766057462476241174528*d^6 + 
+         3088857568059903844421599887360*d^5 - 8054344122124838243548240281600
+         *d^4 + 14984696804486065720145215488000*d^3 - 
+         18839152632254829658625802240000*d^2 + 
+         14342418474814005415457587200000*d - 4991769752505118019813376000000,
+         274877906944*d^9 - 29686813949952*d^8 + 1391981720764416*d^7 - 
+         37128308646739968*d^6 + 619636374902931456*d^5 - 6695286941341974528*
+         d^4 + 46720694378062413824*d^3 - 202441588324907876352*d^2 + 
+         492569950244579573760*d - 510708197743814246400) + Gam(1,1)^3*M^-16*
+         rat(59049*d^24 - 4408992*d^23 + 105264684*d^22 - 1994544*d^21 - 
+         41628368394*d^20 + 642584141712*d^19 + 506348228700*d^18 - 
+         127130812871760*d^17 + 13339182772809*d^16 + 201471914528811216*d^15
+          - 12944112392946647376*d^14 + 511269820731094401216*d^13 - 
+         14224836757461291143712*d^12 + 291211338195507495419136*d^11 - 
+         4491447557729303567515392*d^10 + 52960814581768352307790848*d^9 - 
+         481423340416129014838374144*d^8 + 3382432336151769197191569408*d^7 - 
+         18306446744514059354469113856*d^6 + 75539303229487959818265231360*d^5
+          - 233049097417579966120038432768*d^4 + 
+         519820907322381900445148774400*d^3 - 790746109768971192004352409600*
+         d^2 + 733035042248877328790716416000*d - 
+         311985609531569876238336000000,2147483648*d^12 - 257698037760*d^11 + 
+         13761075216384*d^10 - 431833191809024*d^9 + 8858524666822656*d^8 - 
+         125016945979293696*d^7 + 1243616370491392000*d^6 - 
+         8782190797186400256*d^5 + 43695005504190283776*d^4 - 
+         149444283441174544384*d^3 + 333813419042653863936*d^2 - 
+         437800549276220129280*d + 255354098871907123200);
+
+
+id,only intbn*dala^8*x3^1*x4^2*x5^2*x6^2 =  + M^-18*miBN*rat( - 177147*d^28 + 
+         16120377*d^27 - 550494144*d^26 + 6587191512*d^25 + 89850834846*d^24
+          - 3941121801834*d^23 + 43026970378932*d^22 + 202718323098900*d^21 - 
+         10249198889855067*d^20 + 77524537967935929*d^19 + 522687799451082564*
+         d^18 - 5120569210498945812*d^17 - 81264140068121291520*d^16 - 
+         1682895345501314635488*d^15 + 67530573490350355238016*d^14 + 
+         28549369640342004944256*d^13 - 23793037762795811921726208*d^12 + 
+         373906342676800812442717440*d^11 - 1432934295934014002619436032*d^10
+          - 31628107168976055590138151936*d^9 + 616174503645980993928745476096
+         *d^8 - 5818414529761308679792266215424*d^7 + 
+         35939319551626461708408738545664*d^6 - 
+         155712837812359868432988190801920*d^5 + 
+         479935748648960408512008290304000*d^4 - 
+         1035276720351627280617817767936000*d^3 + 
+         1488991749662225367086137344000000*d^2 - 
+         1283783847922391015487858278400000*d + 
+         501926012294957368873058304000000,2199023255552*d^9 - 237494511599616
+         *d^8 + 11135853766115328*d^7 - 297026469173919744*d^6 + 
+         4957090999223451648*d^5 - 53562295530735796224*d^4 + 
+         373765555024499310592*d^3 - 1619532706599263010816*d^2 + 
+         3940559601956636590080*d - 4085665581950513971200) + Gam(1,1)^3*M^-18
+         *rat( - 177147*d^25 + 14526054*d^24 - 416571012*d^23 + 2562411672*
+         d^22 + 121385835198*d^21 - 2916619250508*d^20 + 14581193414796*d^19
+          + 394847730192024*d^18 - 4324668108881787*d^17 - 362128234449983850*
+         d^16 + 23138398098365675472*d^15 - 806450765758866132768*d^14 + 
+         18627362990127333623520*d^13 - 275911567564209169894848*d^12 + 
+         1941463134790870230326016*d^11 + 16583297364372259233040896*d^10 - 
+         673548671681990394404887296*d^9 + 10131676239334797761414911488*d^8
+          - 98444131828982414939977408512*d^7 + 681279650249972959885038206976
+         *d^6 - 3447445043523104523986890457088*d^5 + 
+         12725380017992084665017130942464*d^4 - 
+         33443950957828905336305520476160*d^3 + 
+         59360661004226638587641620070400*d^2 - 
+         63809255800387581548068601856000*d + 31370375768434835554566144000000
+         ,17179869184*d^12 - 2061584302080*d^11 + 110088601731072*d^10 - 
+         3454665534472192*d^9 + 70868197334581248*d^8 - 1000135567834349568*
+         d^7 + 9948930963931136000*d^6 - 70257526377491202048*d^5 + 
+         349560044033522270208*d^4 - 1195554267529396355072*d^3 + 
+         2670507352341230911488*d^2 - 3502404394209761034240*d + 
+         2042832790975256985600);
+
+
+id,only intbn*dala^8*x3^2*x4^2*x5^2*x6^2 =  + M^-20*miBN*rat(531441*d^30 - 
+         63772920*d^29 + 3151740375*d^28 - 76782595680*d^27 + 623145081150*
+         d^26 + 15744728047248*d^25 - 525249952944786*d^24 + 5405328074644704*
+         d^23 + 24990013613201373*d^22 - 1205348767912691640*d^21 + 
+         10147224459133004427*d^20 - 18601288303595073984*d^19 + 
+         96523663959795509316*d^18 + 24064270515169035108192*d^17 - 
+         798047237302635321424800*d^16 - 2583336554265661469517312*d^15 + 
+         427265485262225221379220864*d^14 - 5056552013089652528443462656*d^13
+          - 93719477058052940807564282112*d^12 + 
+         4107862737748102813062008463360*d^11 - 
+         73044850339828153494856357899264*d^10 + 
+         838839001784101744872798319435776*d^9 - 
+         6915808226442932375636591955247104*d^8 + 
+         42580903771318461915038435979558912*d^7 - 198493974343608416079486894\
+         707834880*d^6 + 699443899936925414663975214514176000*d^5 - 1835644936\
+         762352665915387004583936000*d^4 + 34786563800225517374556910229913600\
+         00*d^3 - 4496693213486652330883691210342400000*d^2 + 3545720093514987\
+         510467194257408000000*d - 1285428342978114275324681256960000000,
+         17592186044416*d^10 - 2286984185774080*d^9 + 130885864170455040*d^8
+          - 4336122016227655680*d^7 + 91933386568397488128*d^6 - 
+         1300946380109213859840*d^5 + 12417088453605494620160*d^4 - 
+         78738999337105982750720*d^3 + 316562233177123382624256*d^2 - 
+         726223814599972151623680*d + 719077142423290458931200) + Gam(1,1)^3*
+         M^-20*rat(531441*d^27 - 58989951*d^26 + 2611264878*d^25 - 52176877380
+         *d^24 + 102392422542*d^23 + 17763632607222*d^22 - 369643773407400*
+         d^21 + 1745521355233548*d^20 + 48501334791708345*d^19 - 
+         1215689194199380239*d^18 + 73350260396268958530*d^17 - 
+         6012682516067786887824*d^16 + 317758889974603930011648*d^15 - 
+         11658561036318548204580000*d^14 + 318047169595829704854436800*d^13 - 
+         6680377116743427419369723136*d^12 + 110053300059134127278970621696*
+         d^11 - 1436673642953319760975684022016*d^10 + 
+         14938486555050223378960066859520*d^9 - 
+         123849936744401922001861475893248*d^8 + 
+         816193813149755223339425965129728*d^7 - 
+         4242589294029498272388437454422016*d^6 + 
+         17156931377663566064118033979932672*d^5 - 
+         52791489378332387576036267088936960*d^4 + 119264416799306991483371435\
+         694489600*d^3 - 186292362797979760129276555296768000*d^2 + 1795377572\
+         50944548707055519662080000*d - 80339271436132142207792578560000000,
+         137438953472*d^13 - 19516331393024*d^12 + 1243547651014656*d^11 - 
+         47012918180446208*d^10 + 1174966712743755776*d^9 - 
+         20473887273561096192*d^8 + 255615307650294611968*d^7 - 
+         2313072060671809552384*d^6 + 15161804994706629722112*d^5 - 
+         71087001890135090397184*d^4 + 231781609903903605784576*d^3 - 
+         498028529165734728695808*d^2 + 632765835708719997911040*d - 
+         359538571211645229465600);
+
+
+id,only intbn*dala^9*x3^1*x4^1*x5^1*x6^1 =  + M^-14*miBN*rat(19683*d^27 - 
+         1121931*d^26 + 10563210*d^25 + 531572220*d^24 - 12839292342*d^23 + 
+         1995219054*d^22 + 3218392843272*d^21 - 42225998339556*d^20 - 
+         202275388251909*d^19 + 11179318823525925*d^18 + 8712847184982534*d^17
+          - 2551717020557187072*d^16 - 23635148933049474816*d^15 + 
+         1027739405609578393056*d^14 + 8518369824438497384256*d^13 - 
+         487609935875422935245568*d^12 + 2441556003671823335853312*d^11 + 
+         127460690539379930811831552*d^10 - 3231608121250210102324234752*d^9
+          + 40930524665819858258189438976*d^8 - 339467503040876649124788092928
+         *d^7 + 1986681394016356832724997177344*d^6 - 
+         8402279104654430081817219563520*d^5 + 
+         25638857352663505523233652736000*d^4 - 
+         55156205324558308696717787136000*d^3 + 
+         79427186452354514208738508800000*d^2 - 
+         68711948046943064944961126400000*d + 26984492399813926525599744000000
+         ,68719476736*d^9 - 7421703487488*d^8 + 347995430191104*d^7 - 
+         9282077161684992*d^6 + 154909093725732864*d^5 - 1673821735335493632*
+         d^4 + 11680173594515603456*d^3 - 50610397081226969088*d^2 + 
+         123142487561144893440*d - 127677049435953561600) + Gam(1,1)^3*M^-14*
+         rat(19683*d^24 - 944784*d^23 + 1705860*d^22 + 565505712*d^21 - 
+         7835243886*d^20 - 79133369904*d^19 + 2684002726260*d^18 - 
+         16849368139248*d^17 - 408442114384893*d^16 - 16967174090244480*d^15
+          + 3455852247444570480*d^14 - 214667070995876577408*d^13 + 
+         8230586502715411233312*d^12 - 220503110018218924875264*d^11 + 
+         4318934882671448224904448*d^10 - 63290173962541150900574208*d^9 + 
+         703094470919637530992780032*d^8 - 5957672761457640314506911744*d^7 + 
+         38484942322060884453132902400*d^6 - 188002542038642752639625920512*
+         d^5 + 682349758177690426775767547904*d^4 - 
+         1781964005573365338179669852160*d^3 + 3162405108451541648482920038400
+         *d^2 - 3411347553247719354947076096000*d + 
+         1686530774988370407849984000000,536870912*d^12 - 64424509440*d^11 + 
+         3440268804096*d^10 - 107958297952256*d^9 + 2214631166705664*d^8 - 
+         31254236494823424*d^7 + 310904092622848000*d^6 - 2195547699296600064*
+         d^5 + 10923751376047570944*d^4 - 37361070860293636096*d^3 + 
+         83453354760663465984*d^2 - 109450137319055032320*d + 
+         63838524717976780800);
+
+
+id,only intbn*dala^9*x3^1*x4^1*x5^1*x6^2 =  + M^-16*miBN*rat( - 59049*d^28 + 
+         3877551*d^27 - 60859836*d^26 - 1320073200*d^25 + 52338754746*d^24 - 
+         339807258054*d^23 - 9603302834412*d^22 + 210356208943740*d^21 - 
+         491049792072729*d^20 - 38797116565127409*d^19 + 264523747856726448*
+         d^18 + 7881685088481107100*d^17 + 4560804264661560576*d^16 - 
+         3697732089088021524384*d^15 + 1166115072533546066688*d^14 + 
+         1684307423061669737727360*d^13 - 20002526343776466323944704*d^12 - 
+         318901615522672385703308544*d^11 + 13008802317774508508080324608*d^10
+          - 206813385149965037434998420480*d^9 + 
+         2082596150433946262087289692160*d^8 - 
+         14786199261111863375419481948160*d^7 + 
+         76860553558388567896301585301504*d^6 - 
+         295375828779005698696948666859520*d^5 + 
+         832078907142926069694228332544000*d^4 - 
+         1672342897795579568740877991936000*d^3 + 
+         2271242691902046564262084608000000*d^2 - 
+         1867464126419961468145788518400000*d + 
+         701596802395162089665593344000000,549755813888*d^9 - 59373627899904*
+         d^8 + 2783963441528832*d^7 - 74256617293479936*d^6 + 
+         1239272749805862912*d^5 - 13390573882683949056*d^4 + 
+         93441388756124827648*d^3 - 404883176649815752704*d^2 + 
+         985139900489159147520*d - 1021416395487628492800) + Gam(1,1)^3*M^-16*
+         rat( - 59049*d^25 + 3346110*d^24 - 29681964*d^23 - 1652164776*d^22 + 
+         38208880170*d^21 + 33683768676*d^20 - 10109475796284*d^19 + 
+         120332175300504*d^18 + 787242771534231*d^17 + 40282027296726222*d^16
+          - 10808703268680067920*d^15 + 733853371421188564704*d^14 - 
+         30273103354039024712544*d^13 + 875504579125257466691904*d^12 - 
+         18689885508488036721470208*d^11 + 302162828837081106549238272*d^10 - 
+         3754827935784982516393269504*d^9 + 36153474528283496749333016064*d^8
+          - 270354318764081301536578412544*d^7 + 
+         1564616126489511253700333223936*d^6 - 6935115367537782848957576577024
+         *d^5 + 23086985729340047110708965801984*d^4 - 
+         55818279470262123738120176271360*d^3 + 
+         92456575479483240925397149286400*d^2 - 
+         93754628709405814452173930496000*d + 43849800149697630604099584000000
+         ,4294967296*d^12 - 515396075520*d^11 + 27522150432768*d^10 - 
+         863666383618048*d^9 + 17717049333645312*d^8 - 250033891958587392*d^7
+          + 2487232740982784000*d^6 - 17564381594372800512*d^5 + 
+         87390011008380567552*d^4 - 298888566882349088768*d^3 + 
+         667626838085307727872*d^2 - 875601098552440258560*d + 
+         510708197743814246400);
+
+
+id,only intbn*dala^9*x3^1*x4^1*x5^2*x6^2 =  + M^-18*miBN*rat(177147*d^30 - 
+         17006112*d^29 + 570157461*d^28 - 3870780048*d^27 - 241038477270*d^26
+          + 6569859764448*d^25 - 33055153605558*d^24 - 1311783575581152*d^23
+          + 26183005143436287*d^22 - 48766874684823072*d^21 - 
+         3889757772029602863*d^20 + 22188019425712497648*d^19 + 
+         431047373815411463052*d^18 + 7268102323547812643808*d^17 - 
+         268533723431481597812448*d^16 - 3370414690948323143089152*d^15 + 
+         177392786352278519906750592*d^14 - 1099410364219350778082491392*d^13
+          - 52776301849017055129151417088*d^12 + 
+         1601100551285134769386624094208*d^11 - 
+         24345798182807118557505199211520*d^10 + 
+         248125171921977680418383270830080*d^9 - 
+         1840287322174961418769471984533504*d^8 + 
+         10258968049486481241080685706346496*d^7 - 
+         43451589283780730068730767704588288*d^6 + 139413130313140744551085774\
+         460682240*d^5 - 333628929012360738209294331150336000*d^4 + 5771902163\
+         36631299508955263270912000*d^3 - 681899281657091732101374620467200000
+         *d^2 + 492022601840227737125188848844800000*d - 163459179834300601009\
+         918967808000000,4398046511104*d^10 - 571746046443520*d^9 + 
+         32721466042613760*d^8 - 1084030504056913920*d^7 + 
+         22983346642099372032*d^6 - 325236595027303464960*d^5 + 
+         3104272113401373655040*d^4 - 19684749834276495687680*d^3 + 
+         79140558294280845656064*d^2 - 181555953649993037905920*d + 
+         179769285605822614732800) + Gam(1,1)^3*M^-18*rat(177147*d^27 - 
+         15411789*d^26 + 428262714*d^25 + 275168340*d^24 - 247316566950*d^23
+          + 4360904187138*d^22 + 10875991860936*d^21 - 1308083154478812*d^20
+          + 14389636195639827*d^19 - 92958095245241853*d^18 + 
+         30857739664066348374*d^17 - 2750752767506296646736*d^16 + 
+         137491522565684507172864*d^15 - 4759049728189920059925984*d^14 + 
+         122472848478938153848840512*d^13 - 2419068795156692467022211840*d^12
+          + 37311526751469354353009362176*d^11 - 
+         453970065189016931317798452480*d^10 + 4380701589957948385133617251840
+         *d^9 - 33571128029869622824033960894464*d^8 + 
+         203735391171549674987592999714816*d^7 - 
+         971742094966625859401160273887232*d^6 + 
+         3593317022475846134080522022682624*d^5 - 
+         10075507653623081427478378067263488*d^4 + 
+         20671743629933895817451098205061120*d^3 - 
+         29223603116552286244997096590540800*d^2 + 
+         25401743002601103791662030651392000*d - 
+         10216198739643787563119935488000000,34359738368*d^13 - 4879082848256*
+         d^12 + 310886912753664*d^11 - 11753229545111552*d^10 + 
+         293741678185938944*d^9 - 5118471818390274048*d^8 + 
+         63903826912573652992*d^7 - 578268015167952388096*d^6 + 
+         3790451248676657430528*d^5 - 17771750472533772599296*d^4 + 
+         57945402475975901446144*d^3 - 124507132291433682173952*d^2 + 
+         158191458927179999477760*d - 89884642802911307366400);
+
+
+id,only intbn*dala^9*x3^1*x4^2*x5^2*x6^2 =  + M^-20*miBN*rat( - 531441*d^31 + 
+         55269864*d^30 - 2131373655*d^29 + 26354749680*d^28 + 605376449730*
+         d^27 - 25715049345648*d^26 + 273334304188818*d^25 + 2998671172471872*
+         d^24 - 111475262807516637*d^23 + 805508550101469672*d^22 + 
+         9138355827470061813*d^21 - 143754303042532996848*d^20 + 
+         201096948897725674428*d^19 - 25608649138525763257248*d^18 + 
+         413018909059930759693728*d^17 + 15352092351107826612314112*d^16 - 
+         385932100393974637866943872*d^15 - 1779695751105951013624071168*d^14
+          + 174624309267487381262659684608*d^13 - 
+         2608351104819255760140979949568*d^12 + 
+         7319046535858508485864222485504*d^11 + 
+         329878603653148711044903406952448*d^10 - 
+         6505615802102695542328181155725312*d^9 + 
+         68072027851768456095147035304394752*d^8 - 482800485997486974561128080\
+         965107712*d^7 + 2476459689560809242607815100811182080*d^6 - 935545746\
+         2228453968708216427642880000*d^5 + 2589166260817509091719050105035161\
+         6000*d^4 - 51161808866874175468407365157519360000*d^3 + 6840137132227\
+         1449783671865108070400000*d^2 - 55446093153261685892150426861568000000
+         *d + 20566853487649828405194900111360000000,35184372088832*d^10 - 
+         4573968371548160*d^9 + 261771728340910080*d^8 - 8672244032455311360*
+         d^7 + 183866773136794976256*d^6 - 2601892760218427719680*d^5 + 
+         24834176907210989240320*d^4 - 157477998674211965501440*d^3 + 
+         633124466354246765248512*d^2 - 1452447629199944303247360*d + 
+         1438154284846580917862400) + Gam(1,1)^3*M^-20*rat( - 531441*d^28 + 
+         50486895*d^27 - 1667425662*d^26 + 10396639332*d^25 + 732437615538*
+         d^24 - 19401911367894*d^23 + 85425651691848*d^22 + 4168779019284852*
+         d^21 - 76429676475445113*d^20 + 439667837532046719*d^19 - 
+         53899233289078874706*d^18 + 4839078349727483551344*d^17 - 
+         221555969717519339806464*d^16 + 6574418796724885324393632*d^15 - 
+         131510193014732933581156800*d^14 + 1591622403210152141698734336*d^13
+          - 3167266191239288569055051520*d^12 - 324179157992826275487845925120
+         *d^11 + 8048291732202892796650877492736*d^10 - 
+         115165848136401652061499593859072*d^9 + 
+         1165405174760675528690357649162240*d^8 - 
+         8816511716366585301042377987653632*d^7 + 
+         50724497326808406294096965290819584*d^6 - 221719412664284669449852276\
+         589985792*d^5 + 725399413254011209733208837728501760*d^4 - 1721938305\
+         990932103604666415815065600*d^3 + 28011400475167316133613693650862080\
+         00*d^2 - 2792264844578980637105095736033280000*d + 128542834297811427\
+         5324681256960000000,274877906944*d^13 - 39032662786048*d^12 + 
+         2487095302029312*d^11 - 94025836360892416*d^10 + 2349933425487511552*
+         d^9 - 40947774547122192384*d^8 + 511230615300589223936*d^7 - 
+         4626144121343619104768*d^6 + 30323609989413259444224*d^5 - 
+         142174003780270180794368*d^4 + 463563219807807211569152*d^3 - 
+         996057058331469457391616*d^2 + 1265531671417439995822080*d - 
+         719077142423290458931200);
+
+
+id,only intbn*dala^9*x3^2*x4^2*x5^2*x6^2 =  + M^-22*miBN*rat(1594323*d^33 - 
+         216296487*d^32 + 11992320459*d^31 - 318469266945*d^30 + 2141793913932
+         *d^29 + 116300920724262*d^28 - 3678669422062434*d^27 + 
+         34449324253709310*d^26 + 439646641607371995*d^25 - 
+         14832189774550164555*d^24 + 120603738142952598735*d^23 + 
+         492696863101210209075*d^22 - 18449922693041230104810*d^21 + 
+         424868402282752079093340*d^20 - 5419530369703998307574280*d^19 - 
+         159799549823119947062808000*d^18 + 4812033880194816962123478720*d^17
+          + 42766885240756286874047061120*d^16 - 
+         3296506008689608885342863690240*d^15 + 
+         33518906216649162194989321440000*d^14 + 
+         944690564166498891743847025946112*d^13 - 
+         39230147116691074138122571081724928*d^12 + 73970040594341906249431811\
+         7104695296*d^11 - 9285271713714186165251604421891399680*d^10 + 
+         85446343340344329242672420169373974528*d^9 - 598807443530847393005708\
+         451110494666752*d^8 + 3244873503628576749247738245385658302464*d^7 - 
+         13627195375927998083884927094513215733760*d^6 + 440007000454324192844\
+         60982688531297075200*d^5 - 107201731090699492832437318082705227776000
+         *d^4 + 190566478044216319524599251349966684160000*d^3 - 2330542617840\
+         04792821827657208850022400000*d^2 + 175107834329880291816996646114295\
+         808000000*d - 60860354971376857373237623746723840000000,
+         281474976710656*d^11 - 43347146413441024*d^10 + 2972375754064527360*
+         d^9 - 119638124101097226240*d^8 + 3136005039325779591168*d^7 - 
+         56117562524012057198592*d^6 + 698236825219626036101120*d^5 - 
+         6027985955578205658152960*d^4 + 35300771476282671498264576*d^3 - 
+         133179478573614933353693184*d^2 + 290375179085161953566392320*d - 
+         276125622690543536229580800) + Gam(1,1)^3*M^-22*rat(1594323*d^30 - 
+         201947580*d^29 + 10146094425*d^28 - 223391814840*d^27 - 65834320590*
+         d^26 + 120362638902408*d^25 - 2604942425799198*d^24 + 
+         8735356587916800*d^23 + 572964811658606007*d^22 - 9951921433323855612
+         *d^21 - 43444567950340432491*d^20 + 14554366602834074473944*d^19 - 
+         1395567425071440545211180*d^18 + 88367541143158549820695824*d^17 - 
+         3942303036783843040738416864*d^16 + 131527809704549845501533255168*
+         d^15 - 3409717565271129539916731859072*d^14 + 
+         70247151559868727353934935646720*d^13 - 
+         1165367291133726260783791175077632*d^12 + 
+         15684953261070738482195751537887232*d^11 - 17189986585225425346766242\
+         4654380032*d^10 + 1534812774689594750226439356157464576*d^9 - 
+         11135533118106326834005340700906455040*d^8 + 652619926099715802790210\
+         76439379869696*d^7 - 305855945624184669019046465727731859456*d^6 + 
+         1128432070181443841443775587733197553664*d^5 - 3200298812206958289114\
+         078754251158323200*d^4 + 6723526932897599623223891011716513792000*d^3
+          - 9843129295299006104537253967728476160000*d^2 + 8952392911345809753\
+         113276444741468160000*d - 3803772185711053585827351484170240000000,
+         2199023255552*d^14 - 365037860421632*d^13 + 27391033671155712*d^12 - 
+         1229728988876767232*d^11 + 36852427985191436288*d^10 - 
+         778769414070579757056*d^9 + 11951817635452174729216*d^8 - 
+         135165431108462083833856*d^7 + 1130808551213280943669248*d^6 - 
+         6959525148209507259645952*d^5 + 31005914484274332405071872*d^4 - 
+         96972594669750740280410112*d^3 + 201367208570981655785766912*d^2 - 
+         248734698051534802869288960*d + 138062811345271768114790400);
+
+
+id,only intbn*dala^10*x3^1*x4^1*x5^1*x6^1 =  + M^-16*miBN*rat(59049*d^30 - 
+         3936600*d^29 + 44188335*d^28 + 2570337360*d^27 - 73881457074*d^26 - 
+         33014660400*d^25 + 26975140722270*d^24 - 358075613243520*d^23 - 
+         2878447325248395*d^22 + 121160300157472680*d^21 - 37364788377945405*
+         d^20 - 24272430617592331920*d^19 - 255515633029927999260*d^18 + 
+         7628030404823419454880*d^17 + 219143297124730645665120*d^16 - 
+         4763578160234637517086720*d^15 - 83510635732959490240302720*d^14 + 
+         3148500426174013906319201280*d^13 - 9762583220744105287682945280*d^12
+          - 1063119869762866384123351019520*d^11 + 
+         27351205910980466575567935845376*d^10 - 
+         377170100677721408098665503416320*d^9 + 
+         3514311730681145630504451648552960*d^8 - 
+         23720625889122547783013509292359680*d^7 + 118973577949007423793920509\
+         089153024*d^6 - 445298565367078329501455391412715520*d^5 + 1229511074\
+         584391659777942735552512000*d^4 - 24331352763430865078783218506792960\
+         00*d^3 + 3264729737131237963470378054451200000*d^2 - 2658850759729759\
+         497737380193894400000*d + 991394907155680530343976239104000000,
+         1099511627776*d^10 - 142936511610880*d^9 + 8180366510653440*d^8 - 
+         271007626014228480*d^7 + 5745836660524843008*d^6 - 
+         81309148756825866240*d^5 + 776068028350343413760*d^4 - 
+         4921187458569123921920*d^3 + 19785139573570211414016*d^2 - 
+         45388988412498259476480*d + 44942321401455653683200) + Gam(1,1)^3*
+         M^-16*rat(59049*d^27 - 3405159*d^26 + 12479022*d^25 + 2748665340*d^24
+          - 49578148386*d^23 - 530004702330*d^22 + 23287339051704*d^21 - 
+         140674524999444*d^20 - 4614713804295567*d^19 + 83393453015437833*d^18
+          - 3190461848470734750*d^17 + 643611599582282832528*d^16 - 
+         52146357465274269228288*d^15 + 2511069881172464524224096*d^14 - 
+         84174578436890283358330944*d^13 + 2092810774647861209220468480*d^12
+          - 39765370869484591609255958784*d^11 + 
+         586798693696647721532229306624*d^10 - 6784671452309799447332941106688
+         *d^9 + 61696057829872080710041441247232*d^8 - 
+         440838657060540007680625857675264*d^7 + 
+         2460290240050967501413755502657536*d^6 - 
+         10593218942954848778774635770937344*d^5 + 
+         34455415519244098799554066712100864*d^4 - 
+         81771200911486605929881933719797760*d^3 + 133449535473167708675271595\
+         288166400*d^2 - 133731692467179524272320336101376000*d + 
+         61962181697230033146498514944000000,8589934592*d^13 - 1219770712064*
+         d^12 + 77721728188416*d^11 - 2938307386277888*d^10 + 
+         73435419546484736*d^9 - 1279617954597568512*d^8 + 
+         15975956728143413248*d^7 - 144567003791988097024*d^6 + 
+         947612812169164357632*d^5 - 4442937618133443149824*d^4 + 
+         14486350618993975361536*d^3 - 31126783072858420543488*d^2 + 
+         39547864731794999869440*d - 22471160700727826841600);
+
+
+id,only intbn*dala^10*x3^1*x4^1*x5^1*x6^2 =  + M^-18*miBN*rat( - 177147*d^31
+          + 13463172*d^30 - 242789805*d^29 - 6473738700*d^28 + 293613817302*
+         d^27 - 1969636816872*d^26 - 81849832658010*d^25 + 1829530779954120*
+         d^24 - 1390775195073375*d^23 - 444077425579373100*d^22 + 
+         3504582769543071255*d^21 + 71771077778194524420*d^20 + 
+         86918841797198704020*d^19 - 30038528939308242343920*d^18 - 
+         443845040039136192258720*d^17 + 20426746800196370629883520*d^16 + 
+         117151718712308620242480000*d^15 - 11783799079044907445686080000*d^14
+          + 117445761595104705239986471680*d^13 + 
+         2916007279107764204314930590720*d^12 - 
+         111820974086301658482157636082688*d^11 + 
+         1897344067540617288411898713919488*d^10 - 
+         21103698011019636318275989041315840*d^9 + 169562606126439721003165174\
+         036561920*d^8 - 1021098258742453609306139787453530112*d^7 + 466715587\
+         8673442854734140428734431232*d^6 - 1615689305403136820537457916621357\
+         0560*d^5 + 41725715917392225997417362147508224000*d^4 - 7792197694900\
+         0136111004145982373888000*d^3 + 99388984918863941470382726106316800000
+         *d^2 - 77422005993900307527678574146355200000*d + 2775905740035905484\
+         9631334694912000000,8796093022208*d^10 - 1143492092887040*d^9 + 
+         65442932085227520*d^8 - 2168061008113827840*d^7 + 
+         45966693284198744064*d^6 - 650473190054606929920*d^5 + 
+         6208544226802747310080*d^4 - 39369499668552991375360*d^3 + 
+         158281116588561691312128*d^2 - 363111907299986075811840*d + 
+         359538571211645229465600) + Gam(1,1)^3*M^-18*rat( - 177147*d^28 + 
+         11868849*d^27 - 132781518*d^26 - 7896583404*d^25 + 225697074678*d^24
+          + 201825952182*d^23 - 84702148820352*d^22 + 1074069068446044*d^21 + 
+         9905254712902269*d^20 - 379392345566589375*d^19 + 
+         11906402229844463574*d^18 - 2020167730504029070584*d^17 + 
+         174460197184126726995648*d^16 - 8993307652545073111064352*d^15 + 
+         322833691983499856753267520*d^14 - 8635320520176511561694671872*d^13
+          + 177894814298593888685940993792*d^12 - 
+         2873826465435511729655854765824*d^11 + 
+         36784377780435534544901243905536*d^10 - 
+         375058974154290626655446674728960*d^9 + 
+         3050005590418038282923037927948288*d^8 - 
+         19724353117848022719298790522880000*d^7 + 100667783550291636375909061\
+         387223040*d^6 - 399976376960468062204352001722548224*d^5 + 1210065237\
+         273294584177159669098217472*d^4 - 26899422319411280920625089300188364\
+         80*d^3 + 4137782070650234415724565676372787200*d^2 - 3930373934172716\
+         779064464955670528000*d + 1734941087522440928101958418432000000,
+         68719476736*d^13 - 9758165696512*d^12 + 621773825507328*d^11 - 
+         23506459090223104*d^10 + 587483356371877888*d^9 - 
+         10236943636780548096*d^8 + 127807653825147305984*d^7 - 
+         1156536030335904776192*d^6 + 7580902497353314861056*d^5 - 
+         35543500945067545198592*d^4 + 115890804951951802892288*d^3 - 
+         249014264582867364347904*d^2 + 316382917854359998955520*d - 
+         179769285605822614732800);
+
+
+id,only intbn*dala^10*x3^1*x4^1*x5^2*x6^2 =  + M^-20*miBN*rat(531441*d^33 - 
+         57927069*d^32 + 2183454873*d^31 - 13947078555*d^30 - 1352941159356*
+         d^29 + 39490641377154*d^28 - 153047563642998*d^27 - 12263438275013430
+         *d^26 + 241518270617384265*d^25 - 52240032934279785*d^24 - 
+         52623150151865639355*d^23 + 436068271032809011425*d^22 + 
+         3532021579701309441330*d^21 + 44257461509756890396980*d^20 - 
+         994910765579434650697560*d^19 - 80669889631294624430740800*d^18 + 
+         1458954265833752630583435840*d^17 + 34372490195467094999681888640*
+         d^16 - 1298373327119188036319156743680*d^15 + 
+         5377315211042248582606110009600*d^14 + 
+         496212442115205041526477338786304*d^13 - 
+         14941234986937575292154130127911936*d^12 + 24245422900000516730119505\
+         0573555712*d^11 - 2710485176843974998886378462694891520*d^10 + 
+         22503266257388559104596849842009931776*d^9 - 143161703725217666446045\
+         298949616041984*d^8 + 706593265116179006227249040622585643008*d^7 - 
+         2707985391664322673527088262248105246720*d^6 + 7988962903099926797055\
+         322354476279398400*d^5 - 17798931391217794744652988951142858752000*
+         d^4 + 28954565104678728880854453679627960320000*d^3 - 324293137976608\
+         91455268547350809804800000*d^2 + 223353290655352895438840781770588160\
+         00000*d - 7123998758363062278421138510970880000000,70368744177664*
+         d^11 - 10836786603360256*d^10 + 743093938516131840*d^9 - 
+         29909531025274306560*d^8 + 784001259831444897792*d^7 - 
+         14029390631003014299648*d^6 + 174559206304906509025280*d^5 - 
+         1506996488894551414538240*d^4 + 8825192869070667874566144*d^3 - 
+         33294869643403733338423296*d^2 + 72593794771290488391598080*d - 
+         69031405672635884057395200) + Gam(1,1)^3*M^-20*rat(531441*d^30 - 
+         53144100*d^29 + 1695592035*d^28 + 2312358840*d^27 - 1366340912730*
+         d^26 + 27243059058936*d^25 + 117830235155094*d^24 - 11783455124595840
+         *d^23 + 134493247121388669*d^22 + 1388836133912889756*d^21 - 
+         75120991261919595657*d^20 + 6570155838007304716968*d^19 - 
+         628726740321556889584740*d^18 + 38461016384012288474597808*d^17 - 
+         1631214667459823666372772768*d^16 + 51557169745146753336953857536*
+         d^15 - 1263182309372076314576150553984*d^14 + 
+         24518815956443787517173636564480*d^13 - 
+         381838036527159864265783066662144*d^12 + 
+         4806221979716093536509005720745984*d^11 - 
+         49077959291837522377724257453200384*d^10 + 40682064409561651199104384\
+         1338355712*d^9 - 2730878081752167664945487925167554560*d^8 + 14758776\
+         776134354665830651159939776512*d^7 - 63575785914523251792797370080719\
+         798272*d^6 + 214899614935232126440467503220714897408*d^5 - 5565922914\
+         26660732712648157515743232000*d^4 + 106443806053122381841134064804823\
+         0400000*d^3 - 1413853072166854318638339042626764800000*d^2 + 
+         1162803380771972595948506043666923520000*d - 445249922397691392401321\
+         156935680000000,549755813888*d^14 - 91259465105408*d^13 + 
+         6847758417788928*d^12 - 307432247219191808*d^11 + 9213106996297859072
+         *d^10 - 194692353517644939264*d^9 + 2987954408863043682304*d^8 - 
+         33791357777115520958464*d^7 + 282702137803320235917312*d^6 - 
+         1739881287052376814911488*d^5 + 7751478621068583101267968*d^4 - 
+         24243148667437685070102528*d^3 + 50341802142745413946441728*d^2 - 
+         62183674512883700717322240*d + 34515702836317942028697600);
+
+
+id,only intbn*dala^10*x3^1*x4^2*x5^2*x6^2 =  + M^-22*miBN*rat( - 1594323*d^34
+          + 187598673*d^33 - 8098983693*d^32 + 102607498683*d^31 + 
+         3590652891078*d^30 - 154853211175038*d^29 + 1585252849025718*d^28 + 
+         31766725343414502*d^27 - 1059734478174139575*d^26 + 
+         6918550225617468645*d^25 + 146375677798950363255*d^24 - 
+         2663564149674356986305*d^23 + 9581379157219446341460*d^22 - 
+         92769793808009937206760*d^21 - 2228100871385539116105840*d^20 + 
+         257351096477791916599145040*d^19 - 1935641983378657914992934720*d^18
+          - 129383495084262992192269678080*d^17 + 
+         2526702074355995721610016590080*d^16 + 
+         25818201939763797741182224984320*d^15 - 
+         1548030876066183811253654811866112*d^14 + 
+         22225716961694094086733324614694912*d^13 - 
+         33557757842979728008111837633646592*d^12 - 40293355932673569596461216\
+         85993115648*d^11 + 81688547506511021731856459424671219712*d^10 - 
+         939226736595350533362395111938236874752*d^9 + 75336604799266763248550\
+         13874603245699072*d^8 - 44780527689386383402574361322428633710592*d^7
+          + 201288816721271546225467705012706586132480*d^6 - 68481086972708405\
+         4287860370310858119577600*d^5 + 1739064681588374551459272474138727415\
+         808000*d^4 - 3197142343011888958620958867090550292480000*d^3 + 
+         4019868877782205978975901183645004595200000*d^2 - 3091080662966468395\
+         332702006310600704000000*d + 1095486389484783432718277227441029120000\
+         000,562949953421312*d^11 - 86694292826882048*d^10 + 
+         5944751508129054720*d^9 - 239276248202194452480*d^8 + 
+         6272010078651559182336*d^7 - 112235125048024114397184*d^6 + 
+         1396473650439252072202240*d^5 - 12055971911156411316305920*d^4 + 
+         70601542952565342996529152*d^3 - 266358957147229866707386368*d^2 + 
+         580750358170323907132784640*d - 552251245381087072459161600) + Gam(1,
+         1)^3*M^-22*rat( - 1594323*d^31 + 173249766*d^30 - 6511037985*d^29 + 
+         40762115190*d^28 + 4086886987710*d^27 - 119177621131788*d^26 + 
+         438414925555854*d^25 + 38153607076468764*d^24 - 730201230241108407*
+         d^23 - 361445176531052514*d^22 + 222579153750169833507*d^21 - 
+         13772364379727946689106*d^20 + 1133588826220427204680188*d^19 - 
+         63247327491872620006894584*d^18 + 2351687296206989143965892032*d^17
+          - 60566355042440670768241751616*d^16 + 
+         1042216990589232320889133266048*d^15 - 
+         8872235384988395635433762183424*d^14 - 
+         99081436943910831587037666563328*d^13 + 
+         5291657979336334211912489613510144*d^12 - 110429292847019039211861103\
+         027590144*d^11 + 1559384810650981812191484287621376000*d^10 - 
+         16491096826306378670070567709927907328*d^9 + 135177603515942302733075\
+         056176936321024*d^8 - 868859921355303776003332910181105795072*d^7 + 
+         4376974951053880200899060795365975916544*d^6 - 1711147845105903085687\
+         3881824946397642752*d^5 + 50881851686827649580829526564804336025600*
+         d^4 - 111180355496857787113492784243168772096000*d^3 + 16822393440403\
+         6300128557294974371102720000*d^2 - 1573393002185135219702116245211761\
+         86880000*d + 68467899342798964544892326715064320000000,4398046511104*
+         d^14 - 730075720843264*d^13 + 54782067342311424*d^12 - 
+         2459457977753534464*d^11 + 73704855970382872576*d^10 - 
+         1557538828141159514112*d^9 + 23903635270904349458432*d^8 - 
+         270330862216924167667712*d^7 + 2261617102426561887338496*d^6 - 
+         13919050296419014519291904*d^5 + 62011828968548664810143744*d^4 - 
+         193945189339501480560820224*d^3 + 402734417141963311571533824*d^2 - 
+         497469396103069605738577920*d + 276125622690543536229580800);
+
+
+id,only intbn*dala^10*x3^2*x4^2*x5^2*x6^2 =  + M^-24*miBN*rat(4782969*d^36 - 
+         727011288*d^35 + 44837677170*d^34 - 1287945137736*d^33 + 
+         6210962717751*d^32 + 751284212749488*d^31 - 23550796575886140*d^30 + 
+         190493107327161936*d^29 + 5222011774804439175*d^28 - 
+         153886344195227216760*d^27 + 1092708197096891681250*d^26 + 
+         15947812823492931534360*d^25 - 417610806559803984842055*d^24 + 
+         5121150773414311962214560*d^23 - 2564719884622589483532600*d^22 - 
+         2586884247508748217874066080*d^21 + 31517346242836145021877146160*
+         d^20 + 1407293234010384263370011479680*d^19 - 
+         32557569852309910533394809408000*d^18 - 
+         579890418489353094637026647946240*d^17 + 
+         30600198516316355042032093028564736*d^16 - 25962896450839075297674597\
+         5392899072*d^15 - 11201066937131357390048358159790725120*d^14 + 
+         451265013107736507177523789248305750016*d^13 - 8996167370541668853727\
+         024319812767952896*d^12 + 122547091136862651648086780392373547466752*
+         d^11 - 1246006814063429422192798621964590890024960*d^10 + 98082520795\
+         78395098791815478068483070623744*d^9 - 607417841900783355618017271580\
+         43553001635840*d^8 + 297330904309497346301279140066138735132016640*
+         d^7 - 1146187394382909449776616716541352541264281600*d^6 + 3439372213\
+         670062474271745884568961501102080000*d^5 - 78647233707107728424345104\
+         09208741725470720000*d^4 + 132288894420654093932704582216458134618112\
+         00000*d^3 - 15413513495349106255801730184230184419328000000*d^2 + 
+         11098402950037034090449460775416192040960000000*d - 37153689574482942\
+         35744224407574491955200000000,4503599627370496*d^12 - 
+         810647932926689280*d^11 + 65590424973023903744*d^10 - 
+         3150718299308399001600*d^9 + 99945540255268919574528*d^8 - 
+         2202459096743717225103360*d^7 + 34516695213503032372232192*d^6 - 
+         386914294580615721548513280*d^5 + 3072454501141056297763864576*d^4 - 
+         16815992591311430276937154560*d^3 + 60048665951986403532198641664*d^2
+          - 125214084462476069263292497920*d + 114868259039266111071505612800)
+          + Gam(1,1)^3*M^-24*rat(4782969*d^33 - 683964567*d^32 + 38595902625*
+         d^31 - 927888014385*d^30 - 2884422009060*d^29 + 744496035014574*d^28
+          - 16844282969888646*d^27 + 24834458975220702*d^26 + 
+         5797521571416316641*d^25 - 102941612234349106059*d^24 + 
+         56916126411401590605*d^23 + 7445149776298435375971*d^22 + 
+         2576823280776431071307514*d^21 - 336602902567551890089859388*d^20 + 
+         25639252895841652464610010472*d^19 - 1371060330920522607318674842080*
+         d^18 + 55006060537807804646318071461312*d^17 - 
+         1723764430509197527464094879512192*d^16 + 
+         43284615605606508438452975583588864*d^15 - 88491318401928192390214688\
+         5168179456*d^14 + 14874030689017733168920850338826973696*d^13 - 
+         206720943700116408170611244265644534784*d^12 + 2381970690676408361458\
+         760074419167471616*d^11 - 22760175466553532792382406991874004140032*
+         d^10 + 179955900183100952191061281937640903180288*d^9 - 1171835670874\
+         423856608160239663596886032384*d^8 + 62363016190932960049779804719370\
+         83219902464*d^7 - 26811299623419606732673442108140808275230720*d^6 + 
+         91557080876424454797783980545779468746096640*d^5 - 242239949694627769\
+         946803939256112979850035200*d^4 + 47810699355535663738350413071437352\
+         0883712000*d^3 - 661662100754500898482835849113134862172160000*d^2 + 
+         572053076388838522184400267547392973209600000*d - 2322105598405183897\
+         34014025473405747200000000,35184372088832*d^15 - 6755399441055744*
+         d^14 + 590112288673890304*d^13 - 31070333829229051904*d^12 + 
+         1101206107135798149120*d^11 - 27790920666968913608704*d^10 + 
+         515197158420595974602752*d^9 - 7134603034083498028695552*d^8 + 
+         74321756160532721973592064*d^7 - 581768759676076988720742400*d^6 + 
+         3391257093403544338493865984*d^5 - 14450021940174134124996460544*d^4
+          + 43562474719752014449222877184*d^3 - 87748513934352925652787658752*
+         d^2 + 105682639370962826283460853760*d - 
+         57434129519633055535752806400);
+
+
+id,only intbn*dala^11*x3^1*x4^1*x5^1*x6^1 =  + M^-18*miBN*rat(177147*d^33 - 
+         13640319*d^32 + 180788355*d^31 + 11838714327*d^30 - 399689637732*d^29
+          - 353312120106*d^28 + 201931233586830*d^27 - 2842731613548882*d^26
+          - 32409682889246685*d^25 + 1268838781069378365*d^24 - 
+         1857245214661054425*d^23 - 263400318706881119445*d^22 - 
+         1205384956084555419690*d^21 + 45876785977207449001980*d^20 + 
+         2572861378109654208871800*d^19 - 22193730873241968234997440*d^18 - 
+         1840077725596082788633139520*d^17 + 25155329228488814933972211840*
+         d^16 + 824861328706488453010731302400*d^15 - 
+         24716304067458222353130676542720*d^14 + 
+         24075999980684996523957706157568*d^13 + 
+         10732410077710482795521526362532864*d^12 - 28218589239957324558401023\
+         9592417280*d^11 + 4207510722322785873451977950380351488*d^10 - 
+         43524348946705121228012328935545110528*d^9 + 333325485333094355478254\
+         878062530789376*d^8 - 1939614742992217220790679987851354439680*d^7 + 
+         8641510969508368141605364053756107292672*d^6 - 2933490408070261463357\
+         2554898961659330560*d^5 + 74610609812412563676215058086385156096000*
+         d^4 - 137668074734603082225957702853761957888000*d^3 + 17392595119789\
+         9087011259550933817753600000*d^2 - 1344560207546755791929243616078200\
+         83200000*d + 47914610996207014069416395865587712000000,17592186044416
+         *d^11 - 2709196650840064*d^10 + 185773484629032960*d^9 - 
+         7477382756318576640*d^8 + 196000314957861224448*d^7 - 
+         3507347657750753574912*d^6 + 43639801576226627256320*d^5 - 
+         376749122223637853634560*d^4 + 2206298217267666968641536*d^3 - 
+         8323717410850933334605824*d^2 + 18148448692822622097899520*d - 
+         17257851418158971014348800) + Gam(1,1)^3*M^-18*rat(177147*d^30 - 
+         12045996*d^29 + 69185745*d^28 + 12692385720*d^27 - 287480122110*d^26
+          - 3172421486808*d^25 + 179472931452882*d^24 - 1182219198748704*d^23
+          - 46619228648243457*d^22 + 880290637028208468*d^21 + 
+         6911894104111440045*d^20 - 922132684578486711672*d^19 + 
+         137189384703227533184532*d^18 - 13245969090163287215610864*d^17 + 
+         786497250813449806364007456*d^16 - 32417123653840292566879610880*d^15
+          + 995459355435585230476854892416*d^14 - 
+         23644788904897095194754363588096*d^13 + 
+         443439002920206501700102482446592*d^12 - 
+         6643052534821999906228337927129088*d^11 + 
+         79997430137468858844297251571975168*d^10 - 77628174690878338165847292\
+         6964150272*d^9 + 6063930499712268375259153378526527488*d^8 - 37953130\
+         000315669574781725849687556096*d^7 + 18861295947644307210178237684300\
+         9327104*d^6 - 733341040176056125593599420130558738432*d^5 + 217987111\
+         5173936874544545230218479009792*d^4 - 4777008113717235383840987505034\
+         033889280*d^3 + 7263615045057725839761396094572114739200*d^2 - 
+         6835345759285825807417566090208739328000*d + 299466318726293837933852\
+         4741599232000000,137438953472*d^14 - 22814866276352*d^13 + 
+         1711939604447232*d^12 - 76858061804797952*d^11 + 2303276749074464768*
+         d^10 - 48673088379411234816*d^9 + 746988602215760920576*d^8 - 
+         8447839444278880239616*d^7 + 70675534450830058979328*d^6 - 
+         434970321763094203727872*d^5 + 1937869655267145775316992*d^4 - 
+         6060787166859421267525632*d^3 + 12585450535686353486610432*d^2 - 
+         15545918628220925179330560*d + 8628925709079485507174400);
+
+
+id,only intbn*dala^11*x3^1*x4^1*x5^1*x6^2 =  + M^-20*miBN*rat( - 531441*d^33
+          + 40920957*d^32 - 542365065*d^31 - 35516142981*d^30 + 1199068913196*
+         d^29 + 1059936360318*d^28 - 605793700760490*d^27 + 8528194840646646*
+         d^26 + 97229048667740055*d^25 - 3806516343208135095*d^24 + 
+         5571735643983163275*d^23 + 790200956120643358335*d^22 + 
+         3616154868253666259070*d^21 - 137630357931622347005940*d^20 - 
+         7718584134328962626615400*d^19 + 66581192619725904704992320*d^18 + 
+         5520233176788248365899418560*d^17 - 75465987685466444801916635520*
+         d^16 - 2474583986119465359032193907200*d^15 + 
+         74148912202374667059392029628160*d^14 - 
+         72227999942054989571873118472704*d^13 - 
+         32197230233131448386564579087598592*d^12 + 84655767719871973675203071\
+         8777251840*d^11 - 12622532166968357620355933851141054464*d^10 + 
+         130573046840115363684036986806635331584*d^9 - 99997645599928306643476\
+         4634187592368128*d^8 + 5818844228976651662372039963554063319040*d^7
+          - 25924532908525104424816092161268321878016*d^6 + 880047122421078439\
+         00717664696884977991680*d^5 - 223831829437237691028645174259155468288\
+         000*d^4 + 413004224203809246677873108561285873664000*d^3 - 5217778535\
+         93697261033778652801453260800000*d^2 + 403368062264026737578773084823\
+         460249600000*d - 143743832988621042208249187596763136000000,
+         140737488355328*d^10 - 20266198323167232*d^9 + 1283525893800591360*
+         d^8 - 46983803112542699520*d^7 + 1098164488537462800384*d^6 - 
+         17077136376631400595456*d^5 + 178347048843499012096000*d^4 - 
+         1230522489354112708116480*d^3 + 5345160844600208667967488*d^2 - 
+         13138130840805379997171712*d + 13806281134527176811479040) + Gam(1,1)
+         ^3*M^-20*rat( - 531441*d^30 + 36137988*d^29 - 207557235*d^28 - 
+         38077157160*d^27 + 862440366330*d^26 + 9517264460424*d^25 - 
+         538418794358646*d^24 + 3546657596246112*d^23 + 139857685944730371*
+         d^22 - 2640871911084625404*d^21 - 20735682312334320135*d^20 + 
+         2766398053735460135016*d^19 - 411568154109682599553596*d^18 + 
+         39737907270489861646832592*d^17 - 2359491752440349419092022368*d^16
+          + 97251370961520877700638832640*d^15 - 
+         2986378066306755691430564677248*d^14 + 
+         70934366714691285584263090764288*d^13 - 
+         1330317008760619505100307447339776*d^12 + 
+         19929157604465999718685013781387264*d^11 - 23999229041240657653289175\
+         4715925504*d^10 + 2328845240726350144975418780892450816*d^9 - 
+         18191791499136805125777460135579582464*d^8 + 113859390000947008724345\
+         177549062668288*d^7 - 565838878429329216305347130529027981312*d^6 + 
+         2200023120528168376780798260391676215296*d^5 - 6539613345521810623633\
+         635690655437029376*d^4 + 14331024341151706151522962515102101667840*
+         d^3 - 21790845135173177519284188283716344217600*d^2 + 205060372778574\
+         77422252698270626217984000*d - 89839895617888151380155742247976960000\
+         00,1099511627776*d^13 - 171523813933056*d^12 + 11980278696247296*d^11
+          - 495061707475910656*d^10 + 13475596917836611584*d^9 - 
+         254628737856923762688*d^8 + 3429621439156849737728*d^7 - 
+         33286501162662544539648*d^6 + 232539263980015026438144*d^5 - 
+         1154369934304603365441536*d^4 + 3959257899091132548120576*d^3 - 
+         8893718343964044658999296*d^2 + 11746420845850381302890496*d - 
+         6903140567263588405739520);
+
+
+id,only intbn*dala^11*x3^1*x4^1*x5^2*x6^2 =  + M^-22*miBN*rat(1594323*d^36 - 
+         195570288*d^35 + 8227060974*d^34 - 48669602976*d^33 - 7116323951979*
+         d^32 + 223357571773776*d^31 - 569433392565444*d^30 - 
+         101104430185196064*d^29 + 2017866154384935261*d^28 + 
+         4017519156609815472*d^27 - 646932236273292302370*d^26 + 
+         6298798697799355942560*d^25 + 50563463138512620360075*d^24 - 
+         605415122291976033499920*d^23 + 9173739160733459406640920*d^22 - 
+         867689553019849170661939680*d^21 + 1257518319686780954500740240*d^20
+          + 722149679096298021689411195520*d^19 - 
+         8533523714288378843326304125440*d^18 - 
+         366089879261824814758207043773440*d^17 + 
+         11369763697247886350617258396015872*d^16 - 
+         21443400458795669451533140394852352*d^15 - 55662748913999554099430843\
+         11811180544*d^14 + 168356845402091603504227825892829536256*d^13 - 
+         2906121996092959686320241831983719059456*d^12 + 353797930396313230040\
+         04361848483410509824*d^11 - 325483821516047119178140090983459431448576
+         *d^10 + 2332113061338228520623804746996237159890944*d^9 - 13188027525\
+         113366130368970538859202358542336*d^8 + 59053213694903135002782614439\
+         767947207507968*d^7 - 208458408396218918411804964961641452556779520*
+         d^6 + 573162417251572399177568459857836703639142400*d^5 - 12014649510\
+         17175213445683536025121657454592000*d^4 + 185335976666979110993194167\
+         6527291329413120000*d^3 - 1981346134880789919038530166498360347852800\
+         000*d^2 + 1309869196965031153283010062987575689216000000*d - 
+         402965366102369913894935370396472442880000000,1125899906842624*d^12
+          - 202661983231672320*d^11 + 16397606243255975936*d^10 - 
+         787679574827099750400*d^9 + 24986385063817229893632*d^8 - 
+         550614774185929306275840*d^7 + 8629173803375758093058048*d^6 - 
+         96728573645153930387128320*d^5 + 768113625285264074440966144*d^4 - 
+         4203998147827857569234288640*d^3 + 15012166487996600883049660416*d^2
+          - 31303521115619017315823124480*d + 28717064759816527767876403200)
+          + Gam(1,1)^3*M^-22*rat(1594323*d^33 - 181221381*d^32 + 6567370731*
+         d^31 + 13826264301*d^30 - 7122914351820*d^29 + 159371233216938*d^28
+          + 998048372529726*d^27 - 95474817207741798*d^26 + 
+         1147699166119619787*d^25 + 16203849672609655263*d^24 - 
+         527325704281840607793*d^23 - 4322934105873186041559*d^22 + 
+         1432684149990959653004286*d^21 - 155956629658589008708796820*d^20 + 
+         11266222983172926823175001336*d^19 - 574239566096047402187816049696*
+         d^18 + 21905520105088058278439102190912*d^17 - 
+         651351782006051408806691911540608*d^16 + 
+         15483321597984550268188494522816000*d^15 - 29883123070969040664545333\
+         9462093568*d^14 + 4727222153036155925200469690580395520*d^13 - 
+         61631950824285733347703896987835130880*d^12 + 66402753510171413342305\
+         7084460453378048*d^11 - 5913695499689708361040693661107546669056*d^10
+          + 43442880511703011717809739357918484987904*d^9 - 262029880316893711\
+         888863738344943091187712*d^8 + 12877254411132065026010791411501690933\
+         73952*d^7 - 5096990277238378039203829802582724128538624*d^6 + 
+         15976138410653519678047846864199776456409088*d^5 - 386794672504808741\
+         46626205820813935693004800*d^4 + 696408779836636086855065328027529044\
+         29568000*d^3 - 87639960139612217951772711751303424901120000*d^2 + 
+         68678527448904425012201848630672065822720000*d - 25185335381398119618\
+         433460649779527680000000,8796093022208*d^15 - 1688849860263936*d^14
+          + 147528072168472576*d^13 - 7767583457307262976*d^12 + 
+         275301526783949537280*d^11 - 6947730166742228402176*d^10 + 
+         128799289605148993650688*d^9 - 1783650758520874507173888*d^8 + 
+         18580439040133180493398016*d^7 - 145442189919019247180185600*d^6 + 
+         847814273350886084623466496*d^5 - 3612505485043533531249115136*d^4 + 
+         10890618679938003612305719296*d^3 - 21937128483588231413196914688*d^2
+          + 26420659842740706570865213440*d - 14358532379908263883938201600);
+
+
+id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + M^-24*miBN*rat( - 4782969*d^37
+          + 631351908*d^36 - 30297451410*d^35 + 391191594336*d^34 + 
+         19547940036969*d^33 - 875503467104508*d^32 + 8525112320896380*d^31 + 
+         280522824190560864*d^30 - 9031873921347677895*d^29 + 
+         49446108699138433260*d^28 + 1985018686807652653950*d^27 - 
+         37801976765430765159360*d^26 + 98654550089945354154855*d^25 + 
+         3231065357781767734626540*d^24 - 99858295583663649760758600*d^23 + 
+         2638178645201200007544718080*d^22 + 20220338707338819335604175440*
+         d^21 - 2037640158867107163807554402880*d^20 + 
+         4411705172102225265994579814400*d^19 + 
+         1231041815535551305304922836106240*d^18 - 
+         19002390146529293149291560069639936*d^17 - 35237500581793634786389588\
+         5178395648*d^16 + 16393646227299172449583277667648706560*d^15 - 
+         227243674365109359376556626052491247616*d^14 - 2913289161306128982345\
+         1465153347047424*d^13 + 57376256273970725426453706003881811591168*
+         d^12 - 1204935008673823610768936985882880059310080*d^11 + 15111884201\
+         690193345064156961223334729875456*d^10 - 1354232574014895664140345824\
+         03326108410839040*d^9 + 917504779492069364934755403094732324900700160
+         *d^8 - 4800430691807037476248966084781422161376051200*d^7 + 
+         19484375673988126521260588446258089324183552000*d^6 - 609227209026904\
+         76643000407282170488296570880000*d^5 + 144065577972150047455419749962\
+         529021047603200000*d^4 - 24916427534595908160960743424868608481689600\
+         0000*d^3 + 297171866956945091025585142909187496345600000000*d^2 - 
+         218252690043292387573244991100749348864000000000*d + 7430737914896588\
+         4714884488151489839104000000000,9007199254740992*d^12 - 
+         1621295865853378560*d^11 + 131180849946047807488*d^10 - 
+         6301436598616798003200*d^9 + 199891080510537839149056*d^8 - 
+         4404918193487434450206720*d^7 + 69033390427006064744464384*d^6 - 
+         773828589161231443097026560*d^5 + 6144909002282112595527729152*d^4 - 
+         33631985182622860553874309120*d^3 + 120097331903972807064397283328*
+         d^2 - 250428168924952138526584995840*d + 
+         229736518078532222143011225600) + Gam(1,1)^3*M^-24*rat( - 4782969*
+         d^34 + 588305187*d^33 - 24916611285*d^32 + 155969961885*d^31 + 
+         21442182296760*d^30 - 686807594833374*d^29 + 1954362269597166*d^28 + 
+         312051200422552218*d^27 - 6294210750920730681*d^26 - 
+         13008819193977226761*d^25 + 2001916118275580530575*d^24 - 
+         8583472304526467188071*d^23 - 2725726276302399778826934*d^22 + 
+         285066436952023268663709108*d^21 - 18907194844490614662812822712*d^20
+          + 858275273003689558026474632640*d^19 - 
+         27584853919397352499944574619712*d^18 + 
+         623643219753041434537733450285952*d^17 - 
+         8809326995422557889171077993345024*d^16 + 
+         19220871907151755133087373496402176*d^15 + 28242329913679053091220873\
+         64536615424*d^14 - 90759670080238255207805762510894939136*d^13 + 
+         1752448183325919801953464810893723224064*d^12 - 248792383469746344367\
+         92794496509345292288*d^11 + 275247609147969703656586857899839179620352
+         *d^10 - 2427282332787595187213065399089221177573376*d^9 + 17200411798\
+         395181127185224321334854500745216*d^8 - 97914732758446313366886167330\
+         600856122818560*d^7 + 444668911591967679855684861617036696758517760*
+         d^6 - 1588901667833861326008875671659476395071897600*d^5 + 4366692000\
+         337198761552574654407886076116992000*d^4 - 89004777703526318491872467\
+         65174335555502080000*d^3 + 126611889387011794474723167147153042702336\
+         00000*d^2 - 11208850967936252053953991325474453716992000000*d + 
+         4644211196810367794680280509468114944000000000,70368744177664*d^15 - 
+         13510798882111488*d^14 + 1180224577347780608*d^13 - 
+         62140667658458103808*d^12 + 2202412214271596298240*d^11 - 
+         55581841333937827217408*d^10 + 1030394316841191949205504*d^9 - 
+         14269206068166996057391104*d^8 + 148643512321065443947184128*d^7 - 
+         1163537519352153977441484800*d^6 + 6782514186807088676987731968*d^5
+          - 28900043880348268249992921088*d^4 + 87124949439504028898445754368*
+         d^3 - 175497027868705851305575317504*d^2 + 
+         211365278741925652566921707520*d - 114868259039266111071505612800);
+
+
+id,only intbn*dala^11*x3^2*x4^2*x5^2*x6^2 =  + M^-26*miBN*rat(14348907*d^39 - 
+         2424965283*d^38 + 165190994676*d^37 - 5102053616574*d^36 + 
+         12339693502857*d^35 + 4431763363969035*d^34 - 140500025074737306*d^33
+          + 901701776745422532*d^32 + 50561280315219944061*d^31 - 
+         1400246645078218701357*d^30 + 7666207897104017165880*d^29 + 
+         279234691325402735738322*d^28 - 6342129014494506693607665*d^27 + 
+         46991119754405757092758965*d^26 + 740833046048087272883706030*d^25 - 
+         34064339180534995880271915000*d^24 + 104324873305491964162344304800*
+         d^23 + 19025953179049574523843653640240*d^22 - 
+         115380063684642448493323186404960*d^21 - 
+         14928965964885506159083098825803520*d^20 + 24938298380617280715784286\
+         7724301568*d^19 + 7991241995188279708586082005753334528*d^18 - 
+         336512295250020295202981752047352659456*d^17 + 2262294804566376353721\
+         955018480345073664*d^16 + 155072528496303928605936756253487498969088*
+         d^15 - 6155857250154580998868712924205038203514880*d^14 + 12940478816\
+         8532012362342591778238370376933376*d^13 - 190127662711352500316462355\
+         1193136369921687552*d^12 + 211794963704221959289587230036808936548554\
+         50624*d^11 - 185260840222177940379328456457786406217552232448*d^10 + 
+         1293531128974484366836107778431185824696510709760*d^9 - 7254488534482\
+         695374237765338187556075035135311872*d^8 + 32651057864459958985297002\
+         787302286030792304885760*d^7 - 11709816733258505999904022909357819505\
+         4969539788800*d^6 + 3299895864160686932307700747799131150723496017920\
+         00*d^5 - 714175478395835070596868435371402039562495590400000*d^4 + 
+         1144432982588143738496631924571318963436676710400000*d^3 - 
+         1277481344824903583510316377690940171482038272000000*d^2 + 
+         885565551496944868596285681988537873732730880000000*d - 2866370054914\
+         61671382675314475747536325836800000000,72057594037927936*d^13 - 
+         14987979559889010688*d^12 + 1412617073519539257344*d^11 - 
+         79796003176849092902912*d^10 + 3010650442174465465909248*d^9 - 
+         80014947582259951571042304*d^8 + 1538968798757233834802020352*d^7 - 
+         21654108168939210047536234496*d^6 + 222496875990372744017955782656*
+         d^5 - 1645515497972176105829205803008*d^4 + 
+         8494343336139303220583023509504*d^3 - 
+         28905227697889525890637671432192*d^2 + 
+         57933801983817536807099128872960*d - 51460980049591217760034514534400
+         ) + Gam(1,1)^3*M^-26*rat(14348907*d^36 - 2295825120*d^35 + 
+         144270288270*d^34 - 3761148257424*d^33 - 24276019566627*d^32 + 
+         4290409779619248*d^31 - 101640416507582292*d^30 - 94056147400295520*
+         d^29 + 51828880930464806469*d^28 - 936919170171545613696*d^27 - 
+         1749824674364140190946*d^26 + 283629435708266909252784*d^25 - 
+         5953291127805962202919677*d^24 + 639373835989688745421523376*d^23 - 
+         87394897378103583259635857208*d^22 + 7784445413870889815522620747584*
+         d^21 - 491217206432668884407355612169392*d^20 + 
+         23357723041119071141001402707713536*d^19 - 87104018801316791178509301\
+         7357989888*d^18 + 26167218912668564849938296346568423424*d^17 - 
+         644750826225229407933787140680368460544*d^16 + 1318461939995372955981\
+         8588151341245034496*d^15 - 225446565763846844699462172865788009043968
+         *d^14 + 3237713337501530130607184587355808881983488*d^13 - 3913306552\
+         5943271342322934301330016267816960*d^12 + 398094232895071448648215027\
+         789405022063689728*d^11 - 3402299288871027382071066410342359156034174\
+         976*d^10 + 24336220263389255573748393439252188270988099584*d^9 - 
+         144807568210144237313846607472204653472357810176*d^8 + 71044810513172\
+         4083769193521859951283062997778432*d^7 - 2838023688268048921265430409\
+         357972659935738068992*d^6 + 90682764845325248653240566290432976107969\
+         76046080*d^5 - 22591000528158209016540668636269772584110784512000*d^4
+          + 42219925126382082402421975298217353054917754880000*d^3 - 
+         55608007492840781868412616894499970746710753280000*d^2 + 459667521911\
+         14889979264157224761690659435315200000*d - 17914812843216354461417207\
+         154734221020364800000000,562949953421312*d^16 - 123848989752688640*
+         d^15 + 12468215568375218176*d^14 - 761495646593567686656*d^13 + 
+         31538807269667385638912*d^12 - 937995066668340188545024*d^11 + 
+         20693486993531608890343424*d^10 - 344961975517762965081161728*d^9 + 
+         4385450257837930668433080320*d^8 - 42604446914735891263701123072*d^7
+          + 314892517829339200362794450944*d^6 - 
+         1750483528887574009645195329536*d^5 + 7170609424714044319185980358656
+         *d^4 - 20919964897398549283696451518464*d^3 + 
+         41002256472525515912984244781056*d^2 - 
+         48264768510505475063562507386880*d + 25730490024795608880017257267200
+         );
 #endprocedure
 
 #procedure reduceBNBN
@@ -7137,9 +7280,6 @@ id,only intbn*dala^11*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-26*miBN*rat(
         endif;
         .sort
 
-*        id inttbl = 1;
-        .sort
-
         #message - done
 #endprocedure
 
@@ -7169,11 +7309,6 @@ id,only intbn*dala^11*x3^2*x4^2*x5^2*x6^2 =  + int0 * ( M^-26*miBN*rat(
                 #else                
                 #call reduceBNnotab
         #endif
-
-*         #call expansion(2)        
-*         b ep;
-*         Print+s;
-*         .end        
         
         #call symBN{p1,p2,x3,x4,x5,x6}
         
@@ -7361,9 +7496,9 @@ if ( count(`p1'.`p1',1,`p2'.`p2',1,`p'.`p',1) >= -4 );
 		id	xpower^n8?/`p1'.`p1'^n1?pos_/`p2'.`p2'^n2?pos_/`p'.`p'^n?pos_/`pa'.`pa'^n3?/`pb'.`pb'^n4?
 			*ep`pa'^x1?*ep`pb'^x2? = xpower^n8/`p1'.`p1'^n1/`p2'.`p2'^n2/`p'.`p'^n/`pa'.`pa'^n3/`pb'.`pb'^n4
 				*ep`pa'^x1*ep`pb'^x2*(
-					+num(n3+x1*ep)*(`p'.`p'/`pa'.`pa'-`p1'.`p1'/`pa'.`pa')
-					+num(n4+x2*ep)*(`p'.`p'/`pb'.`pb'-`p2'.`p2'/`pb'.`pb')
-				)*den(4-2*ep+n8-2*n-n3-n4-x1*ep-x2*ep);
+					+num(n3+x1*(2-d/2))*(`p'.`p'/`pa'.`pa'-`p1'.`p1'/`pa'.`pa')
+					+num(n4+x2*(2-d/2))*(`p'.`p'/`pb'.`pb'-`p2'.`p2'/`pb'.`pb')
+				)*den(d+n8-2*n-n3-n4-x1*(2-d/2)-x2*(2-d/2));
 	endrepeat;
 	id	num(x?number_) = x;
 	id	den(x?number_) = 1/x;
@@ -7380,26 +7515,27 @@ else;
 		+sum_(isum1,0,n2-1,sum_(isum2,0,n0-1,sum_(isum3,0,n0-1-isum2,
 			ftriangle(n,n0-isum2-isum3,n3+n1+isum2,x1,n4+isum1+isum3,x2,0,n2-isum1)*sign_(n1+isum1)
 				*fac_(n1+isum1+isum2+isum3-1)
-				*Pochhammer(n1+isum2,n3+x1*ep)
-				*Pochhammer(isum3+isum1,n4+x2*ep)
-				*Pochhammer(-n1-isum1-isum2-isum3,isum2+isum3+5-2*ep+n-2*n0-n3-n4-x1*ep-x2*ep)
+				*Pochhammer(n1+isum2,n3+x1*(2-d/2))
+				*Pochhammer(isum3+isum1,n4+x2*(2-d/2))
+				*Pochhammer(-n1-isum1-isum2-isum3,isum2+isum3+5-2*(2-d/2)+n-2*n0-n3-n4-x1*(2-d/2)-x2*(2-d/2))
 				*invfac_(isum1)*invfac_(isum2)*invfac_(isum3)*invfac_(n1-1)
 		)))
 		+sum_(isum1,0,n1-1,sum_(isum2,0,n2-1,sum_(isum3,0,n0,
 			ftriangle(n,0,n3+isum1+isum3,x1,n4+n0+isum2-isum3,x2,n1-isum1,n2-isum2)*sign_(isum1+isum2)
 				*fac_(n0+isum1+isum2-1)
-				*Pochhammer(isum3+isum1,n3+x1*ep)
-				*Pochhammer(n0-isum3+isum2,n4+x2*ep)
-				*Pochhammer(-isum1-isum2-n0,4-2*ep+n-n0-n3-n4-x1*ep-x2*ep)
+				*Pochhammer(isum3+isum1,n3+x1*(2-d/2))
+				*Pochhammer(n0-isum3+isum2,n4+x2*(2-d/2))
+				*Pochhammer(-isum1-isum2-n0,4-2*(2-d/2)+n-n0-n3-n4-x1*(2-d/2)-x2*(2-d/2))
 				*n0*invfac_(n0-isum3)
 				*invfac_(isum1)*invfac_(isum2)*invfac_(isum3)
 		)))
 		+sum_(isum1,0,n1-1,sum_(isum2,0,n0-1,sum_(isum3,0,n0-1-isum2,
 			ftriangle(n,n0-isum2-isum3,n3+isum1+isum3,x1,n4+n2+isum2,x2,n1-isum1,0)*sign_(n2+isum1)
 				*fac_(n2+isum1+isum2+isum3-1)
-				*Pochhammer(n2+isum2,n4+x2*ep)
-				*Pochhammer(isum3+isum1,n3++x1*ep)
-				*Pochhammer(-n2-isum1-isum2-isum3,isum2+isum3+5-2*ep+n-2*n0-n3-n4-x1*ep-x2*ep)
+				*Pochhammer(n2+isum2,n4+x2*(2-d/2))
+*                                ++ -> +        
+				*Pochhammer(isum3+isum1,n3+x1*(2-d/2))
+				*Pochhammer(-n2-isum1-isum2-isum3,isum2+isum3+5-2*(2-d/2)+n-2*n0-n3-n4-x1*(2-d/2)-x2*(2-d/2))
 				*invfac_(isum1)*invfac_(isum2)*invfac_(isum3)*invfac_(n2-1)
 		)));
 	repeat id Pochhammer(n?pos_,x?) = Pochhammer(n-1,x)*num(n-1+x);
@@ -8251,7 +8387,7 @@ endif;
                 * `x4'^n4  * `x5'^n5  * `x6'^(n6-1) * (-1)
                 *1/(n6-1)/M^2/2
                 *(
-                num(4-2*(n6-1)-n1-n3 -2*ep)
+                num(4-2*(n6-1)-n1-n3 -2*(2-d/2))
                 +n1/`p1'.`p1'*(1/`x4'-1/`x6')
                 +n3/`p3'.`p3'*(1/`x5'-1/`x6')
                 )
@@ -8260,10 +8396,9 @@ endif;
 
                 endif;
                 endif;
-                
-*   repeat id acc(x1?)*acc(x2?) = acc(x1*x2);
+               
                 #call ACCU{BMn6}
-
+                
 #enddo
 
 #endprocedure
@@ -8568,7 +8703,7 @@ endif;
                 *(-1)/(n1-1)/M^2*(
                 - `p1'.`p1'*n3/`p3'.`p3'*(1/`x6'-1/`x5')
                 - (n1-1)                *(1/`x6'-`p4'.`p4')
-                + `p1'.`p1'*(n-2*n6-n3-(n1-1))
+                + `p1'.`p1'*num(d-2*n6-n3-(n1-1))
                 +2*n6*M^2*`x6'*`p1'.`p1'
                 );
                 
@@ -8585,7 +8720,7 @@ endif;
                 *(-1)/(n2-1)/M^2*(
                 - `p2'.`p2'*n3/`p3'.`p3'*(1/`x5'-1/`x6')
                 - (n2-1)                *(1/`x5'-`p4'.`p4')
-                + `p2'.`p2'*(n-2*n5-n3-(n2-1))
+                + `p2'.`p2'*num(d-2*n5-n3-(n2-1))
                 +2*n5*M^2*`x5'*`p2'.`p2'
                 );
                 
@@ -8593,7 +8728,7 @@ endif;
 
                 endif;
 
-                id n = num(4-2*ep);
+*                 id n = num(4-2*ep);
 
 * topBM1        
                 endif;
@@ -9501,34 +9636,31 @@ if(count(int`in',1)) id  `v1'.`v2' = (1/(`z') - 1/`x' - 1/`y' +2*M^2)/2;
 * topm4
 * (simple topology)
 *
-
-#message this is topm4
+        
+        #message this is topm4
 * if( count(intm4,1)) multiply intM00*intM0/intm4;
 *         #call one00(p3,p4,p6,e3,e4,e6,int1)
-
+        
 * Numerator p4->p3,p6
         if(count(intm4,1)) id p4=p6-p3;        
         #call IntOne(p3,p4,p6,m4,MxM)
-.sort
-
-Print+s;
-.sort:AFP-one1;
-
+        .sort
+        
 * #include expandnomdeno
-
-#call averts(p5,MxM)
-.sort
+        
+        #call averts(p5,MxM)
+        .sort
 *         #call one10(x5,s5m1,1/p5.p5,e5)
         #call TadpoleM0(x5,p5,MxM,M0)        
-.sort
-
-#call averts(p6,M0)
-.sort
-
+        .sort
+        
+        #call averts(p6,M0)
+        .sort
+        
 *         #call one10(x6,p6)
-#call TadpoleM0(x6,p6,M0,0)        
-.sort
-
+        #call TadpoleM0(x6,p6,M0,0)        
+        .sort
+        
 * #include expandnomdeno
         
 #endprocedure        
@@ -9546,7 +9678,7 @@ Print+s;
 
 * treat 1-loop integral
 
-        if( count(intm5,1)) multiply replace_(x1,s1m,x2,s2m,x3,s3m,x4,s4m,x5,s5m,x6,s6m,x7,s7m,x8,s8m);
+        if( count(intm5,1)) multiply replace_(x1,s1m,x2,s2m,x3,s3m,x4,s4m,x5,s5m,x6,s6m);
 
         #call averts(p4,m5)
 *         #call one10(s4m,s4m1,1/p4.p4,yy1)
@@ -9697,8 +9829,6 @@ Print+s;
 #procedure topn1
         #message this is topn1
         
-
-        
 * integrals of type N1
         
         if(count(intn1,1));        
@@ -9710,38 +9840,8 @@ Print+s;
         
         .sort 
         
-* The following commands should not be used if 'EXACTEXP' is defined.
-
-* id agam=2;
-* id bgam=23/3;
-* id cgam=35/2+3*z2;
-* id dgam=275/192*16+23/2*z2-2*z3;
-* id egam=-16*(189/128 - 89/48*z3 - 3/32*z4 - 105/64*z2 - 9/64*z2^2);
-* id fgam = -384*(
-*          14917/18432 + 1/128*z3*z2 - 175/256*z3 + 649/1536*z4 + 1/320*z5
-*          - 275/3072*z2 - 23/1024*z2^2
-*          )
-*          +16*B4;
-
-* argument;
-*   id agam=2;
-*   id bgam=23/3;
-*   id cgam=35/2+3*z2;
-*   id dgam=275/192*16+23/2*z2-2*z3;
-*   id egam=-16*(189/128 - 89/48*z3 - 3/32*z4 - 105/64*z2 - 9/64*z2^2);
-*   id fgam = -384*(
-*          14917/18432 + 1/128*z3*z2 - 175/256*z3 + 649/1536*z4 + 1/320*z5
-*          - 275/3072*z2 - 23/1024*z2^2
-*          )
-*          +16*B4;
-* endargument;
-
-#call ACCU()
+        #call ACCU()
         
-* b int0,intt1;
-* Print+s;
-* .end
-
 #endprocedure        
 
 
@@ -10300,9 +10400,7 @@ Print+s;
         iGam(1,x1)*
         iGam(1,x2)*
         iGam(2,-2-x1-x2)*
-        rat(1,ep);
-*         rat(1,ep^(1+x1+x2));
-*       We normalize G function to have 1+a1+a2 maximum pole       
+        rat(1,2-d/2);
 
 #endprocedure
 
@@ -10314,27 +10412,27 @@ Print+s;
         
         id Gam(x?pos_,0)  = fac_(x-1);
         id iGam(x?pos_,0) = 1/fac_(x-1);
-        id Gam(0,y?)      = rat(1,ep*y) * Gam(1,y);
-        id iGam(0,y?)     = rat(ep*y,1) * iGam(1,y);
+        id Gam(0,y?)      = rat(1,(2-d/2)*y) * Gam(1,y);
+        id iGam(0,y?)     = rat((2-d/2)*y,1) * iGam(1,y);
         
         .sort
         
         repeat;
-                id Gam(x?pos_,y?)         = rat(x-1+ep*y,1) * Gam(x-1,y);
+                id Gam(x?pos_,y?)         = rat(x-1+(2-d/2)*y,1) * Gam(x-1,y);
                 id Gam(1,y?) * iGam(1,y?) = 1;
         endrepeat;
         
         .sort
         
         repeat; 
-                id iGam(x?pos_,y?)        = rat(1,x-1+ep*y) * iGam(x-1,y);
+                id iGam(x?pos_,y?)        = rat(1,x-1+(2-d/2)*y) * iGam(x-1,y);
                 id Gam(1,y?) * iGam(1,y?) = 1;
         endrepeat;
         
         .sort
         
         repeat;
-                id Gam(x?neg0_,y?)        = rat(1,x+ep*y) * Gam(x+1,y);
+                id Gam(x?neg0_,y?)        = rat(1,x+(2-d/2)*y) * Gam(x+1,y);
                 id Gam(1,y?) * iGam(1,y?) = 1;
         endrepeat;
         
@@ -10342,7 +10440,7 @@ Print+s;
 
         
         repeat;
-                id iGam(x?neg0_,y?)       = rat(x+ep*y,1) * iGam(x+1,y);
+                id iGam(x?neg0_,y?)       = rat(x+(2-d/2)*y,1) * iGam(x+1,y);
                 id Gam(1,y?) * iGam(1,y?) = 1;
         endrepeat;
         
@@ -10434,8 +10532,9 @@ multiply, ep^('x');
 
 *--#[ expansion :
 *
-#procedure expansion(maxeppow)
-*         #call subvalues
+#procedure exp4d(maxeppow)
+* Expansion near d=4-2*ep      
+        Multiply replace_(d,4-2*ep);
 *
 *	Expands the PolyRatFun to sufficient powers in ep.
 *
@@ -10452,7 +10551,6 @@ multiply, ep^('x');
         SplitArg,den;
         Multiply replace_(DUMMYSYMBOL,1);
         
-**** id	den(?a,x1?) = den(x1,?a);
         repeat id den(x1?,x2?,x3?,?a) = den(x1,x2+x3,?a);
         id	den(x1?,x2?) = den(1,x2/x1)/x1;
         id	den(x1?) = 1/x1;
@@ -10474,6 +10572,9 @@ multiply, ep^('x');
         #call subvalues
 
         if ( count(ep,1) > `maxeppow' ) discard;
+        .sort
+* Switch back to ep without truncation        
+        S ep;        
 #endprocedure
 *
 *--#] expansion : 
@@ -10490,6 +10591,7 @@ multiply, ep^('x');
 *         
 * #-
 * #include matad-ng.hh
+* #undefine REDBNTAB
 * S n3m2;
 
 * * Fill table upto weight 11
@@ -10503,7 +10605,7 @@ multiply, ep^('x');
         
 *         #do i=1,1
 *                 id,once dala^n1?pos_*x3^n3m2?*x4^n4?*x5^n5?*x6^n6? = 
-*                 ((4*((n3m2+2)-1)-2*rat(4-2*ep,1))/4/M^2/((n3m2+2)-1)*x3^((n3m2+2)-1)*x4^n4*x5^n5*x6^n6 -
+*                 ((4*((n3m2+2)-1)-2*rat(d,1))/4/M^2/((n3m2+2)-1)*x3^((n3m2+2)-1)*x4^n4*x5^n5*x6^n6 -
 *                 x3^(n3m2+2)*x4^n4*x5^n5*x6^n6)*4*M^2*(n3m2)*((n3m2+2)-1)*dala^(n1-1);
                 
 *                 if(count(dala,1)) redefine i "0";
