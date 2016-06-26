@@ -10073,24 +10073,24 @@ multiply, ep^('x');
         + ep * T1ep + ep^2 * T1ep2 + ep^3*miT1trunc;        
         
 * MMMMMM(1,1,1,1,1,1)        
-        id miD6 = 2*z3/ep + D6 + ep*D6ep + ep^3*miD6trunc;
+        id miD6 = 2*z3/ep + D6 + ep*D6ep + ep^2*miD6trunc;
         
 * MMMMM0(1,1,1,1,1,1)        
-        id miD5 = 2*z3/ep + D5 + ep*D5ep + ep^3*miD5trunc;
+        id miD5 = 2*z3/ep + D5 + ep*D5ep + ep^2*miD5trunc;
         
 * 00MMMM(1,1,1,1,1,1)        
-        id miD4 = 2*z3/ep + D4 + ep*D4ep + ep^3*miD4trunc;
+        id miD4 = 2*z3/ep + D4 + ep*D4ep + ep^2*miD4trunc;
         
 * MM0000(1,1,1,1,1,1)        
-        id miDN = 2*z3/ep + DN + ep*DNep + ep^3*miDNtrunc;
+        id miDN = 2*z3/ep + DN + ep*DNep + ep^2*miDNtrunc;
         
 * MMM000(1,1,1,1,1,1)        
-        id miDM = 2*z3/ep + DM + ep*DMep + ep^3*miDMtrunc;
+        id miDM = 2*z3/ep + DM + ep*DMep + ep^2*miDMtrunc;
 
 * MMM000(1,1,1,1,1,0)/M^2        
 *** the coefficients of 1/ep^3 and 1/ep^2 are determined
 *** from the cancellation of poles 
-        id miE3 = -2/3/ep^3-11/3/ep^2 + (-14 + (27*S2)/2 - 2*z2)/ep + E3 + ep*E3ep + ep^3*miE3trunc;
+        id miE3 = -2/3/ep^3-11/3/ep^2 + (-14 + (27*S2)/2 - 2*z2)/ep + E3 + ep*E3ep + ep^2*miE3trunc;
 
 * MM00MM(1,1,0,0,1,1)/M^4                
         id miBN = agam/ep^3+bgam/ep^2+cgam/ep+dgam+egam*ep
