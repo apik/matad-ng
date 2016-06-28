@@ -12,8 +12,6 @@
 *   Options and flags
 *   -------------
 * 
-*   TABINT     - use tables for integrals BN(1,1,1,n) 
-* 
 *   REDBNTAB   - use table for integrals 
 *                BN(1,1,1,1), BN(1,1,1,2), BN(1,1,2,2), 
 *                BN(1,2,2,2), BN(2,2,2,2) and dalambertian 
@@ -56,9 +54,6 @@
 
 * By default we use reduction with tables for BN topology 
 #define REDBNTAB
-
-* And not use tables for BN(1,1,1,n) integrals
-* #define TABINT
 
 **************************************************************************************
 S d;
@@ -3998,22 +3993,26 @@ endif;
         
         
         #do i=1,1
+
+***
+*** We do not use tables for BN(1,1,1,n)
+***
                 
-                if ( count(intbn,1) );        
-                #ifdef `TABINT'
-                        if((count(`x3',1) = 1)      &&  (count(`x4',1) = 1) &&
-                        (count(`x5',1) = 1)      &&  (count(`x6',1) > 10) &&
-                        (count(`p1'.`p1',1) = 0) &&  (count(`p2'.`p2',1) = 0)  );
-                #endif
+*                 if ( count(intbn,1) );        
+*                 #ifdef `TABINT'
+*                         if((count(`x3',1) = 1)      &&  (count(`x4',1) = 1) &&
+*                         (count(`x5',1) = 1)      &&  (count(`x6',1) > 10) &&
+*                         (count(`p1'.`p1',1) = 0) &&  (count(`p2'.`p2',1) = 0)  );
+*                 #endif
                 
-                #ifndef `TABINT'
+*                 #ifndef `TABINT'
                         
 * old version without TabBN:
                         
                         if((count(`x3',1) = 1)      &&  (count(`x4',1) = 1) &&
                         (count(`x5',1) = 1)      &&  (count(`x6',1) > 1) &&
                         (count(`p1'.`p1',1) = 0) &&  (count(`p2'.`p2',1) = 0)  );
-                #endif
+*                 #endif
                 
 *
 * do the reduction via eq. (N20)
