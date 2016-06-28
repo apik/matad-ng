@@ -16,4 +16,4 @@ With expansion of Euler gamma functions near d for remaining trivial integrals
 
 > `Gam(n,x)=Gamma(n+(2-d/2)*x)*Exp(ep*x*EulerGamma), iGam(n,x)=Exp(-ep*x*EulerGamma)/Gamma(n+(2-d/2)*x)`
 
-Each integral is divided by `Exp(-ep*x*EulerGamma)` and `Zeta[2]` is present in final results.
+Each integral is divided by `Exp(-ep*EulerGamma)` and `Zeta[2]` is present in final results.
