@@ -9,6 +9,8 @@ MATAD-ng
 
 For origianl MATAD usage and examples see M.Steinhauser lectures at CAPP 2009 https://www.ttp.kit.edu/~ms/capp09.pdf
 
+## Master integrals
+
 To use reduction at arbitrary **d** only following 9 master integrals needed:
 ![MATAD-ng master integrals](https://raw.githubusercontent.com/wiki/apik/matad-ng/images/masterints.png)
 
@@ -17,3 +19,39 @@ With expansion of Euler gamma functions near d for remaining trivial integrals
 > `Gam(n,x)=Gamma(n+(2-d/2)*x)*Exp(ep*x*EulerGamma), iGam(n,x)=Exp(-ep*x*EulerGamma)/Gamma(n+(2-d/2)*x)`
 
 Each integral is divided by `Exp(-ep*EulerGamma)` and `Zeta[2]` is present in final results.
+
+## Usage
+
+Calculate one-loop integral using MATAD notation for massive propagators **s1m** and for massles propagator **1/p1.p1**
+```
+#-
+#include matad-ng.hh
+* We use s1m for massive denominator and 1/p1.p1 for massless
+L ex1loop = s1m^2*p1.p1;
+* 1 - one-loop reduction
+#call matad(1)
+* expansion upto ep^3
+#call exp4d(3)
+hide;
+.sort
+```
+
+Calculate three-loop integral using auxiliary topology definition, mass distribution determined by symbol for example `[MM00MM]`
+
+```
+L ex3loopB = tad3l([MM00MM],2,2,2,1,1,1);
+* Convert to original MATAD notation
+#call FromAuxTopo
+* 3 - three-loop reduction
+#call matad(3)
+```
+
+Expand result in **ep** up to O(ep) near d=4-2e*p
+```
+#call exp4d(1)
+```
+
+## Tests
+
+To check correctness of results with package supplied test cases with results obtained with the help of original MATAD package. To run tests use command
+`$ form tests.frm` and file tests.err will be produced if results of calculation do not match.
