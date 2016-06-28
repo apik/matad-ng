@@ -1,30 +1,66 @@
 * 
+*   MATAD-ng - exact version of M.Steinhauser MATAD package
+*   rat() function used at intermediate steps and intermediate
+*   results do not expanded in ep.
+* 
+*   For details see: https://github.com/apik/matad-ng
+* 
+*   Andrey Pikelner, pikelner[at]theor.jinr.ru
+* 
+**************************************************************************************
+* 
+*   Options and flags
+*   -------------
+* 
+*   TABINT     - use tables for integrals BN(1,1,1,n) 
+* 
+*   REDBNTAB   - use table for integrals 
+*                BN(1,1,1,1), BN(1,1,1,2), BN(1,1,2,2), 
+*                BN(1,2,2,2), BN(2,2,2,2) and dalambertian 
+*                application upto dala^11
+* 
+*   Integration routines
+*   --------------------
+* 
+*   IntOne     - one-loop massless self-energy
+*   TadpoleM0  - one-loop massive tadpole
+*   TadpoleMM0 - two-loop tadpole with two massive and one massless line
 * 
 * 
+*   Conventions used
+*   ----------------
+* 
+*   All integrals are expressed in terms of master integrals:
+* 
+*       (1) - miT1 at two-loop and
+*       (9) - miD6,miD5,miD4,miDN,miDM,miE3,miBN,miBN1x11,miBN1x00 at three-loop level
+* 
+*   Final answer contain symbol *d* instead of *n* in original MATAD package
+* 
+*   When expansion used all master integrals divided by Exp(-ep*EulerGamma) 
+*   for each loop. Gamma functions present in final result expanded according to:
+* 
+*       Gam(n,x)=Gamma(n+ep*x)*Exp(ep*x*EulerGamma)
+*      iGam(n,x)=Exp(-ep*x*EulerGamma)/Gamma(n+ep*x)
 * 
 * 
+*   Routines from exact version of MINCER package
+*   ---------------------------------------------
+* 
+*   IntOne    - One-loop massless self-energy (G-function)
+*   DoG       - Reduction of 1-loop inegral and Pochhammer symbols
+*   expansion - New name exp4d with corrected expansion for denominators with ep^0
 * 
 * 
-* 
-* 
-* 
-* 
-* 
-* MINCER exact routines IntOne,DoG,expansion
-* 
-* 
-* TABINT
-* REDBNTAB
-* 
-* 
-* 
-* 
-
+**************************************************************************************
 
 * By default we use reduction with tables for BN topology 
 #define REDBNTAB
 
-* S  n,ep;
+* And not use tables for BN(1,1,1,n) integrals
+* #define TABINT
+
+**************************************************************************************
 S d;
 dimension d;
 
@@ -9069,9 +9105,6 @@ endif;
 * 1, 2 and 4.
         
 * in order to avoid 1/fac_(-x)-terms:
-
-*         Print+s;
-*         .end        
 
         if( count(intbm2,1));                
         if (count(p5.p5,1)>=0) multiply replace_(p5,p4,p4,p5,p1,p3,p3,p1);
