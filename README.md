@@ -55,7 +55,7 @@ Expand result in **ep** up to O(ep) near d=4-2e*p
 
 ### Dimension shifts
 
-Here we express two-loop master integral **miT1** in 
+Here we express two-loop master integral **miT1** in `d=(4+2)-2*ep` dimensions in terms of integrals in `d=4-2*ep` dimensions
 ```
 L f1 = miT1;
 #call shift4plus(2)
