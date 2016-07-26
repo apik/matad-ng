@@ -49,6 +49,12 @@
 *   DoG       - Reduction of 1-loop inegral and Pochhammer symbols
 *   expansion - New name exp4d with corrected expansion for denominators with ep^0
 * 
+*
+*   Space-time dimension shifts
+*   ---------------------------
+*
+*   Using procedure shift4plus(n=2*k) it is possible express general d-dimensional
+*   result of reduction as (d+2*k)-dimensional in terms of d=4 dimensional master integrals
 * 
 **************************************************************************************
 
@@ -10756,46 +10762,62 @@ id miT1(d0?{,<4}) = Gam(2 + ep - 1/2*d0)^2*rat(4,d0^2 - 4*d0*ep - 4*d0 + 4*
 
 
 
-*--#[ exp4plus :
+*--#[ shift4plus :
 *
-        #procedure exp4plus(DIM,maxeppow)
-* Expansion near d=4 + DIM -2*ep      
-*         .sort
-*         S [{4+`DIM'}-2ep];        
-                Multiply replace_(d,{4+`DIM'}-2*ep);
-                
-* First argument dimension d=4-2ep for n+x*ep        
-*         id,once  Gam(n?,x?) =  Gam({4+`DIM'},n-`DIM'/2,x);
-*         id,once iGam(n?,x?) = iGam({4+`DIM'},n-`DIM'/2,x);
-                
-                id  Gam(n?,x?) =  Gam(n+x*(2-({4+`DIM'}-2*ep)/2));
-                id iGam(n?,x?) = iGam(n+x*(2-({4+`DIM'}-2*ep)/2));
-                
-                id mi?{miT1,miD6,miD5,miD4,miDN,miDM,miE3,miBN,miBN1x11,miBN1x00} = mi({4+`DIM'});
+        #procedure shift4plus(DIM)
 
-                #if(`DIM' > 0)
-                        #message Lowering DRR applied
+                #if({`DIM' % 2} == 0)
                         
-                        #do i=0,1                        
-                                #call dimstepdown  
-                                if(match(mi?{miT1,miD6,miD5,miD4,miDN,miDM,miE3,miBN,miBN1x11,miBN1x00}(d0?{,>4}))) redefine i "0";
-                                .sort
-                        #enddo
+* Expansion near d=4 + DIM -2*ep      
+                        Multiply replace_(d,{4+`DIM'}-2*ep);
+                        
+* First argument dimension d=4-2ep for n+x*ep        
+                        
+                        id  Gam(n?,x?) =  Gam(n+x*(2-({4+`DIM'}-2*ep)/2));
+                        id iGam(n?,x?) = iGam(n+x*(2-({4+`DIM'}-2*ep)/2));
+                        
+                        id mi?{miT1,miD6,miD5,miD4,miDN,miDM,miE3,miBN,miBN1x11,miBN1x00} = mi({4+`DIM'});
+                        
+                        #if(`DIM' > 0)
+                                #message Lowering DRR applied
+                                
+                                #do i=0,1                        
+                                        #call dimstepdown  
+                                        if(match(mi?{miT1,miD6,miD5,miD4,miDN,miDM,miE3,miBN,miBN1x11,miBN1x00}(d0?{,>4}))) redefine i "0";
+                                        .sort
+                                #enddo
+                                
+                                #else
+                                #message Raising DRR applied
+                                
+                                #do i=0,1                        
+                                        #call dimstepup 
+                                        if(match(mi?{miT1,miD6,miD5,miD4,miDN,miDM,miE3,miBN,miBN1x11,miBN1x00}(d0?{,<4}))) redefine i "0";
+                                        .sort
+                                #enddo
+                                
+                        #endif        
+
+* First remove numerical values
+                        id Gam(x?pos_)  = fac_(x-1);
+                        id iGam(x?pos_) = 1/fac_(x-1);
+                        
+                        SplitArg (ep),Gam,iGam;
+                        id Gam(x?symbol_) = Gam(0,x);                        
+                        id Gam(n?,x?)     = Gam(n,x/ep);
+
+*                       When Gamma args are free from ep convert to d=4-2*ep
+                        Multiply replace_(ep,2-d/2);                        
+                        #call GammaArgToOne
+*        Change notation to apply exp4d
+                        id mi?{miT1,miD6,miD5,miD4,miDN,miDM,miE3,miBN,miBN1x11,miBN1x00}(4) = mi;
 
                         #else
-                        #message Raising DRR applied
-
-                        #do i=0,1                        
-                                #call dimstepup 
-                                if(match(mi?{miT1,miD6,miD5,miD4,miDN,miDM,miE3,miBN,miBN1x11,miBN1x00}(d0?{,<4}))) redefine i "0";
-                                .sort
-                        #enddo
-                        
-                #endif        
-                
-#endprocedure
+                        #message Expansion near Odd d not implemented                        
+                #endif                        
+        #endprocedure
 *
-*--#] exp4plus : 
+*--#] shift4plus : 
 
 
 *--#[ fillbntab : 

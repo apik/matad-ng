@@ -22,6 +22,8 @@ Each integral is divided by `Exp(-ep*EulerGamma)` and `Zeta[2]` is present in fi
 
 ## Usage
 
+### Reduction
+
 Calculate one-loop integral using MATAD notation for massive propagators **s1m** and for massles propagator **1/p1.p1**
 ```
 #-
@@ -50,6 +52,21 @@ Expand result in **ep** up to O(ep) near d=4-2e*p
 ```
 #call exp4d(1)
 ```
+
+### Dimension shifts
+
+Here we express two-loop master integral **miT1** in 
+```
+L f1 = miT1;
+#call shift4plus(2)
+```
+And result is
+```
+f1 =
+   + Gam(1,1)^2*rat(-48,d^6 - 13*d^5 + 64*d^4 - 148*d^3 + 160*d^2 - 64*d)
+   + miT1*rat(3,d^2 - d);
+```
+where **miT1** is two-lop master integral in four dimensions and `d=4-2*ep`
 
 ## Tests
 
