@@ -66,7 +66,7 @@ f1 =
    + Gam(1,1)^2*rat(-48,d^6 - 13*d^5 + 64*d^4 - 148*d^3 + 160*d^2 - 64*d)
    + miT1*rat(3,d^2 - d);
 ```
-where **miT1** is two-lop master integral in four dimensions and `d=4-2*ep`
+where **miT1** is two-loop master integral in four dimensions and `d=4-2*ep`
 
 ## Tests
 
