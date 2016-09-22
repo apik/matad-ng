@@ -120,7 +120,7 @@ S eps1m,eps2m,eps3m,eps4m,eps5m,eps6m;
 S epx1,epx2,epx3,epx4,epx5,epx6;
 
 * Zeta values
-Symbols z2,z3,z4,z5,z6,z7,z8,z9,zz5,z6z2;
+Symbols z2,z3,z4,z5,z6;
 
 * Master integrals
 CF mi;

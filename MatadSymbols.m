@@ -126,7 +126,14 @@ symbSubs =
         (Pi^2*(45 + 16*Sqrt[3]*Gl[{2, 1}, (2*Pi)/3] - 2*Zeta[3]))/12 + 7*Zeta[3] +
         (18*Pi*Gl[{3, 1}, (2*Pi)/3] - 13*Pi*(-3 + Log[3])*Zeta[3])/(3*Sqrt[3]) +
         (Cl[{2}, (2*Pi)/3]*(-4*Pi^2*(-3 + Log[3]) - 3*(-90 + Log[3]*(42 + (-9 + Log[3])*Log[3]) + 4*Zeta[3])))/(2*Sqrt[3]) +
-         (3*Zeta[5])/5
+         (3*Zeta[5])/5,
+
+        (* Zeta function symbols *)
+        z2 -> Zeta[2],
+        z3 -> Zeta[3],
+        z4 -> Zeta[4],
+        z5 -> Zeta[5],
+        z6 -> Zeta[6]
     };
 
 
