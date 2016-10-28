@@ -10,7 +10,8 @@
        Int.J.Mod.Phys. A15 (2000) 5087-5159, hep-ph/0102033
    [5] New results for the epsilon expansion of certain one, two and three loop Feynman diagrams
        Nucl.Phys. B605 (2001) 266-318, hep-th/0012189 
-
+   [6] Fully massive vacuum integrals at 5 loops 
+       http://inspirehep.net/record/1449931
 *)
 
 (* Functions from [3] *)
@@ -29,13 +30,13 @@ miSubs=
         
         miD5 -> 2*Zeta[3]/ep + D5 + ep*D5ep + ep^2*Trunc[D5ep2],
         
-        miD4 -> 2*Zeta[3]/ep + D4 + ep*D4ep + ep^2*Trunc[D4ep2],
+        miD4 -> 2*Zeta[3]/ep + D4 + ep*D4ep + ep^2*D4ep2 + ep^3*Trunc[D4ep3],
         
-        miDN -> 2*Zeta[3]/ep + DN + ep*DNep + ep^2*Trunc[DNep2],
+        miDN -> 2*Zeta[3]/ep + DN + ep*DNep + ep^2*DNep2 + ep^3*Trunc[DNep3],
         
-        miDM -> 2*Zeta[3]/ep + DM + ep*DMep + ep^2*Trunc[DMep2],
+        miDM -> 2*Zeta[3]/ep + DM + ep*DMep + ep^2*DMep2 + ep^3*Trunc[DMep3],
 
-        miE3 -> -2/3/ep^3-11/3/ep^2 + (-14 + (27*S2)/2 - 2*Zeta[2])/ep + E3 + ep*E3ep + ep^2*Trunc[E3ep2],
+        miE3 -> -2/3/ep^3-11/3/ep^2 + (-14 + (27*S2)/2 - 2*Zeta[2])/ep + E3 + ep*E3ep + ep^2*E3ep2 + ep^3*Trunc[E3ep3],
 
         miBN ->  2/ep^3 + 23/(3*ep^2) + (35/2 + 3*Zeta[2])/ep + 275/12 + (23*Zeta[2])/2  - 2*Zeta[3] -
         16*ep*(189/128 - (105*Zeta[2])/64 - (9*Zeta[2]^2)/64 - (89*Zeta[3])/48 - (3*Zeta[4])/32) +
@@ -139,8 +140,10 @@ symbSubs =
 
 (* Numerical values for higher orders in ep *)
 
-N[D6ep,prec_:$MachinePrecision] = 41.87670208303`13;
-N[D5ep,prec_:$MachinePrecision] = 74.9083038310`13;
+(* eq. C.2-63 from [6] *)
+N[D6ep,prec_:$MachinePrecision] = 41.87670208303157617433490267097099146643159391700`50;
+(* eq. C.2-62 - reduced from [6] *)
+N[D5ep,prec_:$MachinePrecision] = 36.47368421155096825994471856976365848558650333990`50;
 (* eq:4.4 from [2] *)
 N[D4ep,prec_:$MachinePrecision]  = 31.79387586520335091502703130598293231890424270640`50;
 N[D4ep2,prec_:$MachinePrecision] = -95.53186858506048154153099646099149596350732620450`50;
