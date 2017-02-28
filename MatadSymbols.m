@@ -24,15 +24,16 @@ N[Gl[L_List,x_],prec_:$MachinePrecision]:=Module[{p=N[PolyLog[L[[1]]-1,Length[L]
 
 miSubs=
     {
-        miT1 ->
-        -21/2 - 3/(2*ep^2) - 9/(2*ep) + (27*S2)/2 - (3*Zeta[2])/2 
-        + ep * T1ep + ep^2 * T1ep2 + ep^3 * T1ep3 + ep^4*Trunc[T1ep4],
+        miT1 -> -21/2 - 3/(2*ep^2) - 9/(2*ep) + (27*S2)/2 - (3*Zeta[2])/2 +
+        ep * T1ep + ep^2 * T1ep2 + ep^3 * T1ep3 + ep^4*Trunc[T1ep4],
         
         miD6 -> 2*Zeta[3]/ep + D6 + ep*D6ep + ep^2*Trunc[D6ep2],
         
         miD5 -> 2*Zeta[3]/ep + D5 + ep*D5ep + ep^2*Trunc[D5ep2],
         
         miD4 -> 2*Zeta[3]/ep + D4 + ep*D4ep + ep^2*D4ep2 + ep^3*Trunc[D4ep3],
+
+        miD3 -> 2*Zeta[3]/ep + D3 + ep*OepD3 + ep^2*Trunc[D3ep2],
         
         miDN -> 2*Zeta[3]/ep + DN + ep*DNep + ep^2*DNep2 + ep^3*Trunc[DNep3],
         
@@ -45,14 +46,14 @@ miSubs=
         ep^2*(16*B4 - 384*(14917/18432 - (275*Zeta[2])/3072 - (23*Zeta[2]^2)/1024 - (175*Zeta[3])/256 +
                            (Zeta[2]*Zeta[3])/128 + (649*Zeta[4])/1536 + Zeta[5]/320)) + ep^3*BNep3 + ep^4*BNep4 + ep^5*Trunc[BNep5],
         
-        miBN1x00 ->
+        miBN1 ->
         + ep^-3 + ep^-2 * ( 15/4 ) + ep^-1 * ( 65/8 + 12/8*Zeta[2] )
         + 81/4*S2 - Zeta[3] + 135/16 + 90/16 *Zeta[2]
         + ep*OepS2
         + ep^2*Oep2S2
-        + ep^3*Trunc[BN1x00ep3],
+        + ep^3*Trunc[BN1ep3],
 
-        miBN1x11 -> + (2*Zeta[3]/ep + D3) + ep*OepD3 + ep^2*Trunc[BN1x11ep2],
+
 
         Gam[x_, y_]  -> Exp[ep*y*EulerGamma]*Gamma[x + ep*y],
         iGam[x_, y_] -> Exp[-ep*y*EulerGamma]/Gamma[x + ep*y] 

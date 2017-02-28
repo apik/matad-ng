@@ -30,8 +30,8 @@
 * 
 *   All integrals are expressed in terms of master integrals:
 * 
-*       (1) - miT1 at two-loop and
-*       (9) - miD6,miD5,miD4,miDN,miDM,miE3,miBN,miBN1x11,miBN1x00 at three-loop level
+*       (1) - miT111 at two-loop and
+*       (9) - miD6,miD5,miD4,miD3,miDN,miDM,miE3,miBN,miBN1 at three-loop level
 * 
 *   Final answer contain symbol *d* instead of *n* in original MATAD package
 * 
@@ -81,8 +81,12 @@ T del;
 *
 * used in MATAD
 *
-S S2,OepS2,Oep2S2,T1ep,T1ep2,B4,D3,OepD3,D4,D4ep,D5,D5ep,D6,D6ep,DM,DMep;
+S S2,OepS2,Oep2S2,T111ep,T111ep2,B4,D3,D3ep,D4,D4ep,D5,D5ep,D6,D6ep,DM,DMep;
 S DN,DNep,E3,E3ep;
+
+* Higher weight
+S D6ep2,D5ep2,D4ep2,D3ep2,DNep2,DMep2,E3ep2,E3ep3,BNep3,BNep4;
+
 S intm1,...,intm5,intn1,intt1;
 S intbm,intbmbm,intbm1,intbm2,intbn,intbnbn,intbn1,intbn2,intbn3;
 S intd4,intd5,intd6,intdm,intdn,inte3,inte4;
@@ -91,7 +95,7 @@ S  diff,[p1^2],[M^2+p1^2];
 
 S  dala,test5,test6;
 
-S  agam,bgam,cgam,dgam,egam,fgam,ggam,hgam;
+S  agam,bgam,cgam,dgam,egam,fgam;
 CF gm2,gm2norm,gm3,gm3norm;
 CF nom,deno,Gam,iGam;
 CF BN1;
@@ -124,15 +128,16 @@ Symbols z2,z3,z4,z5,z6;
 
 * Master integrals
 CF mi;
-CF miT1,miD6,miD5,miD4,miDN,miDM,miE3;
-CF miBN,miBN1x11,miBN1x00;
+CF miT111,miD6,miD5,miD4,miD3,miDN,miDM,miE3;
+CF miBN,miBN1;
 * And its truncation flags
-S miT1trunc,miD6trunc,miD5trunc,miD4trunc,miDNtrunc,miDMtrunc,miE3trunc;
-S miBNtrunc,miBN1x11trunc,miBN1x00trunc;
-S iGamtrunc,Gamtrunc;
+CF Oep;
+S T111tr,D6tr,D5tr,D4tr,DNtr,DMtr,E3tr;
+S BNtr,D3tr,BN1tr;
+S iGamtr,Gamtr;
 
-set trunc:miT1trunc,miD6trunc,miD5trunc,miD4trunc,miDNtrunc,miDMtrunc,miE3trunc,
-          miBNtrunc,miBN1x11trunc,miBN1x00trunc,iGamtrunc,Gamtrunc;
+set trunc:T111tr,D6tr,D5tr,D4tr,DNtr,DMtr,E3tr,
+          BNtr,D3tr,BN1tr,iGamtr,Gamtr;
 
 * Mass distributions
 * Two-loop 
@@ -633,7 +638,7 @@ endif;
         multiply,replace_(p1,p3,p3,p1,s1m,s3m,s3m,s1m);
         endif;
 
-* the rest is taken from topT1 with line 5 replaced by line 3
+* the rest is taken from topT111 with line 5 replaced by line 3
 
 *
 * Now the integration is done:
@@ -718,7 +723,7 @@ endif;
 
         id 1/s3m = p3.p3 + M^2;
 
-        #call ACCU{T1}
+        #call ACCU{T111}
 
         if ( (count(s1m,1)!=0) && (count(s2m,1)!=0) && (count(s3m,1)==0) ); 
         multiply replace_(test5,s1m,test6,s2m);
@@ -728,7 +733,7 @@ endif;
         Multiply intM00;
  
         elseif ( (count(s1m,1)==1) && (count(s2m,1)==1) && (count(s3m,1)==1) ); 
-        id s1m*s2m*s3m = M^2*miT1;
+        id s1m*s2m*s3m = M^2*miT111;
         Multiply int0;
         
         else;
@@ -7106,9 +7111,9 @@ id,only intbn*dala^11*x3^1*x4^2*x5^2*x6^2 =  + int0 * ( M^-24*miBN*rat( -
 * insert the expansion for BN1(0,0,1,1,1,1) and BN1(1,1,1,1,1,1).
 
         if(count(intbn1,1));        
-        id BN1(0,0,1,1,1,1) = +  M^4*miBN1x00*int0/intbn1;
+        id BN1(0,0,1,1,1,1) = +  M^4*miBN1*int0/intbn1;
         
-        id BN1(1,1,1,1,1,1) = + miBN1x11*int0/intbn1;
+        id BN1(1,1,1,1,1,1) = + miD3*int0/intbn1;
         endif;
         .sort
         
@@ -9350,7 +9355,7 @@ endif;
 
 * recursion for 2-loop integral
         
-* the following part is identical to topT1
+* the following part is identical to topT111
         
         #do i=1,5
                 
@@ -9419,7 +9424,7 @@ endif;
         elseif ( (count(s1m,1)==1) && (count(s2m,1)==1) && (count(s5m,1)==1) ); 
 ***  id s1m*s2m*s5m = -3*deno(1,-2)*M^2*(1/2/ep^2 + 1/2/ep) +  M^2*g3fl1;
 *** constant form Davydychev, Tausk, NPB397(93)123
-        id s1m*s2m*s5m = M^2*miT1*int0/intMMM;
+        id s1m*s2m*s5m = M^2*miT111*int0/intMMM;
 
         else;
         multiply 1/(1-1);
@@ -10095,46 +10100,47 @@ multiply, ep^('x');
         1 - ep^2*y^2*z2/2 + ep^3*y^3*z3/3 + ep^4*y^4*(z2^2 - 2*z4)/8 +
         ep^5*y^5*(-5*z2*z3 + 6*z5)/30 +
         ep^6*y^6*(-3*z2^3 + 8*z3^2 + 18*z2*z4 - 24*z6)/144 +
-        ep^7*iGamtrunc;
+        ep^7*Oep(7,iGamtr);
         
         
         repeat  id,once     Gam(1,y?) = 
         1 + ep^2*y^2*z2/2 - ep^3*y^3*z3/3 + ep^4*y^4*(z2^2 + 2*z4)/8 
         - ep^5*y^5*(5*z2*z3 + 6*z5)/30 +
         ep^6*y^6*(3*z2^3 + 8*z3^2 + 18*z2*z4 + 24*z6)/144 + 
-        ep^7*Gamtrunc;
+        ep^7*Oep(7,Gamtr);
         
 
 
 * Two-loop fully massive tadpole        
 * MMM(1,1,1)/M^2        
-        id miT1 = 
+        id miT111 = 
         -21/2 - 3/(2*ep^2) - 9/(2*ep) + (27*S2)/2 - (3*z2)/2 
-        + ep * T1ep + ep^2 * T1ep2 + ep^3*miT1trunc;        
+        + ep * T111ep + ep^2 * T111ep2 + ep^3*Oep(3,T111tr);        
         
 * MMMMMM(1,1,1,1,1,1)        
-        id miD6 = 2*z3/ep + D6 + ep*D6ep + ep^2*miD6trunc;
+        id miD6 = 2*z3/ep + D6 + ep*D6ep + ep^2*D6ep2 + ep^3*Oep(3,D6tr);
         
 * MMMMM0(1,1,1,1,1,1)        
-        id miD5 = 2*z3/ep + D5 + ep*D5ep + ep^2*miD5trunc;
+        id miD5 = 2*z3/ep + D5 + ep*D5ep + ep^2*D5ep2 + ep^3*Oep(3,D5tr);
         
 * 00MMMM(1,1,1,1,1,1)        
-        id miD4 = 2*z3/ep + D4 + ep*D4ep + ep^2*miD4trunc;
+        id miD4 = 2*z3/ep + D4 + ep*D4ep + ep^2*D4ep2 + ep^3*Oep(3,D4tr);
         
+* M000MM(1,1,1,1,1,1)
+        id miD3 = 2*z3/ep + D3 + ep*D3ep + ep^2*D3ep2 + ep^3*Oep(3,D3tr);
+
 * MM0000(1,1,1,1,1,1)        
-        id miDN = 2*z3/ep + DN + ep*DNep + ep^2*miDNtrunc;
+        id miDN = 2*z3/ep + DN + ep*DNep + ep^2*DNep2 + ep^3*Oep(3,DNtr);
         
 * MMM000(1,1,1,1,1,1)        
-        id miDM = 2*z3/ep + DM + ep*DMep + ep^2*miDMtrunc;
+        id miDM = 2*z3/ep + DM + ep*DMep + ep^2*DMep2 + ep^3*Oep(3,DMtr);
 
 * MMM000(1,1,1,1,1,0)/M^2        
-*** the coefficients of 1/ep^3 and 1/ep^2 are determined
-*** from the cancellation of poles 
-        id miE3 = -2/3/ep^3-11/3/ep^2 + (-14 + (27*S2)/2 - 2*z2)/ep + E3 + ep*E3ep + ep^2*miE3trunc;
+        id miE3 = -2/3/ep^3-11/3/ep^2 + (-14 + (27*S2)/2 - 2*z2)/ep + E3 + ep*E3ep + ep^2*E3ep2 + ep^3*E3ep3 + ep^4*Oep(4,E3tr);
 
 * MM00MM(1,1,0,0,1,1)/M^4                
         id miBN = agam/ep^3+bgam/ep^2+cgam/ep+dgam+egam*ep
-        +fgam*ep^2+ggam*ep^3+hgam*ep^4 + ep^5*miBNtrunc;
+        +fgam*ep^2 + BNep3*ep^3 + BNep4*ep^4 + ep^5*Oep(5,BNtr);
 
         id agam=2;
         id bgam=23/3;
@@ -10148,15 +10154,13 @@ multiply, ep^('x');
         +16*B4;
         
 * M000MM(1,1,0,0,1,1)
-        id miBN1x00 =
+        id miBN1 =
         + ep^-3 + ep^-2 * ( 15/4 ) + ep^-1 * ( 65/8 + 12/8*z2 )
         + 81/4*S2 - z3 + 135/16 + 90/16 *z2
         + ep*OepS2
         + ep^2*Oep2S2
-        + ep^3*miBN1x00trunc;
+        + ep^3*Oep(3,BN1tr);
 
-* M000MM(1,1,1,1,1,1)
-        id miBN1x11 = + (2*z3/ep + D3) + ep*OepD3 + ep^2*miBN1x11trunc;
         
 
 #endprocedure
@@ -10228,7 +10232,7 @@ id miD6(d0?{,>4}) = Gam(4 + ep - 1/2*d0)^3*rat(-96,d0^9 - 18*d0^8*ep - 41*d0^8
        + 4051520*d0*ep^4 + 7026688*d0*ep^3 + 7500672*d0*ep^2 + 4497984*d0*ep
        + 1157760*d0 - 512*ep^9 - 10496*ep^8 - 94592*ep^7 - 491456*ep^6 - 
       1620608*ep^5 - 3513344*ep^4 - 5000448*ep^3 - 4497984*ep^2 - 2315520*ep
-       - 518400) + Gam(4 + ep - 1/2*d0)*miT1( - 2 + d0)*rat(-24,d0^5 - 10*d0^4
+       - 518400) + Gam(4 + ep - 1/2*d0)*miT111( - 2 + d0)*rat(-24,d0^5 - 10*d0^4
       *ep - 20*d0^4 + 40*d0^3*ep^2 + 160*d0^3*ep + 155*d0^3 - 80*d0^2*ep^3 - 
       480*d0^2*ep^2 - 930*d0^2*ep - 580*d0^2 + 80*d0*ep^4 + 640*d0*ep^3 + 1860
       *d0*ep^2 + 2320*d0*ep + 1044*d0 - 32*ep^5 - 320*ep^4 - 1240*ep^3 - 2320*
@@ -10253,7 +10257,7 @@ id miD5(d0?{,>4}) = Gam(4 + ep - 1/2*d0)^3*rat(-48,d0^9 - 18*d0^8*ep - 41*d0^8
        + 4051520*d0*ep^4 + 7026688*d0*ep^3 + 7500672*d0*ep^2 + 4497984*d0*ep
        + 1157760*d0 - 512*ep^9 - 10496*ep^8 - 94592*ep^7 - 491456*ep^6 - 
       1620608*ep^5 - 3513344*ep^4 - 5000448*ep^3 - 4497984*ep^2 - 2315520*ep
-       - 518400) + Gam(4 + ep - 1/2*d0)*miT1( - 2 + d0)*rat(-12,d0^5 - 10*d0^4
+       - 518400) + Gam(4 + ep - 1/2*d0)*miT111( - 2 + d0)*rat(-12,d0^5 - 10*d0^4
       *ep - 20*d0^4 + 40*d0^3*ep^2 + 160*d0^3*ep + 155*d0^3 - 80*d0^2*ep^3 - 
       480*d0^2*ep^2 - 930*d0^2*ep - 580*d0^2 + 80*d0*ep^4 + 640*d0*ep^3 + 1860
       *d0*ep^2 + 2320*d0*ep + 1044*d0 - 32*ep^5 - 320*ep^4 - 1240*ep^3 - 2320*
@@ -10316,14 +10320,14 @@ id miD4(d0?{,>4}) = Gam( - 2 - ep + 1/2*d0)*Gam(4 + ep - 1/2*d0)*Gam(7 + 2*ep
       725566464*d0*ep^2 + 333268992*d0*ep + 68014080*d0 - 6144*ep^11 - 150528*
       ep^10 - 1663488*ep^9 - 10941696*ep^8 - 47577600*ep^7 - 143539200*ep^6 - 
       306435072*ep^5 - 462637824*ep^4 - 483710976*ep^3 - 333268992*ep^2 - 
-      136028160*ep - 24883200) + Gam(4 + ep - 1/2*d0)*miT1( - 2 + d0)*rat(-8,
+      136028160*ep - 24883200) + Gam(4 + ep - 1/2*d0)*miT111( - 2 + d0)*rat(-8,
       d0^5 - 10*d0^4*ep - 20*d0^4 + 40*d0^3*ep^2 + 160*d0^3*ep + 155*d0^3 - 80
       *d0^2*ep^3 - 480*d0^2*ep^2 - 930*d0^2*ep - 580*d0^2 + 80*d0*ep^4 + 640*
       d0*ep^3 + 1860*d0*ep^2 + 2320*d0*ep + 1044*d0 - 32*ep^5 - 320*ep^4 - 
       1240*ep^3 - 2320*ep^2 - 2088*ep - 720) + miD4( - 2 + d0)*rat(2,d0^3 - 6*
       d0^2*ep - 9*d0^2 + 12*d0*ep^2 + 36*d0*ep + 26*d0 - 8*ep^3 - 36*ep^2 - 52
       *ep - 24) + miE3( - 2 + d0)*rat(-1,d0^3 - 6*d0^2*ep - 9*d0^2 + 12*d0*
-      ep^2 + 36*d0*ep + 26*d0 - 8*ep^3 - 36*ep^2 - 52*ep - 24) + miBN1x00( - 2
+      ep^2 + 36*d0*ep + 26*d0 - 8*ep^3 - 36*ep^2 - 52*ep - 24) + miBN1( - 2
        + d0)*rat(2,3*d0^4 - 24*d0^3*ep - 42*d0^3 + 72*d0^2*ep^2 + 252*d0^2*ep
        + 213*d0^2 - 96*d0*ep^3 - 504*d0*ep^2 - 852*d0*ep - 462*d0 + 48*ep^4 + 
       336*ep^3 + 852*ep^2 + 924*ep + 360);
@@ -10496,7 +10500,7 @@ id miBN(d0?{,>4}) = Gam(4 + ep - 1/2*d0)^3*rat(11264*d0 - 22528*ep - 38912,27*
       ep^3 - 3564*d0*ep^2 - 4848*d0*ep - 2172*d0 + 432*ep^4 + 2376*ep^3 + 4848
       *ep^2 + 4344*ep + 1440);
 
-id miBN1x11(d0?{,>4}) = Gam( - 2 - ep + 1/2*d0)^2*Gam(7 + 2*ep - d0)*Gam(10 + 
+id miD3(d0?{,>4}) = Gam( - 2 - ep + 1/2*d0)^2*Gam(7 + 2*ep - d0)*Gam(10 + 
       3*ep - 3/2*d0)*rat(32,27*d0^9 - 486*d0^8*ep - 1107*d0^8 + 3888*d0^7*ep^2
        + 17712*d0^7*ep + 19977*d0^7 - 18144*d0^6*ep^3 - 123984*d0^6*ep^2 - 
       279678*d0^6*ep - 208077*d0^6 + 54432*d0^5*ep^4 + 495936*d0^5*ep^3 + 
@@ -10579,12 +10583,12 @@ id miBN1x11(d0?{,>4}) = Gam( - 2 - ep + 1/2*d0)^2*Gam(7 + 2*ep - d0)*Gam(10 +
       333268992*d0*ep + 68014080*d0 - 6144*ep^11 - 150528*ep^10 - 1663488*ep^9
        - 10941696*ep^8 - 47577600*ep^7 - 143539200*ep^6 - 306435072*ep^5 - 
       462637824*ep^4 - 483710976*ep^3 - 333268992*ep^2 - 136028160*ep - 
-      24883200) + miBN1x11( - 2 + d0)*rat(2,d0^3 - 6*d0^2*ep - 9*d0^2 + 12*d0*
-      ep^2 + 36*d0*ep + 26*d0 - 8*ep^3 - 36*ep^2 - 52*ep - 24) + miBN1x00( - 2
+      24883200) + miD3( - 2 + d0)*rat(2,d0^3 - 6*d0^2*ep - 9*d0^2 + 12*d0*
+      ep^2 + 36*d0*ep + 26*d0 - 8*ep^3 - 36*ep^2 - 52*ep - 24) + miBN1( - 2
        + d0)*rat(-2,d0^3 - 6*d0^2*ep - 9*d0^2 + 12*d0*ep^2 + 36*d0*ep + 26*d0
        - 8*ep^3 - 36*ep^2 - 52*ep - 24);
 
-id miBN1x00(d0?{,>4}) = Gam(4 + ep - 1/2*d0)^3*rat(1920*d0 - 3840*ep - 6656,9*
+id miBN1(d0?{,>4}) = Gam(4 + ep - 1/2*d0)^3*rat(1920*d0 - 3840*ep - 6656,9*
       d0^10 - 180*d0^9*ep - 369*d0^9 + 1620*d0^8*ep^2 + 6642*d0^8*ep + 6722*
       d0^8 - 8640*d0^7*ep^3 - 53136*d0^7*ep^2 - 107552*d0^7*ep - 71632*d0^7 + 
       30240*d0^6*ep^4 + 247968*d0^6*ep^3 + 752864*d0^6*ep^2 + 1002848*d0^6*ep
@@ -10601,17 +10605,17 @@ id miBN1x00(d0?{,>4}) = Gam(4 + ep - 1/2*d0)^3*rat(1920*d0 - 3840*ep - 6656,9*
       ep^4 - 236389376*d0*ep^3 - 191817216*d0*ep^2 - 89524224*d0*ep - 18302976
       *d0 + 9216*ep^10 + 188928*ep^9 + 1720832*ep^8 + 9168896*ep^7 + 31641600*
       ep^6 + 73884160*ep^5 + 118194688*ep^4 + 127878144*ep^3 + 89524224*ep^2
-       + 36605952*ep + 6635520) + miBN1x00( - 2 + d0)*rat(18*d0 - 36*ep - 72,9
+       + 36605952*ep + 6635520) + miBN1( - 2 + d0)*rat(18*d0 - 36*ep - 72,9
       *d0^4 - 72*d0^3*ep - 99*d0^3 + 216*d0^2*ep^2 + 594*d0^2*ep + 404*d0^2 - 
       288*d0*ep^3 - 1188*d0*ep^2 - 1616*d0*ep - 724*d0 + 144*ep^4 + 792*ep^3
        + 1616*ep^2 + 1448*ep + 480);
 
-id miT1(d0?{,>4}) = Gam(4 + ep - 1/2*d0)^2*rat(-48,d0^6 - 12*d0^5*ep - 25*d0^5
+id miT111(d0?{,>4}) = Gam(4 + ep - 1/2*d0)^2*rat(-48,d0^6 - 12*d0^5*ep - 25*d0^5
        + 60*d0^4*ep^2 + 250*d0^4*ep + 254*d0^4 - 160*d0^3*ep^3 - 1000*d0^3*
       ep^2 - 2032*d0^3*ep - 1340*d0^3 + 240*d0^2*ep^4 + 2000*d0^2*ep^3 + 6096*
       d0^2*ep^2 + 8040*d0^2*ep + 3864*d0^2 - 192*d0*ep^5 - 2000*d0*ep^4 - 8128
       *d0*ep^3 - 16080*d0*ep^2 - 15456*d0*ep - 5760*d0 + 64*ep^6 + 800*ep^5 + 
-      4064*ep^4 + 10720*ep^3 + 15456*ep^2 + 11520*ep + 3456) + miT1( - 2 + d0)
+      4064*ep^4 + 10720*ep^3 + 15456*ep^2 + 11520*ep + 3456) + miT111( - 2 + d0)
       *rat(3,d0^2 - 4*d0*ep - 5*d0 + 4*ep^2 + 10*ep + 6);
 #endprocedure
 
@@ -10636,7 +10640,7 @@ id miD5(d0?{,<4}) = Gam(2 + ep - 1/2*d0)^3*rat(863*d0^3 - 5178*d0^2*ep - 6061*
       *ep^2 + 191808*d0^2*ep + 57024*d0^2 - 20736*d0*ep^5 - 129600*d0*ep^4 - 
       317952*d0*ep^3 - 383616*d0*ep^2 - 228096*d0*ep - 53568*d0 + 6912*ep^6 + 
       51840*ep^5 + 158976*ep^4 + 255744*ep^3 + 228096*ep^2 + 107136*ep + 20736
-      ) + Gam(2 + ep - 1/2*d0)*miT1(2 + d0)*rat(4*d0^2 - 16*d0*ep - 4*d0 + 16*
+      ) + Gam(2 + ep - 1/2*d0)*miT111(2 + d0)*rat(4*d0^2 - 16*d0*ep - 4*d0 + 16*
       ep^2 + 8*ep,9*d0 - 18*ep - 36) + miD5(2 + d0)*rat( - 2*d0^4 + 16*d0^3*ep
        + 12*d0^3 - 48*d0^2*ep^2 - 72*d0^2*ep - 22*d0^2 + 64*d0*ep^3 + 144*d0*
       ep^2 + 88*d0*ep + 12*d0 - 32*ep^4 - 96*ep^3 - 88*ep^2 - 24*ep,9*d0 - 18*
@@ -10655,7 +10659,7 @@ id miD4(d0?{,<4}) = Gam(2 + ep - 1/2*d0)^3*rat( - 234*d0^3 + 1404*d0^2*ep +
       40176*d0^2*ep + 11448*d0^2 - 5184*d0*ep^5 - 30240*d0*ep^4 - 69984*d0*
       ep^3 - 80352*d0*ep^2 - 45792*d0*ep - 10368*d0 + 1728*ep^6 + 12096*ep^5
        + 34992*ep^4 + 53568*ep^3 + 45792*ep^2 + 20736*ep + 3888) + Gam(2 + ep
-       - 1/2*d0)*miT1(2 + d0)*rat( - 2*d0^2 + 8*d0*ep + 2*d0 - 8*ep^2 - 4*ep,3
+       - 1/2*d0)*miT111(2 + d0)*rat( - 2*d0^2 + 8*d0*ep + 2*d0 - 8*ep^2 - 4*ep,3
       *d0 - 6*ep - 9) + Gam( - ep + 1/2*d0)*Gam(2 + ep - 1/2*d0)^2*Gam(3 + 2*
       ep - d0)*rat(-8,3*d0^3 - 18*d0^2*ep - 18*d0^2 + 36*d0*ep^2 + 72*d0*ep + 
       36*d0 - 24*ep^3 - 72*ep^2 - 72*ep - 24) + Gam( - ep + 1/2*d0)*Gam(2 + ep
@@ -10670,7 +10674,7 @@ id miD4(d0?{,<4}) = Gam(2 + ep - 1/2*d0)^3*rat( - 234*d0^3 + 1404*d0^2*ep +
       63216*ep^2 + 25776*ep + 4320) + miD4(2 + d0)*rat(d0^3 - 6*d0^2*ep - 3*
       d0^2 + 12*d0*ep^2 + 12*d0*ep + 2*d0 - 8*ep^3 - 12*ep^2 - 4*ep,2) + miE3(
       2 + d0)*rat(d0^3 - 6*d0^2*ep - 2*d0^2 + 12*d0*ep^2 + 8*d0*ep + d0 - 8*
-      ep^3 - 8*ep^2 - 2*ep,3) + miBN1x00(2 + d0)*rat( - 9*d0^4 + 72*d0^3*ep + 
+      ep^3 - 8*ep^2 - 2*ep,3) + miBN1(2 + d0)*rat( - 9*d0^4 + 72*d0^3*ep + 
       27*d0^3 - 216*d0^2*ep^2 - 162*d0^2*ep - 26*d0^2 + 288*d0*ep^3 + 324*d0*
       ep^2 + 104*d0*ep + 8*d0 - 144*ep^4 - 216*ep^3 - 104*ep^2 - 16*ep,54*d0^2
        - 216*d0*ep - 270*d0 + 216*ep^2 + 540*ep + 324);
@@ -10720,7 +10724,7 @@ id miBN(d0?{,<4}) = Gam(2 + ep - 1/2*d0)^3*rat( - 11*d0 + 22*ep + 16,d0^4 - 8*
        - 486*d0^2*ep - 78*d0^2 + 864*d0*ep^3 + 972*d0*ep^2 + 312*d0*ep + 24*d0
        - 432*ep^4 - 648*ep^3 - 312*ep^2 - 48*ep,128*d0 - 256*ep - 256);
 
-id miBN1x11(d0?{,<4}) = Gam(2 + ep - 1/2*d0)^3*rat(126*d0^3 - 756*d0^2*ep - 
+id miD3(d0?{,<4}) = Gam(2 + ep - 1/2*d0)^3*rat(126*d0^3 - 756*d0^2*ep - 
       908*d0^2 + 1512*d0*ep^2 + 3632*d0*ep + 2100*d0 - 1008*ep^3 - 3632*ep^2
        - 4200*ep - 1512,9*d0^6 - 108*d0^5*ep - 126*d0^5 + 540*d0^4*ep^2 + 1260
       *d0^4*ep + 729*d0^4 - 1440*d0^3*ep^3 - 5040*d0^3*ep^2 - 5832*d0^3*ep - 
@@ -10740,22 +10744,22 @@ id miBN1x11(d0?{,<4}) = Gam(2 + ep - 1/2*d0)^3*rat(126*d0^3 - 756*d0^2*ep -
        - ep + 1/2*d0)^2*Gam(3 + 2*ep - d0)*Gam(4 + 3*ep - 3/2*d0)*rat(56*d0 - 
       112*ep - 144,3*d0^4 - 24*d0^3*ep - 27*d0^3 + 72*d0^2*ep^2 + 162*d0^2*ep
        + 90*d0^2 - 96*d0*ep^3 - 324*d0*ep^2 - 360*d0*ep - 132*d0 + 48*ep^4 + 
-      216*ep^3 + 360*ep^2 + 264*ep + 72) + miBN1x11(2 + d0)*rat(d0^3 - 6*d0^2*
+      216*ep^3 + 360*ep^2 + 264*ep + 72) + miD3(2 + d0)*rat(d0^3 - 6*d0^2*
       ep - 3*d0^2 + 12*d0*ep^2 + 12*d0*ep + 2*d0 - 8*ep^3 - 12*ep^2 - 4*ep,2)
-       + miBN1x00(2 + d0)*rat(9*d0^4 - 72*d0^3*ep - 27*d0^3 + 216*d0^2*ep^2 + 
+       + miBN1(2 + d0)*rat(9*d0^4 - 72*d0^3*ep - 27*d0^3 + 216*d0^2*ep^2 + 
       162*d0^2*ep + 26*d0^2 - 288*d0*ep^3 - 324*d0*ep^2 - 104*d0*ep - 8*d0 + 
       144*ep^4 + 216*ep^3 + 104*ep^2 + 16*ep,18*d0 - 36*ep - 36);
 
-id miBN1x00(d0?{,<4}) = Gam(2 + ep - 1/2*d0)^3*rat(120*d0 - 240*ep - 176,9*
+id miBN1(d0?{,<4}) = Gam(2 + ep - 1/2*d0)^3*rat(120*d0 - 240*ep - 176,9*
       d0^4 - 72*d0^3*ep - 72*d0^3 + 216*d0^2*ep^2 + 432*d0^2*ep + 216*d0^2 - 
       288*d0*ep^3 - 864*d0*ep^2 - 864*d0*ep - 288*d0 + 144*ep^4 + 576*ep^3 + 
-      864*ep^2 + 576*ep + 144) + miBN1x00(2 + d0)*rat(9*d0^4 - 72*d0^3*ep - 27
+      864*ep^2 + 576*ep + 144) + miBN1(2 + d0)*rat(9*d0^4 - 72*d0^3*ep - 27
       *d0^3 + 216*d0^2*ep^2 + 162*d0^2*ep + 26*d0^2 - 288*d0*ep^3 - 324*d0*
       ep^2 - 104*d0*ep - 8*d0 + 144*ep^4 + 216*ep^3 + 104*ep^2 + 16*ep,18*d0
        - 36*ep - 36);
 
-id miT1(d0?{,<4}) = Gam(2 + ep - 1/2*d0)^2*rat(4,d0^2 - 4*d0*ep - 4*d0 + 4*
-      ep^2 + 8*ep + 4) + miT1(2 + d0)*rat(d0^2 - 4*d0*ep - d0 + 4*ep^2 + 2*ep,
+id miT111(d0?{,<4}) = Gam(2 + ep - 1/2*d0)^2*rat(4,d0^2 - 4*d0*ep - 4*d0 + 4*
+      ep^2 + 8*ep + 4) + miT111(2 + d0)*rat(d0^2 - 4*d0*ep - d0 + 4*ep^2 + 2*ep,
       3);
 
 #endprocedure
@@ -10776,14 +10780,14 @@ id miT1(d0?{,<4}) = Gam(2 + ep - 1/2*d0)^2*rat(4,d0^2 - 4*d0*ep - 4*d0 + 4*
                         id  Gam(n?,x?) =  Gam(n+x*(2-({4+`DIM'}-2*ep)/2));
                         id iGam(n?,x?) = iGam(n+x*(2-({4+`DIM'}-2*ep)/2));
                         
-                        id mi?{miT1,miD6,miD5,miD4,miDN,miDM,miE3,miBN,miBN1x11,miBN1x00} = mi({4+`DIM'});
+                        id mi?{miT111,miD6,miD5,miD4,miD3,miDN,miDM,miE3,miBN,miBN1} = mi({4+`DIM'});
                         
                         #if(`DIM' > 0)
                                 #message Lowering DRR applied
                                 
                                 #do i=0,1                        
                                         #call dimstepdown  
-                                        if(match(mi?{miT1,miD6,miD5,miD4,miDN,miDM,miE3,miBN,miBN1x11,miBN1x00}(d0?{,>4}))) redefine i "0";
+                                        if(match(mi?{miT111,miD6,miD5,miD4,miD3,miDN,miDM,miE3,miBN,miBN1}(d0?{,>4}))) redefine i "0";
                                         .sort
                                 #enddo
                                 
@@ -10792,7 +10796,7 @@ id miT1(d0?{,<4}) = Gam(2 + ep - 1/2*d0)^2*rat(4,d0^2 - 4*d0*ep - 4*d0 + 4*
                                 
                                 #do i=0,1                        
                                         #call dimstepup 
-                                        if(match(mi?{miT1,miD6,miD5,miD4,miDN,miDM,miE3,miBN,miBN1x11,miBN1x00}(d0?{,<4}))) redefine i "0";
+                                        if(match(mi?{miT111,miD6,miD5,miD4,miD3,miDN,miDM,miE3,miBN,miBN1}(d0?{,<4}))) redefine i "0";
                                         .sort
                                 #enddo
                                 
@@ -10810,7 +10814,7 @@ id miT1(d0?{,<4}) = Gam(2 + ep - 1/2*d0)^2*rat(4,d0^2 - 4*d0*ep - 4*d0 + 4*
                         Multiply replace_(ep,2-d/2);                        
                         #call GammaArgToOne
 *        Change notation to apply exp4d
-                        id mi?{miT1,miD6,miD5,miD4,miDN,miDM,miE3,miBN,miBN1x11,miBN1x00}(4) = mi;
+                        id mi?{miT111,miD6,miD5,miD4,miD3,miDN,miDM,miE3,miBN,miBN1}(4) = mi;
 
                         #else
                         #message Expansion near Odd d not implemented                        
