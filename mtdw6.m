@@ -1,4 +1,11 @@
 (* 
+   Additionl materials to:
+   "Three-loop massive tadpoles and the polylogarithms up to weight six"
+   by B.Kniehl, A.Pikelner, O.Veretin
+   
+   *)
+
+(* 
    Definitions:
    
    1) HI[w___, om1] -> Im[HPL[{w},Exp[2*I*Pi/3]]]
@@ -16,6 +23,16 @@
 
    *)
 
+
+
+(* 
+   Example application:
+
+   Get["mtdw6.m"]
+   subNHPL=Join[Get["nhplRe.m"],Get["nhplIm.m"]];
+   N[Series[miD6/.miw6/.subuniweight/.subNHPL,{ep,0,2}],10]
+
+   *)
 
 (* *******************************************************************
    *******************************************************************
