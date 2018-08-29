@@ -54,7 +54,7 @@ L ex3loopB = tad3l([MM00MM],2,2,2,1,1,1);
 #call matad(3)
 ```
 
-Expand result in **ep** up to O(ep) near d=4-2e*p
+Expand result in **ep** up to O(ep) near d=4-2*ep
 ```
 #call exp4d(1)
 ```
