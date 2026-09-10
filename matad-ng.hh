@@ -609,9 +609,9 @@ endif;
         #call partfrac{p1|s1m}
         #call partfrac{p2|s2m}
         #call partfrac{p3|s3m}
-        
-        if (count(s1m,1,s2m,1,s3m,1) == 0) discard;
-        
+
+        if ( (count(s1m,1) == 0) && (count(s2m,1) == 0) && (count(s3m,1) == 0) ) discard;
+
 * map 010 -> 100
         if ( (count(s1m,1) == 0) && (count(s2m,1) != 0) && (count(s3m,1) == 0) );
         id p1 = -p1;
@@ -9509,7 +9509,12 @@ endif;
 * discard massless tadpoles
 *
 
-        if (count(s1m,1,s2m,1,s3m,1,s4m,1,s5m,1,s6m,1)==0) discard;
+        if ((count(s1m,1) == 0) &&
+            (count(s2m,1) == 0) &&
+            (count(s3m,1) == 0) &&
+            (count(s4m,1) == 0) &&
+            (count(s5m,1) == 0) &&
+            (count(s6m,1) == 0)) discard;
         .sort
 
 *
